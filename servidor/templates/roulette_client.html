@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Apuesta</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/buttons_setup.js' %}"></script>
+    <script src="{% static 'js/bet_collector.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+</head>
+<body>
+    <div id="buttons_row">
+        <img id="apuesta" src="{% static 'img/roulette_bet.png' %}"/>
+        <button id="send" onclick="send_bets()" class="button-send" style="left: 850px; top: 100px">Enviar apuesta</button>
+        <button id="group_coins_bet" onclick="change_bet_coins()" class="button-send" style="left: 850px; top: 175px">Apostar: 1 moneda(s)</button>
+        <!-- Rounded switch -->
+        <label style="position:absolute; left: 850px; top: 250px">Borrar apuesta</label>
+        <label class="switch" style="position:absolute; left: 850px; top: 270px">
+            <input type="checkbox" id="delete_bet">
+            <span class="slider round"></span>
+        </label>
+        <label id="available_coins" style="position:absolute; left: 850px; top: 320px"></label>
+        <label id="betted_coins" style="position:absolute; left: 850px; top: 340px"></label>
+    </div>
+</body>
+</html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        buttons_setup();
+        get_coins(); // From servers
+    });
+</script>

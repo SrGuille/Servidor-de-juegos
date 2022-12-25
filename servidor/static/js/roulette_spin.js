@@ -42,11 +42,27 @@ async function spin_roulette()
     chosen_number = roulette_numbers[Math.floor(crutial_degrees / numbers_width)];
     roulette.classList.add("spin_animation");
 
+    roulette_is_spinning();
+
     await new Promise(r => setTimeout(r, 9000));
     document.getElementById("result").innerHTML = chosen_number;
 
     await new Promise(r => setTimeout(r, 5000));
     send_roulette_result(chosen_number);
+}
+
+// Tell server that roulette is spinning so that new bets are not accepted
+function roulette_is_spinning()
+{
+    $.ajax({
+        url: '../roulette_is_spinning/',
+        type: 'GET',
+        contentType: 'application/json;charset=UTF-8',
+        success: function(response)
+        {
+            console.log(response);
+        }
+    });
 }
 
 function send_roulette_result(result)
