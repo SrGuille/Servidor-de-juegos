@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Servidor de juegos</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+</head>
+<body>
+    <div id="register_form">
+        <form action="./register_player/" method="GET">
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" required>
+            <input onclick="register_name()" type="submit" value="Register">
+        </form>
+    </div>
+</body>
+<script>
+    // JS session storage
+    function register_name() 
+    {
+        sessionStorage.setItem("player_name", document.getElementById("name").value);
+    }
+</script>
+</html>
