@@ -26,9 +26,6 @@ async function get_ranking()
             }
         }
     });
-
-    create_prizes_roulette()
-
 }
 
 function create_prizes_roulette()

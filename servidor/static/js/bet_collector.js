@@ -7,6 +7,7 @@ if(player_name == null) //If the player is not logged in, redirect to the login 
 
 bets = []
 coin_bet_number = 1;
+coin_bet_index = 0;
 total_coins = 0;
 available_coins = 0;
 
@@ -20,8 +21,9 @@ function get_coins()
         data: {player_name:player_name},
         success: function(response)
         {
-            player_coins = parseInt(response.player_coins);
-            document.getElementById("available_coins").innerHTML = player_coins + " monedas disponibles";
+            total_coins = parseInt(response.player_coins);
+            available_coins = total_coins;
+            document.getElementById("available_coins").innerHTML = available_coins + " monedas disponibles";
             document.getElementById("betted_coins").innerHTML = 0 + " monedas apostadas";
         }
     });
@@ -48,7 +50,9 @@ function find_bet(bet)
 // Function to bet or unbet a number
 function bet_unbet(button) 
 {
-    if(coin_bet_number > 0)
+    is_delete_mode = document.getElementById("delete_bet").checked
+
+    if(is_delete_mode == false)
     {
         bet(button);
     }
@@ -69,8 +73,8 @@ function bet(button)
         //If the bet is already in the list, change the number of coins
         if(bet_pos != -1)
         {
-            bets[bet_pos].coins += coin_bet_number;
-            //new_opacity = bets[bet_pos].coins * 10;
+            bets[bet_pos].amount += coin_bet_number;
+            //new_opacity = bets[bet_pos].amount * 10;
         }
         else //If not, add it to the list
         {
@@ -117,7 +121,7 @@ function send_bets()
     
     //Send using set_bets django view
     $.ajax({
-        url: '../send_bets/',
+        url: '../send_player_bets/',
         type: 'GET',
         data: {bets:player_bets},
         contentType: 'application/json;charset=UTF-8',
@@ -128,14 +132,12 @@ function send_bets()
 }
 
 // Function to change the number of coins to bet
-function change_bet_coins() {
-    coin_bet_number = (coin_bet_number + 1) % 4;
+function change_bet_coins() 
+{
+    options = [1, 5, 10, 20];
+    coin_bet_index = (coin_bet_index + 1) % 4;
+    coin_bet_number = options[coin_bet_index];
+
     document.getElementById("group_coins_bet").innerHTML = "Apostar: " + coin_bet_number + " moneda(s)";
     console.log(document.getElementById("group_coins_bet").innerHTML)
-
-    if(coin_bet_number == 0)
-    {
-        document.getElementById("group_coins_bet").innerHTML = "Retirar apuesta";
-    }
-
 }
