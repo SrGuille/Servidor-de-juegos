@@ -1,0 +1,82 @@
+/* CSS variable for rotation degrees*/
+:root {
+    --rotation_degrees: 0deg;
+}
+
+#result{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    text-shadow: 0px 0px 10px black;
+}
+
+#indicator{
+    width: 50px;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#roulette{
+    width: 512px;
+    height: 512px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -25px;
+}
+
+.spin_animation{
+    animation: 10s cubic-bezier(0.4, 1.0, 0.0, 1.0) 0s 1 normal both running spin
+}
+
+@keyframes spin{
+    100%{transform: rotateZ(var(--rotation_degrees))}
+}
+
+.button-third{
+    position: absolute;
+	padding: 28px 108px;
+    border: none !important;
+    opacity: 0%;
+    background-color: rgb(122, 128, 0);
+}
+    
+.button-half{
+    position: absolute;
+	padding: 25px 52px;
+    border: none !important;
+    opacity: 0%;
+    background-color: rgb(122, 128, 0);
+}
+
+.button-number{
+    position: absolute;
+	padding: 34px 25px;
+    border: none !important;
+    opacity: 0%;
+    background-color: rgb(122, 128, 0);
+}
+
+.button-row{
+    position: absolute;
+	padding: 34px 26px;
+    border: none !important;
+    opacity: 0%;
+    background-color: rgb(122, 128, 0);
+}
+
+.button-send{
+    position: absolute;
+	padding: 25px 30px;
+    border: none !important;
+    border-radius: 50px;
+    background-color: rgb(122, 128, 0);
+}
+
