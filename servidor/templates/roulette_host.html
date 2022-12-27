@@ -12,13 +12,13 @@
         <img id="indicator" src="{% static 'img/indicator.png' %}"/>
     </row>
     <row>
-        <img onhover="spin_roulette()" id="roulette" src="{% static 'img/roulette_img.png' %}"/>
+        <img id="roulette" src="{% static 'img/roulette_img.png' %}"/>
     </row>
     <div id="result"></div>
 </body>
 </html>
 <script>
     document.addEventListener("DOMContentLoaded", function(event) {
-        wait_for_all_players();
+        wait_for_all_players_and_run();
     });
 </script>

@@ -3,6 +3,7 @@
     --rotation_degrees: 0deg;
 }
 
+/* --- Result of roulette --- */
 #result{
     width: 100%;
     height: 100%;
@@ -15,6 +16,7 @@
     text-shadow: 0px 0px 10px black;
 }
 
+/* --- Roulette indicator image --- */
 #indicator{
     width: 50px;
     height: auto;
@@ -23,6 +25,7 @@
     margin-right: auto;
 }
 
+/* --- Casino Roulette image --- */
 #roulette{
     width: 512px;
     height: 512px;
@@ -32,13 +35,33 @@
     margin-top: -25px;
 }
 
-.spin_animation{
-    animation: 10s cubic-bezier(0.4, 1.0, 0.0, 1.0) 0s 1 normal both running spin
+/* --- Casino Roulette image animation --- */
+.roulette_spin_animation{
+    animation-duration: 10s;
+    animation-timing-function: cubic-bezier(0.4, 1.0, 0.0, 1.0);
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: both;
+    animation-play-state: running;
+    animation-name: spin;
+}
+
+/* --- Pie Roulettes image animation --- */
+.pie_spin_animation{
+    animation-duration: 5s;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.5, 1.0);
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: both;
+    animation-play-state: running;
+    animation-name: spin;
 }
 
 @keyframes spin{
     100%{transform: rotateZ(var(--rotation_degrees))}
 }
+
+/* --- Roulette invisible buttons --- */
 
 .button-third{
     position: absolute;
@@ -80,6 +103,7 @@
     background-color: rgb(122, 128, 0);
 }
 
+/* --- Slider button for delete bets --- */
 /* The switch - the box around the slider */
 .switch {
     position: relative;
