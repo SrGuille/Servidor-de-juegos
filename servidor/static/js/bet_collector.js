@@ -13,7 +13,6 @@ available_coins = 0;
 
 function get_coins() 
 {
-    //TODO Get the coins from the server
     $.ajax({
         url: '../get_player_coins/',
         type: 'GET',
@@ -126,7 +125,7 @@ function send_bets()
         data: {bets:player_bets},
         contentType: 'application/json;charset=UTF-8',
         success: function(response) {
-            console.log(response);
+            window.location.reload();
         }
     });
 }

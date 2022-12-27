@@ -5,12 +5,10 @@ from . import main_controller
 
 players_lock = threading.Lock()
 
-is_roulette_spinning = False
-
-# Register player bets only if roulette is not spinning
+# Register player bets only if the roulette is not spinning
 def register_player_bets(json_str):
-    global is_roulette_spinning
-    if(not is_roulette_spinning):
+    listen_client_calls = main_controller.get_listen_client_calls()
+    if(listen_client_calls):
         bets = json.loads(json_str) #Convert json to dict
         main_controller.get_players_lock().acquire()
         players = main_controller.get_players()
@@ -20,45 +18,16 @@ def register_player_bets(json_str):
                 list_bets = json.loads(list_bets) #Convert string to list
                 for player_bet in list_bets: #Add bets to player
                     bet = models.Bet(player_bet['type'], player_bet['amount'])
-                    player.bets.append(bet) #Add bet to player
+                    player.elements.append(bet) #Add bet to player
                     player.coins -= bet.amount #Substract coins
         print_players(players)
         main_controller.get_players_lock().release()
-
-def roulette_is_spinning():
-    global is_roulette_spinning
-    is_roulette_spinning = True
-
-# Empty the bets list of all players
-def reset_bets():
-    global is_roulette_spinning
-    main_controller.get_players_lock().acquire()
-    players = main_controller.get_players()
-    for player in players:
-        player.bets = []
-    print_players(players)
-    main_controller.get_players_lock().release()
-    is_roulette_spinning = False
-
-def get_remaining_bets():
-    main_controller.get_players_lock().acquire()
-    players = main_controller.get_players()
-    number_players = len(players)
-    number_bets = 0
-
-    for player in players:
-        if(len(player.bets) > 0): #If player has bets
-            number_bets += 1
-
-    main_controller.get_players_lock().release()
-
-    return number_players - number_bets
 
 def print_players(players):
     for player in players:
         print(f"Name: {player.name}")
         print(f"Coins: {player.coins}")
-        for bet in player.bets:
+        for bet in player.elements:
             print(f"Bet: {bet.type}")
             print(f"Amount: {bet.amount}")
 
@@ -109,7 +78,7 @@ def assign_prizes(result):
     main_controller.get_players_lock().acquire()
     players = main_controller.get_players()
     for player in players:
-        for bet in player.bets:
+        for bet in player.elements:
 
             # If bet is winner, add prize
             if (bet.type in winner_bets):

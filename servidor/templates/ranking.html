@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="{% static 'js/ranking.js' %}"></script>
+    <script src="{% static 'js/game_redirects.js' %}"></script>
 </head>
 <body>
     <div>
@@ -16,14 +17,21 @@
             </tr>
         </table>
     </div>
-    <div id="prizes_roulette">
+    <div id="players_roulette_div">
 
     </div>
+    <div id="prizes_roulette_div">
+
+    </div>
+
+    <div id="result"></div>
 </body>
 <script>
-        document.addEventListener("DOMContentLoaded", function(event) {
-            get_ranking();
-            create_prizes_roulette();
+        document.addEventListener("DOMContentLoaded", function(event) 
+        {
+            get_ranking_from_scores();
+            get_available_prizes();
+            create_and_spin_roulettes();
         });
 </script>
 </html>

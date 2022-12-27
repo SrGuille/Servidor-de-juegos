@@ -12,7 +12,7 @@
         <form action="./register_player/" method="GET">
             <label for="name">Nombre:</label>
             <input type="text" id="name" name="name" required>
-            <input onclick="register_name()" type="submit" value="Register">
+            <input onclick="register_name()" type="submit" value="Registro/Login">
         </form>
     </div>
 </body>
@@ -20,7 +20,9 @@
     // JS session storage
     function register_name() 
     {
-        sessionStorage.setItem("player_name", document.getElementById("name").value);
+        // Will be shared between all pages
+        name = document.getElementById("name").value;
+        sessionStorage.setItem("player_name", name);
     }
 </script>
 </html>
