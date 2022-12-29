@@ -25,7 +25,7 @@ SECRET_KEY = "REDACTED-ROTATE-THIS"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.94.50', '192.168.1.179', '192.168.1.136']
+ALLOWED_HOSTS = ['192.168.94.50', '192.168.1.179', '192.168.1.136','192.168.1.29']
 
 
 # Application definition
