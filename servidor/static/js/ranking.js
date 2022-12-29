@@ -82,13 +82,15 @@ async function create_and_spin_roulettes()
     await new Promise(r => setTimeout(r, 5000));
 
     players_roulette_div = document.getElementById("players_roulette_div");
-    players_roulette_div = document.getElementById("prizes_roulette_div");
+    prizes_roulette_div = document.getElementById("prizes_roulette_div");
 
     await $.ajax({
         url: '../create_roulettes/',
         type: 'GET',
         contentType: 'application/json;charset=UTF-8',
     });
+
+    document.getElementById("ranking").style="display:none;";
 
     players_roulette_img = document.createElement("img");
     players_roulette_img.id = "players_roulette";
@@ -98,16 +100,17 @@ async function create_and_spin_roulettes()
     prizes_roulette_img = document.createElement("img");
     prizes_roulette_img.id = "prizes_roulette";
     prizes_roulette_img.src = "/static/img/prizes_roulette.png";
-    players_roulette_div.appendChild(prizes_roulette_img);
+    prizes_roulette_div.appendChild(prizes_roulette_img);
 
     await new Promise(r => setTimeout(r, 5000));
+
     // Spin the roulettes
     winner = spin_roulette(players_roulette_img, players_prob, candidate_players).player_name;
     prize = spin_roulette(prizes_roulette_img, prizes_prob, candidate_prizes).type;
 
     await new Promise(r => setTimeout(r, 6000));
 
-    document.getElementById("result").innerHTML = winner + " ha ganado un " + prize;
+    document.getElementById("result").innerHTML = winner + " ha ganado <br> un " + prize;
 
     await new Promise(r => setTimeout(r, 10000));
 
@@ -150,7 +153,7 @@ function find_roulette_result(spin_degrees, probs, candidates)
         }
     }
 
-    console('Error: spin percentage is greater than 1');
+    console.log('Error: spin percentage is greater than 1');
     // If the percentage is greater than 1, we return the last player
     return candidates[length(candidates) - 1];
 }
@@ -164,7 +167,7 @@ function send_prize_winner(winner, prize)
         contentType: 'application/json;charset=UTF-8',
         success: function(response) 
         {
-            play_next_game();
+            //play_next_game();
         }
     });
 }

@@ -41,7 +41,7 @@ async function spin_roulette()
     tell_server_to_stop_listening_calls();
 
     await new Promise(r => setTimeout(r, 9000));
-    document.getElementById("result").innerHTML = chosen_number;
+    document.getElementById("result-spin").innerHTML = chosen_number;
 
     await new Promise(r => setTimeout(r, 5000));
     send_roulette_result(chosen_number);
