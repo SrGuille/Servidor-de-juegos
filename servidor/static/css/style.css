@@ -17,7 +17,8 @@ body {
 .character{
     position: absolute;
     background-color: black;
-    padding: 50px 50px;
+    padding: 25px 25px;
+    margin: 25px;
 }
 
 /* CSS variable for rotation degrees*/
