@@ -21,3 +21,9 @@ class Prize():
         self.prob = prob
         self.value = value
         self.amount = 0 #Will be incremented when players are registered
+
+# For hangman
+class Guess():
+    def __init__(self, letter, apperances):
+        self.letter = letter
+        self.apperances = 0

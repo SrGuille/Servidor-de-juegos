@@ -3,6 +3,13 @@ var players_prob = [];
 var candidate_prizes = [];
 var prizes_prob = []
 
+async function get_ranking_and_spin_roulettes()
+{
+    await get_ranking_from_scores();
+    await get_available_prizes();
+    create_and_spin_roulettes();
+}
+
 // Get the players scores and create the ranking table
 async function get_ranking_from_scores()
 {
@@ -17,6 +24,8 @@ async function get_ranking_from_scores()
             // Remove the players with 0 coins
             candidate_players = all_players.map(function(i) {if(i.coins > 0) return i;});
             players_prob = candidate_players.map(x => x.coins / total_coins);
+            console.log(candidate_players)
+            console.log(players_prob)
         }
     });
 
@@ -34,6 +43,8 @@ async function get_available_prizes()
         {
             candidate_prizes = all_prizes.map(function(i) {if(i.amount > 0) return i;});
             prizes_prob = candidate_prizes.map(x => x.prob);
+            console.log(candidate_prizes)
+            console.log(prizes_prob)
         }
     });
 
@@ -138,6 +149,10 @@ function find_roulette_result(spin_degrees, probs, candidates)
             spin_percentage -= probs[i];
         }
     }
+
+    console('Error: spin percentage is greater than 1');
+    // If the percentage is greater than 1, we return the last player
+    return candidates[length(candidates) - 1];
 }
 
 function send_prize_winner(winner, prize)

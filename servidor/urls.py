@@ -1,5 +1,5 @@
 from django.urls import path
-from . import roulette_views, main_views
+from . import main_views, roulette_views, hangman_views
 
 urlpatterns = [
     path('', main_views.login_render, name='login_render'),
@@ -21,4 +21,7 @@ urlpatterns = [
     path('roulette_client/', roulette_views.roulette_client_render, name='roulette_client_render'),
     path('send_player_bets/', roulette_views.send_player_bets, name='send_player_bets'),
     path('send_roulette_result/', roulette_views.send_roulette_result, name='send_roulette_result'),
+
+    path('hangman_host/', hangman_views.hangman_host_render, name='hangman_host_render'),
+    path('hangman_client/', hangman_views.hangman_client_render, name='hangman_client_render'),
 ]

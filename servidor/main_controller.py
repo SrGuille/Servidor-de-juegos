@@ -139,14 +139,14 @@ def create_prizes_roulette():
 
     sizes = np.array(sizes)
 
-    create_roulette_image(labels, sizes, 90, False, 0.5, 'prizes_roulette')
+    create_roulette_image(labels, sizes, 90, False, 0.3, 'prizes_roulette')
 
 # Creates the roulette image (first delete it if it exists)
 def create_roulette_image(labels, sizes, startangle, counterclock, labeldistance, filename):
     plt.pie(sizes, labels=labels, startangle=startangle, counterclock = counterclock, labeldistance=labeldistance)
     if(os.path.exists(f'servidor/static/img/{filename}.png')):
         os.remove(f'servidor/static/img/{filename}.png')
-    plt.savefig(f'servidor/static/img/{filename}.png', transparent=True, dpi=300, bbox_inches='tight')
+    plt.savefig(f'servidor/static/img/{filename}.png', transparent=True, dpi=150, bbox_inches='tight')
     plt.close()
 
 def get_players():
@@ -182,6 +182,21 @@ def reset_elements():
     players_lock.release()
     listen_client_calls = True
 
+# Give to the other available prizes the proportional probability of the out of stock prize
+def adjust_prizes_probabilities(out_of_stock_prize):
+    out_of_stock_prob = out_of_stock_prize.prob
+    available_prizes = []
+    sum_available_prizes_prob = 0
+    num_available_prizes = 0
+    for prize in prizes:
+        if(prize.amount > 0):
+            sum_prizes_prob += prize.prob
+            available_prizes.append(prize)
+            num_available_prizes += 1
+    
+    for prize in available_prizes:
+        prize.prob += (out_of_stock_prob * prize.prob) / sum_available_prizes_prob
+
 # Register that the player has paid for the prize and the prize has been given
 def register_prize_winner(winner, prize_type):
     players_lock.acquire()
@@ -190,6 +205,9 @@ def register_prize_winner(winner, prize_type):
     if(player != None):
         player.coins -= prize.value
         prize.amount -= 1
+
+    if(prize.amount == 0): # If there are no more prizes of this type
+        adjust_prizes_probabilities(prize)
     players_lock.release()
     print_players()
     print_prizes()

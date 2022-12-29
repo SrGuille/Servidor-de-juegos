@@ -11,25 +11,16 @@ def register_player_bets(json_str):
     if(listen_client_calls):
         bets = json.loads(json_str) #Convert json to dict
         main_controller.get_players_lock().acquire()
-        players = main_controller.get_players()
-        for player in players: #Find player
-            if(player.name == bets['player_name']):
-                list_bets = bets['bets']
-                list_bets = json.loads(list_bets) #Convert string to list
-                for player_bet in list_bets: #Add bets to player
-                    bet = models.Bet(player_bet['type'], player_bet['amount'])
-                    player.elements.append(bet) #Add bet to player
-                    player.coins -= bet.amount #Substract coins
-        print_players(players)
+        player = main_controller.get_player(bets['player_name'])
+        if(player != None):
+            list_bets = bets['bets']
+            list_bets = json.loads(list_bets) #Convert string to list
+            for player_bet in list_bets: #Add bets to player
+                bet = models.Bet(player_bet['type'], player_bet['amount'])
+                player.elements.append(bet) #Add bet to player
+                player.coins -= bet.amount #Substract coins
+        main_controller.print_players()
         main_controller.get_players_lock().release()
-
-def print_players(players):
-    for player in players:
-        print(f"Name: {player.name}")
-        print(f"Coins: {player.coins}")
-        for bet in player.elements:
-            print(f"Bet: {bet.type}")
-            print(f"Amount: {bet.amount}")
 
 def compute_winner_bets(result):
     result = int(result)
@@ -89,6 +80,6 @@ def assign_prizes(result):
                 else:
                     player.coins += bet.amount * 36
 
-    print_players(players)
+    main_controller.print_players()
     main_controller.get_players_lock().release()
                 
