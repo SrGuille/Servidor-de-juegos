@@ -5,20 +5,9 @@ from . import main_controller
 import random
 
 num_moves_per_step = 3
-num_steps_per_round = 30
 team_names = ['Azul', 'Naranja']
 teams = [[], []]
-board = []
-rows = 10
-cols = 10
-
-# Initialize the board with half of the cells for each team
-def create_board():
-    global board
-    board = [[0 for x in range(cols)] for y in range(rows)] # Initialize the board
-    random_cells = random.sample(range(0, rows * cols - 1), rows * cols // 2) # Random cells for team orange
-    for cell in random_cells:
-        board[cell // cols][cell % cols] = 1
+coins_per_second = 5
 
 # Register the move if the player has not reached the maximum number of moves
 def register_player_move(player_name, move):
@@ -34,7 +23,7 @@ def register_player_move(player_name, move):
         main_controller.get_players_lock().release()
 
 # Returns the result of the round
-def compute_democracy_move():
+def get_democratic_move():
     main_controller.get_players_lock().acquire()
     players = main_controller.get_players()
     forces = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
@@ -51,7 +40,7 @@ def compute_democracy_move():
 
 # Assign players to 2 teams randomly (choose a player and add it to a team, then choose another player and add it to the other team)
 # In case there is an odd number of players, one team will have one more player
-def make_two_teams(players):
+def create_teams(players):
     for i in range(0, len(players), 2):
         team = random.randint(0, 1)
         teams[team].append(players[i])
@@ -69,8 +58,30 @@ def get_my_team(player_name):
         team_counter += 1
     return None
 
-def get_teams():
-    return teams
+def send_colors_per_second(colors_per_second):
+    number_blue = 0
+    number_orange = 0
 
+    for color in colors_per_second:
+        if(color == 0):
+            number_blue += 1
+
+        else:
+            number_orange += 1
+
+    if(number_blue != number_orange): # There is a winner
+        if(number_blue > number_orange):
+            winner_team = 0
+        else:
+            winner_team = 1
+
+        winner_advantage = abs(number_blue - number_orange)
+        give_prizes(winner_team, winner_advantage)
+    
+# Give prizes to the winner team
+def give_prizes(winner_team, winner_advantage):
+    for team in teams[winner_team]:
+        for player in team:
+            player.coins += winner_advantage * coins_per_second
 
     
