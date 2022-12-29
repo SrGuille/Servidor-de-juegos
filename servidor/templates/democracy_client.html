@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Ranking</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="{% static 'js/democracy_board.js' %}"></script>
+</head>
+<body>
+    <div id="team"></div>
+    <div id="remote_control">
+        <button id="up" onclick="send_move('up')">Up</button>
+        <button id="down" onclick="ssend_move('down')">Down</button>
+        <button id="left" onclick="send_move('left')">Left</button>
+        <button id="right" onclick="send_move('right')">Right</button>
+    </div>
+</body>
+<script>
+        document.addEventListener("DOMContentLoaded", function(event) 
+        {
+            get_team();
+        });
+</script>
+</html>

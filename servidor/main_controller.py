@@ -191,7 +191,7 @@ def adjust_prizes_probabilities(out_of_stock_prize):
     num_available_prizes = 0
     for prize in prizes:
         if(prize.amount > 0):
-            sum_prizes_prob += prize.prob
+            sum_available_prizes_prob += prize.prob
             available_prizes.append(prize)
             num_available_prizes += 1
     
