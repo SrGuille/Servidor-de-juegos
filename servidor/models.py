@@ -3,10 +3,11 @@ from django.db import models
 # Create your models here.
 
 class Player():
-    def __init__(self, name):
+    def __init__(self, name, id):
         self.name = name
+        self.id = id
         self.logged = True
-        self.coins = 100 #Initial coins
+        self.coins = 200 #Initial coins
         self.elements = [] #List of game elements
 
 # For roulette and multibandits

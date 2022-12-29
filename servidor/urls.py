@@ -1,5 +1,5 @@
 from django.urls import path
-from . import main_views, roulette_views, hangman_views
+from . import main_views, roulette_views, hangman_views, democracy_views
 
 urlpatterns = [
     path('', main_views.login_render, name='login_render'),
@@ -24,4 +24,10 @@ urlpatterns = [
 
     path('hangman_host/', hangman_views.hangman_host_render, name='hangman_host_render'),
     path('hangman_client/', hangman_views.hangman_client_render, name='hangman_client_render'),
+
+    path('send_hangman_word/', hangman_views.send_hangman_word, name='send_hangman_word'),
+    path('send_hangman_letter/', hangman_views.send_hangman_letter, name='send_hangman_letter'),
+
+    path('democracy_host/', democracy_views.democracy_host_render, name='democracy_host_render'),
+    path('democracy_client/', democracy_views.democracy_client_render, name='democracy_client_render'),
 ]

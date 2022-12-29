@@ -6,15 +6,20 @@ import random
 
 num_moves_per_step = 3
 num_steps_per_round = 30
-team_names = ['Amarillo', 'Blanco']
+team_names = ['Azul', 'Naranja']
 teams = [[], []]
 board = []
-sizeX = 9
-sizeY = 9
+rows = 10
+cols = 10
 
+# Initialize the board with half of the cells for each team
 def create_board():
     global board
-    board = [[0] * 10 for i in range(10)]
+    board = [[0 for x in range(cols)] for y in range(rows)] # Initialize the board
+    random_cells = random.sample(range(0, rows * cols - 1), rows * cols // 2) # Random cells for team orange
+    for cell in random_cells:
+        board[cell // cols][cell % cols] = 1
+
 # Register the move if the player has not reached the maximum number of moves
 def register_player_move(player_name, move):
     listen_client_calls = main_controller.get_listen_client_calls()
@@ -56,10 +61,12 @@ def make_two_teams(players):
 
 # Returns the team of a player
 def get_my_team(player_name):
+    team_counter = 0
     for team in teams:
         for player in team:
             if(player.name == player_name):
-                return team
+                return team_names[team_counter]
+        team_counter += 1
     return None
 
 def get_teams():
