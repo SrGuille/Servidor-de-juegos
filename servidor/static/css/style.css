@@ -3,6 +3,15 @@
 body {
     font-family: 'Poppins' !important;
 }
+/* --- Democracy game --- */
+.blue-cell{
+    position: absolute;
+    background-color: blue;
+}
+.orange-cell{
+    position: absolute;
+    background-color: orange;
+}
 
 /* CSS variable for rotation degrees*/
 :root {
@@ -21,6 +30,7 @@ body {
 .row-gselector{
     margin-top: 40vh !important;
 }
+
 /* --- Result of roulette --- */
 #result{
     width: 100%;
