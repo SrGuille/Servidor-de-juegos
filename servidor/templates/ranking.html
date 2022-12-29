@@ -15,26 +15,32 @@
     <!--Libreria animaciones-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
-<body>
+<body class="fondo">
     <div>
-        <table id="ranking">
-            <tr>
-                <th>Nombre</th>
-                <th>Monedas</th>
-            </tr>
+        <p class="text-center mt-5 fs-1 fw-bold">Clasificación</p>
+        <table class="table table-striped animate__animated animate__fadeIn animate__slow" id="ranking">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Monedas</th>
+                </tr>
+            </thead>
+            <tbody id="tbody-ranking">
+
+            </tbody>
         </table>
     </div>
     <div class="row box-roulette">
         <div class="col-6 align-content-center">
-            <img class="indicador1" src="{% static 'img/indicator.png' %}" alt="">
+            <img id="indicador1" class="indicador1" src="{% static 'img/indicator.png' %}" alt="">
             <div id="players_roulette_div"></div>
         </div>
         <div class="col-6 justify-content-center">
-            <img class="indicador2" src="{% static 'img/indicator.png' %}" alt="">
+            <img id="indicador2" class="indicador2" src="{% static 'img/indicator.png' %}" alt="">
             <div id="prizes_roulette_div"></div>
         </div>
     </div>
-    <div id="result"></div>
+    <div class="animate__animated animate__fadeIn animate__slow" id="result"></div>
 </body>
 <script>
         document.addEventListener("DOMContentLoaded", function(event) 
