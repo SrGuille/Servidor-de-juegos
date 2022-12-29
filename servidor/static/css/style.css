@@ -316,11 +316,35 @@ body {
 }
 
 .button-send{
-    position: absolute;
-	padding: 20px 30px;
-    border: none !important;
-    border-radius: 50px;
-    background-color: rgb(122, 128, 0);
+    cursor: pointer;
+    display: inline-block;
+    -webkit-box-sizing:border-box;
+       -moz-box-sizing:border-box;
+            box-sizing:border-box;
+    min-width:100px;
+    padding: 22px 33px;
+    font-family: 'Lobster', cursive;
+    font-size: 20px;
+    line-height: 26px;
+    text-decoration: none;
+    color: #FFF;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.75);
+    background: #ff512b;
+    outline: none;
+    border-radius: 15px;
+    border: 1px solid #4c0300;
+    box-shadow:
+      inset 1px 1px 0px rgba(255,255,255,0.25), /* highlight */
+      inset 0 0 6px #a23227, /* inner glow */
+      inset 0 80px 80px -40px #ac3223, /* gradient */
+      1px 1px 3px rgba(0,0,0,0.75); /* shadow */
+      
+    position: relative;
+    overflow: visible; /* IE9 & 10 */
+    -webkit-transition: 500ms linear;
+       -moz-transition: 500ms linear;
+         -o-transition: 500ms linear;
+            transition: 500ms linear;
 }
 
 /* --- Slider button for delete bets --- */

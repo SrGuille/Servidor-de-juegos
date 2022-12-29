@@ -7,13 +7,27 @@
     <script src="{% static 'js/buttons_setup.js' %}"></script>
     <script src="{% static 'js/bet_collector.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-
+    <!--Bootstrap 5.1.3-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <!--Libreria animaciones-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
-<body>
+<body class="fondo">
     <div id="buttons_row">
         <img id="apuesta" src="{% static 'img/roulette_bet.png' %}"/>
-        <button id="send" onclick="send_bets()" class="button-send" style="left: 850px; top: 100px">Enviar apuesta</button>
-        <button id="group_coins_bet" onclick="change_bet_coins()" class="button-send" style="left: 850px; top: 175px">Apostar: 1 moneda(s)</button>
+        <div class="row">
+            <div class="col-3">
+                <button id="send" onclick="send_bets()" class="button-send">Enviar apuesta</button><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <button id="group_coins_bet" onclick="change_bet_coins()" class="button-send">Apostar: 1 moneda(s)</button><br>
+            </div>
+        </div>
         <!-- Rounded switch -->
         <label style="position:absolute; left: 850px; top: 250px">Borrar apuesta</label>
         <label class="switch" style="position:absolute; left: 850px; top: 270px">
