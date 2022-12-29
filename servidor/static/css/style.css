@@ -54,14 +54,44 @@ body {
 .caja-rondas{
     z-index: 2;
     position: relative;
-    top: -510px;
+    top: -600px;
+    left: 105px;
+    background: antiquewhite;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+    transition: 0.6s;
 }
-
+.caja-rondas:hover{
+    opacity: 1;
+    transition: 0.6s;
+}
+.caja-rondas h4{
+    top: 75px;
+    position: relative;
+    color: red;
+}
+.caja-rondas input{
+    width: 42px;
+    background-color: #7fffd400;
+    color: red;
+    border: none;
+    font-size: 35px;
+    top: 75px;
+    left: 10px;
+    position: relative;
+}
+.caja-rondas input:focus-visible{
+    border: none;
+    outline: none;
+}
 .caja-btn{
     position: relative;
-    top: -400px;
+    top: -600px;
 }
 .button-juego {
+    cursor: pointer;
     display: inline-block;
     -webkit-box-sizing:border-box;
        -moz-box-sizing:border-box;
