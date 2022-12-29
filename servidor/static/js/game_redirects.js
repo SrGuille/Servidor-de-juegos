@@ -3,10 +3,11 @@ redirects = ['../roulette_host/', '../hangman_host/', '../democracy_host/', '../
 // Set the game to play with rounds and redirect to it
 function set_play_game(game_number)
 {
-    table = document.getElementById("game_table");
-    game_row = table.rows[game_number + 1] // +1 because of the header
-    rounds = game_row.cells[1].children[0].value; // Value of the input
-
+    //table = document.getElementById("game_table");
+    rounds = document.getElementById('rounds' + game_number.toString()).value
+    //game_row = table.rows[game_number + 1] // +1 because of the header
+    //rounds = game_row.cells[1].children[0].value; // Value of the input
+    console.log(rounds);
     //Django view to set game
     $.ajax({
         url: '../set_game/',
