@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
     <!--Libreria animaciones-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
@@ -19,61 +20,47 @@
         <div class="row justify-content-center row-gselector text-center">
             <h1>Juegos</h1>
         <!--seleccion de juegos nueva-->
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
             <div class="col">
-              <div class="card">
-                <img src="../static/img/img-ruleta.png" class="card-img-top" alt="Problema con enlace de foto">
-                <div class="card-body">
-                  <h5 class="card-title">Ruleta</h5>
-                  <a onclick="set_play_game(0)">Jugar</a>
+              <div class="">
+                <img src="{% static 'img/img-proximamente_v2.png' %}" class="img-juegos animate__animated animate__bounceInDown animate__slow" alt="Problema con enlace de foto"/>
+                <div class="caja-btn animate__animated animate__fadeIn animate__slow">
+                  <h4 class="">Ruleta</h4>
+                  <a class="button-juego" onclick="set_play_game(0)">Jugar</a>
                 </div>
               </div>
             </div>
             <div class="col">
-              <div class="card">
-                <img src="../static/img/img-ahorcado.png" class="card-img-top" alt="Problema con enlace de foto">
-                <div class="card-body">
-                  <h5 class="card-title">Ahorcado</h5>
+              <div class="">
+                <img src="{% static 'img/img-proximamente_v2.png' %}" class="img-juegos animate__animated animate__bounceInDown animate__delay-1s" alt="Problema con enlace de foto">
+                <div class="caja-btn animate__animated animate__fadeIn animate__slow">
+                  <h4 class="">Ahorcado</h4>
+                  <a class="button-juego" onclick="set_play_game(1)">Jugar</a>
                 </div>
               </div>
             </div>
             <div class="col">
-              <div class="card">
-                <img src="../static/img/img-democracia.png" class="card-img-top" alt="Problema con enlace de foto">
-                <div class="card-body">
-                  <h5 class="card-title">Democracia</h5>
+              <div class="">
+                <img src="{% static 'img/img-proximamente_v2.png' %}" class="img-juegos animate__animated animate__bounceInDown animate__slow" alt="Problema con enlace de foto">
+                <div class="caja-btn animate__animated animate__fadeIn animate__slow">
+                  <h4 class="">Democracia</h4>
+                  <a class="button-juego" onclick="set_play_game(2)">Jugar</a>
                 </div>
               </div>
             </div>
-            <div class="col">
-              <div class="card">
-                <img src="../static/img/img-proximamente.png" class="card-img-top" alt="Problema con enlace de foto">
-                <div class="card-body">
-                  <h5 class="card-title">Proximamente</h5>
+            <div class="row mt-5">
+                <div class="col">
+                    <div class="caja-btn">
+                        <div class="">
+                            <p class="">Proximamente más juegos</p>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
+
         </div>
-
-
-
-            <div class="row text-center">
-                <div class="col-md-4 bg-danger">
-                    <a onclick="set_play_game(0)">Jugar</a>
-                </div>
-                <div class="col-md-4 bg-danger">
-                    <a onclick="set_play_game(1)">Jugar</a>
-                </div>
-                <div class="col-md-4 bg-danger">
-                    <a onclick="set_play_game(2)">Jugar</a>
-                </div>
-            </div>
-            <div class="row text-center">
-                <div class="col-md-4 bg-danger">
-                    <a onclick="set_play_game(3)">Jugar</a>
-                </div>
-            </div>
         <!--tabla seleccion antigua-->
+        <!--
         <table id="game_table">
             <thead>
                 <tr>
@@ -113,6 +100,7 @@
                 </tr>
             </tbody>
         </table>
+        -->
         </div>
     </div>
     <!-- Snow animation-->
