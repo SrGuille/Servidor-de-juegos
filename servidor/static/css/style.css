@@ -7,12 +7,12 @@ body {
 .blue-cell{
     position: absolute;
     background-color: blue;
-    padding: 100px 100px;
+    padding: 50px 50px;
 }
 .orange-cell{
     position: absolute;
     background-color: orange;
-    padding: 100px 100px;
+    padding: 50px 50px;
 }
 .character{
     position: absolute;
@@ -54,6 +54,7 @@ body {
 .caja-rondas{
     z-index: 2;
     position: relative;
+    top: -510px;
 }
 
 .caja-btn{
