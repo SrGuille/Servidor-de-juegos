@@ -4,23 +4,34 @@
     align-content: center;
     justify-content: center;
     align-items: center;
+    padding-top: 50px;
 }
 #ranking{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+    width: 50%;
+    text-align: center;
+    margin-top: 5%;
+    margin-inline: auto;
+}
+#ranking tr{
+    font-size: 28px;
 }
 .indicador1{
     width: 80px;
     height: auto;
     z-index: 2;
-    justify-content: center;
+    margin-left: 255px;
+    display: none;
+    position: relative;
+    top: 75px;
 }
 .indicador2{
     width: 80px;
     height: auto;
     z-index: 2;
-    justify-content: center;
+    margin-left: 255px;
+    display: none;
+    position: relative;
+    top: 75px;
 }
 /* --- General styles --- */
 @import url('https://fonts.googleapis.com/css?family=Poppins');
@@ -218,6 +229,7 @@ body {
     background-position: center;
     background-size: 800px;
     text-align: center;
+    display: none;
 }
 
 /* --- Roulette indicator image --- */

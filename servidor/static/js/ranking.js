@@ -53,7 +53,7 @@ async function get_available_prizes()
 // Sort the players scores by coins and create the ranking table
 function create_ranking_table(players_scores)
 {
-    ranking_table = document.getElementById("ranking");
+    ranking_table = document.getElementById("tbody-ranking");
     // Sort the players by coins in a copy of the array
     players_ranking = [...players_scores].sort((a, b) => (a.coins < b.coins) ? 1 : -1)
     total_coins = 0;
@@ -61,7 +61,6 @@ function create_ranking_table(players_scores)
     for(i = 0; i < players_ranking.length; i++)
     {
         ranking_row = document.createElement("tr");
-        
         player_name_cell = document.createElement("td");
         player_name_cell.innerHTML = players_ranking[i].player_name;
         ranking_row.appendChild(player_name_cell);
@@ -72,6 +71,7 @@ function create_ranking_table(players_scores)
         total_coins += parseInt(players_ranking[i].coins);
 
         ranking_table.appendChild(ranking_row);
+
     }
 
     return total_coins;
@@ -91,6 +91,9 @@ async function create_and_spin_roulettes()
     });
 
     document.getElementById("ranking").style="display:none;";
+    document.getElementById("result").style="display:flex;";
+    document.getElementById("indicador1").style="display:flex;";
+    document.getElementById("indicador2").style="display:flex;";
 
     players_roulette_img = document.createElement("img");
     players_roulette_img.id = "players_roulette";
