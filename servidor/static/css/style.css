@@ -1,3 +1,27 @@
+/* --- Ranking ---*/
+.box-roulette{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+#ranking{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.indicador1{
+    width: 80px;
+    height: auto;
+    z-index: 2;
+    justify-content: center;
+}
+.indicador2{
+    width: 80px;
+    height: auto;
+    z-index: 2;
+    justify-content: center;
+}
 /* --- General styles --- */
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 body {
@@ -163,35 +187,56 @@ body {
   }
 
 
-
-
-
 /* --- Result of roulette --- */
-#result{
+#result-spin{
     width: 100%;
-    height: 100%;
+    height: 110px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 50px;
+    font-size: 55px;
     font-weight: bold;
-    color: rgb(0, 0, 0);
+    color: #ffffff;
     text-shadow: 0px 0px 10px black;
+    background-image: url(../img/numero_ganador.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 330px;
+}
+#result{
+    width: 100%;
+    height: 340px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0px 0px 10px black;
+    background-image: url(../img/numero_ganador.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 800px;
+    text-align: center;
 }
 
 /* --- Roulette indicator image --- */
 #indicator{
-    width: 50px;
+    width: 80px;
     height: auto;
     display: block;
     margin-left: auto;
     margin-right: auto;
+    position: relative;
+    top: 45px;
+    left: 3px;
+    z-index: 2;
 }
 
 /* --- Casino Roulette image --- */
 #roulette{
-    width: 512px;
-    height: 512px;
+    width: 1000px;
+    height: 1000px;
     display: block;
     margin-left: auto;
     margin-right: auto;
