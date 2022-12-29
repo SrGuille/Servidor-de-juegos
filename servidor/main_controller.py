@@ -47,8 +47,9 @@ def get_active_game():
 # If it does not exist, it registers the player and adds a prize of each type
 def register_player(name):
     players_lock.acquire()
-    if(get_player(name) == None): # If player doesn't exists
-        players.append(models.Player(name))
+    if(get_player(name) == None): # If player doesn't exist
+        id = len(players) + 1
+        players.append(models.Player(name, id))
         add_prizes() # Player brings 1 prize of each type
     players_lock.release()
     print_players()
