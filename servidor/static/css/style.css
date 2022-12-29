@@ -7,10 +7,17 @@ body {
 .blue-cell{
     position: absolute;
     background-color: blue;
+    padding: 100px 100px;
 }
 .orange-cell{
     position: absolute;
     background-color: orange;
+    padding: 100px 100px;
+}
+.character{
+    position: absolute;
+    background-color: black;
+    padding: 50px 50px;
 }
 
 /* CSS variable for rotation degrees*/
@@ -31,7 +38,7 @@ body {
 .row-login{
     margin-top: 40vh !important;
 }
-
+ 
 
 /* --- Game selector --- */
 .row-gselector{
@@ -40,12 +47,17 @@ body {
 .img-juegos{
     width: 200px;
     position: relative;
-    top: -215px;
+    top: -400px;
+    opacity: 0,9;
+}
+.caja-rondas{
+    z-index: 2;
+    position: relative;
 }
 
 .caja-btn{
     position: relative;
-    top: -215px;
+    top: -400px;
 }
 .button-juego {
     display: inline-block;
