@@ -7,8 +7,8 @@ colors_per_second = Array();
 
 horizontal_step = 100;
 vertical_step = 100;
-initial_left = 200;
-initial_top = 20;
+initial_left = 700;
+initial_top = 10;
 
 var logical_board = new Array(rows);
 
