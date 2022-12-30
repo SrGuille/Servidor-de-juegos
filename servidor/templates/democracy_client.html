@@ -15,25 +15,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>    
 </head>
 <body>
-    <div id="team"></div>
-    <div class="row" id="remote_control" style="width: 145px;">
+    <div class="row" id="remote_control" style="width: 600px; margin-left: auto; margin-right: auto; 
+    margin-top: auto; margin-bottom: auto;">
         <div class="col d-flex justify-content-center">
-            <button id="up" onclick="send_move('up')">Up</button>
+            <button id="up" onclick="send_move('up')" style="padding: 50px;">ARRB</button>
         </div>
-
-        <div class="col-12">
-            <div class="row">
+        
+        <div class="col-10" style="margin-left: auto; margin-right: auto;">
+            <div class="row" style="text-align: center;">
                 <div class="col">
-                    <button id="left" onclick="send_move('left')">Left</button>
+                    <button id="left" onclick="send_move('left')" style="padding: 50px;">IZQU</button>
                 </div>
-                <div class="col">
-                    <button id="right" onclick="send_move('right')">Right</button>
+                <div class="col" style="margin-top: auto; margin-bottom: auto;">
+                    <label id="team" style="font-size: 20px; text-align: center;">EQUIPO</label>
+                </div>
+                <div class="col" >
+                    <button id="right" onclick="send_move('right')" style="padding: 50px;">DCHA</button>
                 </div>
             </div>
         </div>
 
         <div class="col d-flex justify-content-center">
-            <button id="down" onclick="send_move('down')">Down</button>
+            <button id="down" onclick="send_move('down')" style="padding: 50px;">ABAJ</button>
         </div>
     </div>
 </body>
