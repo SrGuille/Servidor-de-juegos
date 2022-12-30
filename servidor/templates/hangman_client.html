@@ -13,14 +13,14 @@
     <!--Libreria animaciones-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
-<body class="fondo">
+<body >
     <div class="container">
         <div class="row justify-content-center row-login" id="register_form">
             <div class="col-md-4 col-xs-12 text-center animate__animated animate__fadeIn animate__slow caja-login">
                 <form action="./register_player/" method="GET">
-                    <label class="form-label fs-2 fw-bold nombre" for="name">Tu nombre</label>
-                    <input class="form-control" type="text" id="name" name="name" required>
-                    <input class="button-juego" onclick="register_name()" type="submit" value="Jugar">
+                    <label class="form-label fs-2 fw-bold nombre" for="name">Introduce una letra o una frase</label>
+                    <input class="form-control" type="text" id="respuesta" name="respuesta" required>
+                    <input class="button-juego" onclick="register_name()" type="submit" value="Enviar">
                 </form>
             </div>
         </div>
