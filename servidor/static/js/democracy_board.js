@@ -16,9 +16,8 @@ async function play_game()
 {
     await load_board();
     await create_teams();
-    await new Promise(r => setTimeout(r, 5000)); //Wait 10 seconds
     tell_server_to_start_listening_calls()
-    await new Promise(r => setTimeout(r, 5000)); //Wait 10 seconds
+    await new Promise(r => setTimeout(r, 10000)); //Wait 10 seconds
     await countdown();
     await start_game();
     await new Promise(r => setTimeout(r, 5000)); //Wait 5 seconds
@@ -199,5 +198,5 @@ async function send_colors_per_second()
         contentType: 'application/json;charset=UTF-8'
     });
 
-    document.getElementById("result").innerHTML = response.winner_msj;
+    document.getElementById("result_democracy").innerHTML = response.winner_msj;
 }

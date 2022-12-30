@@ -145,12 +145,13 @@ def create_prizes_roulette():
 
     for prize in prizes:
         if(prize.amount > 0): # If there are prizes of this type
-            labels.append(prize.type)
+            label = prize.type.replace("Regalo", "R.")
+            labels.append(label)
             sizes.append(prize.prob)
 
     sizes = np.array(sizes)
 
-    create_roulette_image(labels, sizes, 90, False, 0.3, 'prizes_roulette')
+    create_roulette_image(labels, sizes, 90, False, 0.5, 'prizes_roulette')
 
 # Creates the roulette image (first delete it if it exists)
 def create_roulette_image(labels, sizes, startangle, counterclock, labeldistance, filename):
@@ -225,9 +226,7 @@ def print_players():
     for player in players:
         print(f"Name: {player.name}")
         print(f"Coins: {player.coins}")
-        for bet in player.elements:
-            print(f"Bet: {bet.type}")
-            print(f"Amount: {bet.amount}")
+        print(f"Elements: {player.elements}")
 
 def print_prizes():
     for prize in prizes:
