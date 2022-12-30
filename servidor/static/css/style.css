@@ -232,6 +232,26 @@ body {
     display: none;
 }
 
+#palabra-ahorcado{
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: 45px;
+    text-align: center;
+}
+
+#ahorcado{
+    width: 300px;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: 45px;
+    left: 3px;
+    z-index: 2;
+}
+
 /* --- Roulette indicator image --- */
 #indicator{
     width: 80px;
