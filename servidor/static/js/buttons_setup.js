@@ -15,8 +15,8 @@ function load_regular_numbers_buttons()
     horizontal_step = 55;
     vertical_step = 73;
 
-    initial_left = 121;
-    initial_top = 54;
+    initial_left = 113;
+    initial_top = 45;
 
     //Create the buttons in numerical order to assign the correct id
     id = 1;
@@ -35,8 +35,8 @@ function load_regular_numbers_buttons()
 
 function load_third_buttons()
 {
-    initial_left = 121;
-    button_top = 275;
+    initial_left = 113;
+    button_top = 267;
     horizontal_step = 220;
 
     ids_th = ["1T", "2T", "3T"]
@@ -50,8 +50,8 @@ function load_third_buttons()
 
 function load_row_buttons()
 {
-    button_left = 781;
-    initial_top = 54;
+    button_left = 774;
+    initial_top = 45;
     vertical_step = 73;
 
     ids_row = ["1R", "2R", "3R"]
@@ -66,8 +66,8 @@ function load_row_buttons()
 
 function load_half_buttons()
 {
-    initial_left = 121;
-    button_top = 335;
+    initial_left = 113;
+    button_top = 327;
     horizontal_step = 110;
 
     ids_hf = ["1H", "E", "R", "B", "O", "2H"]
@@ -85,5 +85,5 @@ function buttons_setup()
     load_third_buttons();
     load_row_buttons();
     load_half_buttons();
-    add_button(60, 127, 0, "button-number");
+    add_button(50, 119, 0, "button-number");
 }
