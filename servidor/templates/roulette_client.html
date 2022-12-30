@@ -17,23 +17,31 @@
 </head>
 <body class="fondo">
     <div id="buttons_row">
-        <img id="apuesta" src="{% static 'img/roulette_bet.png' %}"/>
-        <div class="row" style="margin-left: auto;">
-            <div class="col-6">
-                <button id="send" onclick="send_bets()" class="button-send">Enviar apuesta</button><br>
+        <img id="apuesta" style="width: 500px; margin-top: 50px; margin-left: 200px;" src="{% static 'img/roulette_bet.png' %}"/>
+        
+        <div class="row" style="margin-left: 250px; ">
+            <div class="col-3">
+                <button id="send" onclick="send_bets()" class="button-send">Enviar</button><br>
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <button id="group_coins_bet" onclick="change_bet_coins()" class="button-send">Apostar: 1 moneda(s)</button><br>
             </div>
         </div>
-        <!-- Rounded switch -->
-        <label style="position:absolute; left: 850px; top: 250px">Borrar apuesta</label>
-        <label class="switch" style="position:absolute; left: 850px; top: 270px">
-            <input type="checkbox" id="delete_bet">
-            <span class="slider round"></span>
-        </label>
-        <label id="available_coins" style="position:absolute; left: 850px; top: 320px"></label>
-        <label id="betted_coins" style="position:absolute; left: 850px; top: 340px"></label>
+        
+        <div style="position:absolute; left: 700px; top: 100px">
+            <label style="font-size:20px">Borrar apuesta</label>
+            <label class="switch" >
+                <input type="checkbox" id="delete_bet">
+                <span class="slider round"></span>
+            </label>
+            <br>
+            <br>
+            <br>
+            <label id="available_coins" style="font-size:20px"></label>
+            <br>
+            <br>
+            <label id="betted_coins" style="font-size:20px"></label>
+        </div>
     </div>
 </body>
 </html>
