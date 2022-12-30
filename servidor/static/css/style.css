@@ -290,6 +290,7 @@ body {
     z-index: 2; 
     position: relative;
     font-size: 100px;
+    color: #ed3232;
 }
 
 /* --- Roulette indicator image --- */
@@ -345,7 +346,7 @@ body {
 
 .button-third{
     position: absolute;
-	padding: 28px 108px;
+	padding: 16px 62px;
     border: none !important;
     opacity: 0%;
     background-color: rgb(122, 128, 0);
@@ -353,7 +354,7 @@ body {
     
 .button-half{
     position: absolute;
-	padding: 25px 52px;
+	padding: 14px 30px;
     border: none !important;
     opacity: 0%;
     background-color: rgb(122, 128, 0);
@@ -361,7 +362,7 @@ body {
 
 .button-number{
     position: absolute;
-	padding: 34px 25px;
+	padding: 20px 14px;
     border: none !important;
     opacity: 0%;
     background-color: rgb(122, 128, 0);
@@ -369,7 +370,7 @@ body {
 
 .button-row{
     position: absolute;
-	padding: 34px 26px;
+	padding: 20px 14px;
     border: none !important;
     opacity: 0%;
     background-color: rgb(122, 128, 0);

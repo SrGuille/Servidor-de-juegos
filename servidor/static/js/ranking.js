@@ -170,7 +170,7 @@ function send_prize_winner(winner, prize)
         contentType: 'application/json;charset=UTF-8',
         success: function(response) 
         {
-            //play_next_game();
+            play_next_game();
         }
     });
 }
