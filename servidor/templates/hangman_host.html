@@ -4,16 +4,18 @@
 <head>
     <title>Roulette game</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/hangman_board.js' %}"></script>
+    <script src="{% static 'js/set_client_calls.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
     <row>
-        <img id="ahorcado" src="{% static 'img/ahorcado/ahorcado00.png' %}"/>
+        <img id="ahorcado" src="{% static 'img/ahorcado/ahorcado10.png' %}"/>
         <label id="ahorcados">tumadre<br>tupadre<br>tuojete</label>
     </row>
     <row>
         <div id="palabra-ahorcado">
-            <h1 "hueco-palabra">_ _ _ _ _ _&nbsp&nbsp&nbsp&nbsp_ _ _ _ _ _ _ _ _ _ _ _ _ _ _</h1>
+            <h1 id="hueco-palabra">_ _ _ _ _ _&nbsp&nbsp&nbsp&nbsp_ _ _ _ _ _ _ _ _ _ _ _ _ _ _</h1>
         </div>
     </row>
 </body>

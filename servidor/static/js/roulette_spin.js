@@ -1,6 +1,7 @@
 // Wait for all players to bet before spinning the roulette
 async function wait_for_all_players_and_run()
 {
+    tell_server_to_start_listening_calls();
     all_bets_sent = false;
     while (!all_bets_sent)
     {
@@ -45,20 +46,6 @@ async function spin_roulette()
 
     await new Promise(r => setTimeout(r, 5000));
     send_roulette_result(chosen_number);
-}
-
-// Tell server that roulette is spinning so that new bets are not accepted
-function tell_server_to_stop_listening_calls()
-{
-    $.ajax({
-        url: '../dont_listen_client_calls/',
-        type: 'GET',
-        contentType: 'application/json;charset=UTF-8',
-        success: function(response)
-        {
-            console.log(response);
-        }
-    });
 }
 
 function send_roulette_result(result)

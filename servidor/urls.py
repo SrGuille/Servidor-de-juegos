@@ -3,10 +3,12 @@ from . import main_views, roulette_views, hangman_views, democracy_views
 
 urlpatterns = [
     path('', main_views.login_render, name='login_render'),
+    path('ranking/', main_views.ranking_render, name='ranking_render'),
+    path('redirect_to_ready_game/', main_views.redirect_to_ready_game, name='redirect_to_ready_game'),
+    path('wait/', main_views.wait_render, name='wait_render'),
     path('game_selector/', main_views.game_selector_render, name='game_selector_render'),
     path('set_game/', main_views.set_game, name='set_game'),
     path('get_next_game/', main_views.get_next_game, name='get_next_game'),
-    path('ranking/', main_views.ranking_render, name='ranking_render'),
     path('register_player/', main_views.register_player, name='register_player'),
     path('get_remaining_interactions/', main_views.get_remaining_interactions, name='get_remaining_interactions'),
     path('get_players_scores/', main_views.get_players_scores, name='get_players_scores'),
@@ -14,6 +16,7 @@ urlpatterns = [
     path('create_roulettes/', main_views.create_roulettes, name='create_roulettes'),
     path('get_number_players/', main_views.get_number_players, name='get_number_players'),
     path('get_player_coins/', main_views.get_player_coins, name='get_player_coins'),
+    path('listen_client_calls/', main_views.listen_client_calls, name='listen_client_calls'),
     path('dont_listen_client_calls/', main_views.dont_listen_client_calls, name='dont_listen_client_calls'),
     path('send_prize_winner/', main_views.send_prize_winner, name='send_prize_winner'),
 
@@ -24,6 +27,9 @@ urlpatterns = [
 
     path('hangman_host/', hangman_views.hangman_host_render, name='hangman_host_render'),
     path('hangman_client/', hangman_views.hangman_client_render, name='hangman_client_render'),
+    path('create_sentence/', hangman_views.create_sentence, name='create_sentence'),
+    path('send_player_guess/', hangman_views.send_player_guess, name='send_player_guess'),
+    path('perform_step/', hangman_views.perform_step, name='perform_step'),
 
     path('democracy_host/', democracy_views.democracy_host_render, name='democracy_host_render'),
     path('democracy_client/', democracy_views.democracy_client_render, name='democracy_client_render'),

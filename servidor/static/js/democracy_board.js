@@ -146,6 +146,7 @@ function move_character(x_moves, y_moves)
 
 async function start_game()
 {
+    tell_server_to_start_listening_calls()
     round = 0;
     max_rounds = 30;
     while(round < max_rounds)
@@ -154,6 +155,7 @@ async function start_game()
         move_with_democracy();
         round += 1;
     }
+    tell_server_to_stop_listening_calls()
 }
 
 async function create_teams()

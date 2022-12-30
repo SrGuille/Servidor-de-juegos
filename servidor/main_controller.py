@@ -18,7 +18,7 @@ remaining_rounds = 1
 
 prizes = [models.Prize("Dulce", 0.4, 5), models.Prize("Regalo pequeño", 0.2, 20), models.Prize("Regalo mediano", 0.2, 30), models.Prize("Regalo grande", 0.2, 40)]
 
-listen_client_calls = True
+listen_client_calls = False
 
 # TODO Maybe init everything here
 def game_setup():
@@ -65,6 +65,13 @@ def get_player(name):
 
     return searched_player
 
+def get_player_elements(name):
+    players_lock.acquire()
+    player = get_player(name)
+    player_elements =  player.elements
+    players_lock.release()
+    return player_elements
+
 def get_prize(type):
     searched_prize = None
     for prize in prizes:
@@ -77,7 +84,10 @@ def get_prize(type):
 # Adds a prize of each type to the prizes list
 def add_prizes():
     for prize in prizes:
-        prize.amount += 1
+        if(prize.type == "Dulce"): # If it is a candy, a lot of them
+            prize.amount += 10
+        else:
+            prize.amount += 1
 
 # Gets how many players haven't interacted yet
 def get_remaining_interactions():
@@ -176,12 +186,10 @@ def get_player_coins(name):
 # Empty the bets list of all players
 def reset_elements():
     global listen_client_calls
-    players_lock.acquire()
     for player in players:
         player.elements = []
     print_players()
-    players_lock.release()
-    listen_client_calls = True
+
 
 # Give to the other available prizes the proportional probability of the out of stock prize
 def adjust_prizes_probabilities(out_of_stock_prize):
