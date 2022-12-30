@@ -252,6 +252,17 @@ body {
     z-index: 2;
 }
 
+#ahorcados{
+    width: 30px;
+    height: auto;
+    position: absolute;
+    top: 250px;
+    left: 660px;
+    z-index: 3;
+    font-family: 'Lobster', cursive;
+    font-size: 12px;
+}
+
 /* --- Roulette indicator image --- */
 #indicator{
     width: 80px;
