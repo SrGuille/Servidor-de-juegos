@@ -27,7 +27,7 @@ def get_next_game(request):
 # New player is registered and redirected to the active game client screen
 def register_player(request):
     name = request.GET.get('name')
-
+    print(name)
     if(name == ''):
         return JsonResponse({'status': 'error'}, safe=False)
     elif(name == 'admin'): #Set up the whole DS and redirect to game selector

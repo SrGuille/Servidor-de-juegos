@@ -32,5 +32,5 @@ def get_my_team(request):
 
 def send_colors_per_second(request):
     colors_per_second = request.GET.get('colors_per_second')
-    main_controller.set_colors_per_second(colors_per_second)
-    return JsonResponse({'status': 'ok'}, safe=False)
+    winner_msj = main_controller.set_colors_per_second(colors_per_second)
+    return JsonResponse({'winner_msj': winner_msj}, safe=False)

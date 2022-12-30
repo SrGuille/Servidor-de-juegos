@@ -25,6 +25,5 @@ class Prize():
 
 # For hangman
 class Guess():
-    def __init__(self, letter, apperances):
+    def __init__(self, letter):
         self.letter = letter
-        self.apperances = 0

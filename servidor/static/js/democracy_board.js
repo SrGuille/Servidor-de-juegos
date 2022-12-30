@@ -19,8 +19,12 @@ async function play_game()
     await new Promise(r => setTimeout(r, 10000)); //Wait 10 seconds
     await countdown();
     await start_game();
-    //send_colors_per_second();
+    await new Promise(r => setTimeout(r, 5000)); //Wait 5 seconds
     console.log(colors_per_second)
+    send_colors_per_second();
+    await new Promise(r => setTimeout(r, 5000)); //Wait 5 seconds
+    window.location.href = "../ranking/";
+    
 }
 
 async function countdown()
@@ -120,10 +124,18 @@ function add_character(initial_x,initial_y)
     move_character(initial_x, initial_y)
 }
 
-function move_character(x_moves, x_moves)
+// Modulo function that works with negative numbers
+function mod(n, m) 
 {
-    x = x + x_moves % cols;
-    y = y + x_moves % rows;
+    return ((n % m) + m) % m;
+}
+
+function move_character(x_moves, y_moves)
+{
+    x = mod(x + x_moves, cols);
+    y = mod(y + y_moves, rows);
+
+    console.log(x,y)
 
     cell_left = initial_left + x * horizontal_step;
     cell_top = initial_top + y * vertical_step;
@@ -140,13 +152,14 @@ async function start_game()
     {
         await new Promise(r => setTimeout(r, 1000)); //Wait 1 seconds
         move_with_democracy();
+        round += 1;
     }
 }
 
 async function create_teams()
 {
     await $.ajax({
-        url: "/create_teams",
+        url: "../create_teams",
         type: "GET",
         success: function(response) {
             console.log(response.teams);
@@ -158,28 +171,29 @@ async function create_teams()
 async function move_with_democracy()
 {
     await $.ajax({
-        url: "/get_democratic_move",
+        url: "../get_democratic_move",
         type: "GET",
         contentType: 'application/json;charset=UTF-8',
-        success: function(response) {
+        success: function(response) 
+        {
             horizontal_force = response.horizontal_force;
             vertical_force = response.vertical_force;
             move_character(horizontal_force, vertical_force);
             colors_per_second.push(logical_board[x][y]);
+            console.log(x,y)
         }
     });
 }
 
 // Send the colors per second to the server
-function send_colors_per_second()
+async function send_colors_per_second()
 {
-    $.ajax({
+    response = await $.ajax({
         url: "/send_colors_per_second",
         type: "POST",
         data: JSON.stringify(colors_per_second),
-        contentType: 'application/json;charset=UTF-8',
-        success: function(response) {
-            console.log(response);
-        }
+        contentType: 'application/json;charset=UTF-8'
     });
+
+    document.getElementById("result").innerHTML = response.winner_msj;
 }
