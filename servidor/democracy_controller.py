@@ -4,7 +4,7 @@ import json
 from . import main_controller
 import random
 
-num_moves_per_step = 3
+num_moves_per_step = 1
 team_names = ['Azul', 'Naranja']
 teams = [[], []]
 coins_per_second = 5
@@ -66,6 +66,8 @@ def get_my_team(player_name):
     return None
 
 def send_colors_per_second(colors_per_second):
+    print(colors_per_second)
+    colors_per_second = json.loads(colors_per_second)
     number_blue = 0
     number_orange = 0
     winner_msj = "¡Ha habido un empate!"
@@ -93,9 +95,8 @@ def send_colors_per_second(colors_per_second):
 # Give prizes to the winner team
 def give_prizes(winner_team, winner_advantage):
     main_controller.get_players_lock().acquire()
-    for team in teams[winner_team]:
-        for player in team:
-            player.coins += winner_advantage * coins_per_second
+    for player in teams[winner_team]:
+        player.coins += winner_advantage * coins_per_second
     main_controller.get_players_lock().release()
 
     

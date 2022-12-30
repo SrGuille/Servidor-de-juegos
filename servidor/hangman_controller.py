@@ -79,17 +79,15 @@ def get_censured_sentence():
     return censured_sentence
 
 # Register player guessed letter and apperances only if it is the turn of the player
-def register_player_guess(guess):
+def register_player_guess(guess, player_name):
     valid_guess = False
     listen_client_calls = main_controller.get_listen_client_calls()
     if(listen_client_calls):
-        guess = json.loads(guess) #Convert json to dict
         main_controller.get_players_lock().acquire()
-        player = main_controller.get_player(guess['player_name'])
+        player = main_controller.get_player(player_name)
         if(player != None): 
-            
             player_id = player.id
-            guess = guess['letter'].lower()
+            guess = guess.lower()
             if(guess not in guessed_letters): # If the letter has not been guessed yet
                 
                 valid_guess = True
@@ -105,8 +103,8 @@ def register_player_guess(guess):
 
                 elif(len(guess) == 1): # If the guess is a letter guess
                     
-                    player_guessed_letters[player_id - 1] = guess['letter']
-                    num_apperances = sentence.count(guess['letter'])
+                    player_guessed_letters[player_id - 1] = guess
+                    num_apperances = sentence.count(guess)
                     round_player_guess_appearances[player_id - 1] = num_apperances
                     player_cumulative_appearances[player_id - 1] += num_apperances
 

@@ -16,7 +16,8 @@ def create_sentence(request):
 
 def send_player_guess(request):
     guess = request.GET.get('guess')
-    hangman_controller.register_player_guess(guess)
+    player_name = request.GET.get('player_name')
+    hangman_controller.register_player_guess(guess, player_name)
     return JsonResponse({'status': 'ok'}, safe=False)
 
 def perform_step(request):

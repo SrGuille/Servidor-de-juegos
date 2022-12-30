@@ -150,7 +150,7 @@ def create_prizes_roulette():
 
     sizes = np.array(sizes)
 
-    create_roulette_image(labels, sizes, 90, False, 0.3, 'prizes_roulette')
+    create_roulette_image(labels, sizes, 90, False, 0.5, 'prizes_roulette')
 
 # Creates the roulette image (first delete it if it exists)
 def create_roulette_image(labels, sizes, startangle, counterclock, labeldistance, filename):

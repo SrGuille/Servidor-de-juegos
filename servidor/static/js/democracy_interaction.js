@@ -5,6 +5,8 @@ if(player_name == null) //If the player is not logged in, redirect to the login 
     window.location.href = "../";
 }
 
+go_to_wait_screen_after_game();
+
 function send_move(move)
 {
     console.log(move)
@@ -29,4 +31,11 @@ function get_my_team()
             console.log(response)
         }
     });
+}
+
+
+async function go_to_wait_screen_after_game()
+{
+    await new Promise(r => setTimeout(r, 42000));
+    window.location.href = "../wait/";
 }
