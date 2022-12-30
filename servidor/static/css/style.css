@@ -5,6 +5,9 @@
     justify-content: center;
     align-items: center;
     padding-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 1500px;
 }
 #ranking{
     width: 50%;
@@ -209,7 +212,7 @@ body {
     font-weight: bold;
     color: #ffffff;
     text-shadow: 0px 0px 10px black;
-    background-image: url(../img/numero_ganador.jpg);
+    background-image: url(../img/numero_ganador.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 330px;
@@ -224,7 +227,7 @@ body {
     font-weight: bold;
     color: #ffffff;
     text-shadow: 0px 0px 10px black;
-    background-image: url(../img/numero_ganador.jpg);
+    background-image: url(../img/numero_ganador.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 800px;
