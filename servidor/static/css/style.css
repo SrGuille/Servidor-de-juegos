@@ -276,6 +276,18 @@ body {
     font-size: 700px;
 }
 
+#result_democracy{
+    display: block; 
+    margin-right: auto; 
+    margin-left: auto;  
+    margin-top: 450px;
+    margin-bottom: auto;
+    text-align: center;
+    height: auto;
+    z-index: 2; 
+    position: relative;
+    font-size: 100px;
+}
 
 /* --- Roulette indicator image --- */
 #indicator{
