@@ -16,13 +16,15 @@ async function play_game()
 {
     await load_board();
     await create_teams();
-    await new Promise(r => setTimeout(r, 10000)); //Wait 10 seconds
+    await new Promise(r => setTimeout(r, 5000)); //Wait 10 seconds
+    tell_server_to_start_listening_calls()
+    await new Promise(r => setTimeout(r, 5000)); //Wait 10 seconds
     await countdown();
     await start_game();
     await new Promise(r => setTimeout(r, 5000)); //Wait 5 seconds
     console.log(colors_per_second)
     send_colors_per_second();
-    await new Promise(r => setTimeout(r, 5000)); //Wait 5 seconds
+    await new Promise(r => setTimeout(r, 10000)); //Wait 5 seconds
     window.location.href = "../ranking/";
     
 }
@@ -146,7 +148,6 @@ function move_character(x_moves, y_moves)
 
 async function start_game()
 {
-    tell_server_to_start_listening_calls()
     round = 0;
     max_rounds = 30;
     while(round < max_rounds)
@@ -155,6 +156,7 @@ async function start_game()
         move_with_democracy();
         round += 1;
     }
+    await new Promise(r => setTimeout(r, 2000)); //Wait 1 seconds
     tell_server_to_stop_listening_calls()
 }
 
@@ -191,9 +193,9 @@ async function move_with_democracy()
 async function send_colors_per_second()
 {
     response = await $.ajax({
-        url: "/send_colors_per_second",
-        type: "POST",
-        data: JSON.stringify(colors_per_second),
+        url: "../send_colors_per_second",
+        type: "GET",
+        data: {'colors_per_second': JSON.stringify(colors_per_second)},
         contentType: 'application/json;charset=UTF-8'
     });
 
