@@ -5,6 +5,8 @@ from . import main_controller
 
 client_redirects = ['roulette_client_render', 'hangman_client_render', 'democracy_client_render', 'multibandits_client_render']
 
+client_screen_redirects = ['../roulette_client/', '../hangman_client/', '../democracy_client/', '../multibandits_client/']
+
 def login_render(request):
     return render(request, 'login.html')
 
@@ -13,6 +15,9 @@ def game_selector_render(request):
 
 def ranking_render(request):
     return render(request, 'ranking.html')
+
+def wait_render(request):
+    return render(request, 'wait.html')
 
 def set_game(request):
     game_id = int(request.GET.get('game'))
@@ -35,8 +40,23 @@ def register_player(request):
         return redirect('game_selector_render')
     else: #Register player (if necessary) and redirect to the first game client
         main_controller.register_player(name)
+        if(not main_controller.get_listen_client_calls()):
+            return redirect('wait_render')
+        else:
+            active_game_id = main_controller.get_active_game()
+            return redirect(client_redirects[active_game_id])
+        
+# If there is a ready game, redirect to it. Otherwise, redirect to wait screen
+def redirect_to_ready_game(request):
+    player_name = request.GET.get('player_name')
+    player_elements = main_controller.get_player_elements(player_name)
+    if(not main_controller.get_listen_client_calls() or len(player_elements) > 0): 
+        redirect = '../wait/'
+    else:
         active_game_id = main_controller.get_active_game()
-        return redirect(client_redirects[active_game_id])
+        redirect = client_screen_redirects[active_game_id]
+
+    return JsonResponse({'redirect': redirect}, safe=False)
 
 def get_number_players(request):
     pass
@@ -56,6 +76,10 @@ def get_players_scores(request):
     ranking = main_controller.get_players_scores()
     return JsonResponse(ranking, safe=False)
 
+def listen_client_calls(request):
+    main_controller.set_listen_client_calls(True)
+    return JsonResponse({'status': 'ok'}, safe=False)
+    
 def dont_listen_client_calls(request):
     main_controller.set_listen_client_calls(False)
     return JsonResponse({'status': 'ok'}, safe=False)

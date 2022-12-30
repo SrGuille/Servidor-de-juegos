@@ -125,7 +125,7 @@ function send_bets()
         data: {bets:player_bets},
         contentType: 'application/json;charset=UTF-8',
         success: function(response) {
-            window.location.reload();
+            window.location.href = "../wait/";
         }
     });
 }

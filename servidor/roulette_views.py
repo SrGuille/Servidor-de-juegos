@@ -14,8 +14,10 @@ def roulette_client_render(request):
 def send_roulette_result(request):
     result = request.GET.get('result')
     print(result)
+    main_controller.get_players_lock().acquire()
     roulette_controller.assign_prizes(result)
     main_controller.reset_elements()
+    main_controller.get_players_lock().release()
     return JsonResponse({'status': 'ok'}, safe=False)
 
 def send_player_bets(request):

@@ -1,7 +1,6 @@
 import random
 
-oraciones_str = [
-    """Las mascotas ladraban sin cesar, el vecino se quejó con sus dueños.
+oraciones_str = """Las mascotas ladraban sin cesar, el vecino se quejó con sus dueños.
     Amalia es una buena amiga, pero Clara no lo ve.
     La joven lloró toda la noche, pero su amiga logró consolarla.
     La madre cuenta un cuento y la niña junta sus juguetes.
@@ -44,18 +43,18 @@ oraciones_str = [
     Queremos saber más sobre cómo llegaste a salvo a la civilización.
     Estoy cantando la canción que me enseñaste.
     El viaje comenzó sin inconvenientes; nadie imaginó lo que ocurriría después.
-    Sabes que te quiero.
     El niño quiere que le compren dulces y se pone caprichoso.
     Finalmente, llegamos al lugar donde viví cuando mis padres aún no habían comprado su casa actual.
     Todos fuimos a comer al lugar que nos recomendaste.
     La canción era muy dulce y la mujer se emocionó.
     La casa está limpia y las cortinas brillan.
     Llegó el gran día: hoy se recibe mi hijo."""
-]
 
-oraciones = [oracion.split() for oracion in oraciones_str]
+oraciones = oraciones_str.split(".").remove("")
 
 def get_random_sentence():
-    oracion = random.choice(oraciones)
-    oraciones.remove(oracion)
+
+    oracion = "Esto es una prueba"
+    #oracion = random.choice(oraciones)
+    #oraciones.remove(oracion)
     return oracion

@@ -43,3 +43,25 @@ function play_next_game()
         }
     });
 }
+
+async function wait_until_ready_game()
+{
+    player_name = sessionStorage.getItem("player_name");
+    if(player_name == null) //If the player is not logged in, redirect to the login page
+    {
+        window.location.href = "../";
+    }
+
+    await new Promise(r => setTimeout(r, 5000));
+
+    $.ajax({
+        url: '../redirect_to_ready_game/',
+        type: 'GET',
+        contentType: 'application/json;charset=UTF-8',
+        data: {player_name:player_name},
+        success: function(response) 
+        {
+            window.location.href = response.redirect;
+        }
+    });
+}

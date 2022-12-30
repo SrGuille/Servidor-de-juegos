@@ -66,7 +66,6 @@ def assign_prizes(result):
 
     winner_bets = compute_winner_bets(result)
 
-    main_controller.get_players_lock().acquire()
     players = main_controller.get_players()
     for player in players:
         for bet in player.elements:
@@ -81,5 +80,4 @@ def assign_prizes(result):
                     player.coins += bet.amount * 36
 
     main_controller.print_players()
-    main_controller.get_players_lock().release()
                 
