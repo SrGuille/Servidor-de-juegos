@@ -39,30 +39,29 @@ def compute_winner_bets(result):
             winner_bets.append('O')
             
         if (result <= 18):
-            winner_bets.append('H1')
+            winner_bets.append('1H')
         else:
-            winner_bets.append('H2')
+            winner_bets.append('2H')
             
         if (result <= 12):
-            winner_bets.append('T1')
+            winner_bets.append('1T')
         elif (result <=24):
-            winner_bets.append('T2')
+            winner_bets.append('2T')
         else:
-            winner_bets.append('T3')
+            winner_bets.append('3T')
             
         if (result % 3 == 1):
-            winner_bets.append('R1')
+            winner_bets.append('3R')
         elif (result % 3 == 2):
-            winner_bets.append('R2')
+            winner_bets.append('2R')
         else:
-            winner_bets.append('R3')
+            winner_bets.append('1R')
             
-    winner_bets.append(result)
     return winner_bets
 
 def assign_prizes(result):
-    x2_bets = ['R', 'B', 'E', 'O', 'H1', 'H2']
-    x3_bets = ['T1', 'T2', 'T3', 'R1', 'R2', 'R3']
+    x2_bets = ['R', 'B', 'E', 'O', '1H', '2H']
+    x3_bets = ['1T', '2T', '3T', '1R', '2R', '3R']
 
     winner_bets = compute_winner_bets(result)
 
@@ -76,8 +75,10 @@ def assign_prizes(result):
                     player.coins += bet.amount * 2
                 elif (bet.type in x3_bets):
                     player.coins += bet.amount * 3
-                else:
-                    player.coins += bet.amount * 36
+
+            if (bet.type == result): # If bet is winner, add prize
+                player.coins += bet.amount * 36
+                    
 
     main_controller.print_players()
                 

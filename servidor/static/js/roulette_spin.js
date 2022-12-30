@@ -37,6 +37,7 @@ async function spin_roulette()
     crutial_degrees = Math.floor(Math.random() * 360);
     roulette.style.setProperty('--rotation_degrees', extra_degrees + crutial_degrees + 'deg');
     chosen_number = roulette_numbers[Math.floor(crutial_degrees / numbers_width)];
+    chosen_number = 11;
     roulette.classList.add("roulette_spin_animation");
 
     tell_server_to_stop_listening_calls();
