@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Pantalla de espera</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/wait.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1 id="wait">¡Espera a que haya resultados!</h1>
+</body>
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        wait_until_new_round();
+    });
+</script>

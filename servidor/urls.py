@@ -31,4 +31,6 @@ urlpatterns = [
     path('get_democratic_move/', democracy_views.get_democratic_move, name='get_democratic_move'),
     path('get_my_team/', democracy_views.get_my_team, name='get_my_team'),
     path('send_colors_per_second/', democracy_views.send_colors_per_second, name='send_colors_per_second'),
+    path('create_teams/', democracy_views.create_teams, name='create_teams'),
+
 ]
