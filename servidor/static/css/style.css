@@ -263,6 +263,20 @@ body {
     font-size: 12px;
 }
 
+#countdown{
+    display: block; 
+    margin-right: auto; 
+    margin-left: auto;  
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: center;
+    height: auto;
+    z-index: 2; 
+    position: relative;
+    font-size: 700px;
+}
+
+
 /* --- Roulette indicator image --- */
 #indicator{
     width: 80px;
