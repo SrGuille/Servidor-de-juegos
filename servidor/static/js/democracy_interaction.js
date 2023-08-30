@@ -37,5 +37,6 @@ function get_my_team()
 async function go_to_wait_screen_after_game()
 {
     await new Promise(r => setTimeout(r, 42000));
+    sessionStorage.setItem("played", true) //Set the played flag to true
     window.location.href = "../wait/";
 }

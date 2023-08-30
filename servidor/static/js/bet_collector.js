@@ -125,6 +125,7 @@ function send_bets()
         data: {bets:player_bets},
         contentType: 'application/json;charset=UTF-8',
         success: function(response) {
+            sessionStorage.setItem("played", true) //Set the played flag to true
             window.location.href = "../wait/";
         }
     });

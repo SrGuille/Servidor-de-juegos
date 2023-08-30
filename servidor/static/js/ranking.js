@@ -161,6 +161,7 @@ function find_roulette_result(spin_degrees, probs, candidates)
     return candidates[length(candidates) - 1];
 }
 
+// Send the winner and the prize to the server and go to the next game
 function send_prize_winner(winner, prize)
 {
     $.ajax({
@@ -170,7 +171,7 @@ function send_prize_winner(winner, prize)
         contentType: 'application/json;charset=UTF-8',
         success: function(response) 
         {
-            play_next_game();
+            admin_next_game();
         }
     });
 }

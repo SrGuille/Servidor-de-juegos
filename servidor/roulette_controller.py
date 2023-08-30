@@ -7,8 +7,8 @@ players_lock = threading.Lock()
 
 # Register player bets only if the roulette is not spinning
 def register_player_bets(json_str):
-    listen_client_calls = main_controller.get_listen_client_calls()
-    if(listen_client_calls):
+    ready_to_play_game = main_controller.is_game_ready_to_play()
+    if(ready_to_play_game):
         bets = json.loads(json_str) #Convert json to dict
         main_controller.get_players_lock().acquire()
         player = main_controller.get_player(bets['player_name'])

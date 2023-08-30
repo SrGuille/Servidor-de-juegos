@@ -43,7 +43,7 @@ function change_image(step)
 async function wait_for_all_players_and_run()
 {
     get_sentence();
-    tell_server_to_start_listening_calls();
+    ready_to_play_game();
     all_guesses_sent = false;
     while (!all_guesses_sent)
     {
@@ -102,7 +102,7 @@ async function play_game()
 // Perform a step of the game
 async function perform_step()
 {
-    tell_server_to_stop_listening_calls();
+    not_ready_to_play_game();
     response = await $.ajax({
         url: '../perform_step/',
         type: 'GET',

@@ -1,7 +1,7 @@
 // Wait for all players to bet before spinning the roulette
 async function wait_for_all_players_and_run()
 {
-    tell_server_to_start_listening_calls();
+    ready_to_play_game();
     all_bets_sent = false;
     while (!all_bets_sent)
     {
@@ -13,6 +13,7 @@ async function wait_for_all_players_and_run()
             contentType: 'application/json;charset=UTF-8'
         });
 
+        console.log(response.remaining_interactions)
         if(response.remaining_interactions == "0")
         {
             result = spin_roulette();
@@ -39,7 +40,7 @@ async function spin_roulette()
     chosen_number = roulette_numbers[Math.floor(crutial_degrees / numbers_width)];
     roulette.classList.add("roulette_spin_animation");
 
-    tell_server_to_stop_listening_calls();
+    not_ready_to_play_game();
 
     await new Promise(r => setTimeout(r, 9000));
     document.getElementById("result-spin").innerHTML = chosen_number;

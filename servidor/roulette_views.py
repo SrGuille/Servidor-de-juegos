@@ -5,8 +5,8 @@ from . import roulette_controller, main_controller
 
 # Create your views here.
 
-def roulette_host_render(request):
-    return render(request, 'roulette_host.html')
+def roulette_admin_render(request):
+    return render(request, 'roulette_admin.html')
 
 def roulette_client_render(request):
     return render(request, 'roulette_client.html')
