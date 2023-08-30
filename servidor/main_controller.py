@@ -13,36 +13,92 @@ players = []
 
 games = ['Ruleta', 'Ahorcado', "Democracia", "Tragaperras"]
 
-active_game_id = 0
-remaining_rounds = 1
+# Controls the active game and the number of rounds
+active_game_id = -1
+remaining_rounds = 0
 
-prizes = [models.Prize("Dulce", 0.4, 5), models.Prize("Regalo pequeño", 0.2, 20), models.Prize("Regalo mediano", 0.2, 30), models.Prize("Regalo grande", 0.2, 40)]
+""" 
+Means that the players can join and interact with it.
+Its value is changed from the frontend depending on the state of the game.
+In the games that have more than 1 round it will be toggled between True and False
+between the play - see results phases.
+""" 
+ready_to_play_game = False
 
-listen_client_calls = False
+"""  
+In case of some player has 0 coins, a no cost game is randomly played 
+and the players with 0 coins after it get some free coins 
+""" 
+no_cost_games = ['Ahorcado', 'Democracia'] # Games that don't cost coins to play
+
+no_cost_active_game_id = -1
+FREE_COINS_FOR_0_COINS_PLAYERS = 15
+
+prizes = [
+    models.Prize("Dulce", 0.25, 5), 
+    models.Prize("Regalo pequeño", 0.25, 20), 
+    models.Prize("Regalo mediano", 0.25, 30), 
+    models.Prize("Regalo grande", 0.25, 40)
+]
+
 
 # TODO Maybe init everything here
 def game_setup():
     pass
 
 # Sets the active game and the number of rounds
-def set_game(game, rounds):
+def set_game(game_id, rounds):
     global active_game_id, remaining_rounds
-    active_game_id = game
+    active_game_id = game_id
     remaining_rounds = rounds
 
-# Returns the active game id (if there are no more rounds, it returns -1) TODO democracy game
-def get_next_game():
-    global remaining_rounds
-    if(remaining_rounds > 0):
-        remaining_rounds -= 1
-    
-    if(remaining_rounds == 0): # If there are no more rounds, return -1
-        return -1
-    else:
-        return active_game_id
+""" 
+If there are more rounds of the scheculed game it returns the active game id 
+(if there are no more rounds, it returns -1), and one round is substracted
+When some player/s don't have any coins, next game is some no cost game ignoring the schedule
+"""
+def transition_to_next_game():
+    global active_game_id, remaining_rounds, no_cost_active_game_id
 
-def get_active_game():
-    return active_game_id
+    #TODO, maybe don't give coins to players who got to 0 coins in the previous game
+    
+    # Compensate the players with 0 coins who didn't won anything in the previous no cost game
+    if(no_cost_active_game_id != -1): # If there was a no cost game
+        give_coins_to_0_coins_players()
+        no_cost_active_game_id = -1 # Reset no cost active game id
+    
+    if(some_player_has_0_coins()): # If some player has 0 coins, redirect to a no cost game
+        no_cost_active_game_id = np.random.randint(0, len(no_cost_games))
+        return no_cost_active_game_id
+    else:
+        if(remaining_rounds > 0):
+            remaining_rounds -= 1
+        
+        if(remaining_rounds == 0): # If there are no more rounds, return -1
+            active_game_id = -1
+            return -1
+        else:
+            return active_game_id
+
+# Returns the active game id if it is ready to start, otherwise returns -1
+def get_ready_to_play_game():
+    if(ready_to_play_game):
+        if(no_cost_active_game_id != -1):
+            return no_cost_active_game_id
+        else:
+            return active_game_id
+    else:
+        return -1
+    
+def is_game_ready_to_play():
+    return ready_to_play_game
+
+def give_coins_to_0_coins_players():
+    players_lock.acquire()
+    for player in players:
+        if(player.coins == 0):
+            player.coins += FREE_COINS_FOR_0_COINS_PLAYERS
+    players_lock.release()
 
 # If it does not exist, it registers the player and adds a prize of each type
 def register_player(name):
@@ -100,7 +156,6 @@ def get_remaining_interactions():
             number_interactions += 1
 
     players_lock.release()
-
     return number_players - number_interactions
 
 # Returns the players and their coins (all players, not only the ones with coins)
@@ -167,12 +222,9 @@ def get_players():
 def get_players_lock():
     return players_lock
 
-def get_listen_client_calls():
-    return listen_client_calls
-
-def set_listen_client_calls(value):
-    global listen_client_calls
-    listen_client_calls = value
+def set_ready_to_play_game(value):
+    global ready_to_play_game
+    ready_to_play_game = value
 
 # Returns the coins of a player
 def get_player_coins(name):
@@ -184,9 +236,18 @@ def get_player_coins(name):
     players_lock.release()
     return coins
 
+def some_player_has_0_coins():
+    players_lock.acquire()
+    for player in players:
+        if(player.coins == 0):
+            players_lock.release()
+            return True
+    players_lock.release()
+    return False
+
 # Empty the bets list of all players
 def reset_elements():
-    global listen_client_calls
+    global ready_to_play_game
     for player in players:
         player.elements = []
     print_players()

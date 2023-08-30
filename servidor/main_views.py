@@ -25,9 +25,13 @@ def set_game(request):
     main_controller.set_game(game_id, rounds)
     return JsonResponse({'status': 'ok'}, safe=False)
 
-def get_next_game(request):
-    game_id = main_controller.get_next_game()
-    return JsonResponse({'game': game_id}, safe=False)
+def transition_to_next_game(request):
+    game_id = main_controller.transition_to_next_game()
+    return JsonResponse({'game_id': game_id}, safe=False)
+
+def get_ready_to_play_game(request):
+    game_id = main_controller.get_ready_to_play_game()
+    return JsonResponse({'game_id': game_id}, safe=False)
 
 # New player is registered and redirected to the active game client screen
 def register_player(request):
@@ -35,28 +39,28 @@ def register_player(request):
     print(name)
     if(name == ''):
         return JsonResponse({'status': 'error'}, safe=False)
-    elif(name == 'admin'): #Set up the whole DS and redirect to game selector
+    elif(name == 'admin'): #TODO Set up the whole DS and redirect to game selector
         main_controller.game_setup()
         return redirect('game_selector_render')
     else: #Register player (if necessary) and redirect to the first game client
         main_controller.register_player(name)
-        if(not main_controller.get_listen_client_calls()):
-            return redirect('wait_render')
-        else:
-            active_game_id = main_controller.get_active_game()
-            return redirect(client_redirects[active_game_id])
+        return redirect('wait_render')
         
-# If there is a ready game, redirect to it. Otherwise, redirect to wait screen
-def redirect_to_ready_game(request):
+        
+""" 
+If there is a ready game, redirect to it. Otherwise, redirect to wait screen
+Old version of the code (before the use of channels), substituted by the consumer
+def redirect_to_ready_to_play_game(request):
     player_name = request.GET.get('player_name')
     player_elements = main_controller.get_player_elements(player_name)
-    if(not main_controller.get_listen_client_calls() or len(player_elements) > 0): 
+    if(not main_controller.get_ready_to_play_game() or len(player_elements) > 0): 
         redirect = '../wait/'
     else:
         active_game_id = main_controller.get_active_game()
         redirect = client_screen_redirects[active_game_id]
 
     return JsonResponse({'redirect': redirect}, safe=False)
+"""
 
 def get_number_players(request):
     pass
@@ -76,12 +80,12 @@ def get_players_scores(request):
     ranking = main_controller.get_players_scores()
     return JsonResponse(ranking, safe=False)
 
-def listen_client_calls(request):
-    main_controller.set_listen_client_calls(True)
+def ready_to_play_game(request):
+    main_controller.set_ready_to_play_game(True)
     return JsonResponse({'status': 'ok'}, safe=False)
     
-def dont_listen_client_calls(request):
-    main_controller.set_listen_client_calls(False)
+def not_ready_to_play_game(request):
+    main_controller.set_ready_to_play_game(False)
     return JsonResponse({'status': 'ok'}, safe=False)
 
 def get_available_prizes(request):

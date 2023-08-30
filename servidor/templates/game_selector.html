@@ -30,7 +30,7 @@
                 </div>
                 <div class="caja-btn animate__animated animate__fadeIn animate__slow mt-3">
                   <h4 class="">Ruleta</h4>
-                  <a class="button-juego" onclick="set_play_game(0)">Jugar</a>
+                  <a class="button-juego" onclick="set_next_game(0)">Jugar</a>
                 </div>
               </div>
             </div>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="caja-btn animate__animated animate__fadeIn animate__slow mt-3">
                   <h4 class="">Ahorcado</h4>
-                  <a class="button-juego" onclick="set_play_game(1)">Jugar</a>
+                  <a class="button-juego" onclick="set_next_game(1)">Jugar</a>
                 </div>
               </div>
             </div>
@@ -56,9 +56,22 @@
                 </div>
                 <div class="caja-btn animate__animated animate__fadeIn animate__slow mt-3">
                   <h4 class="">Democracia</h4>
-                  <a class="button-juego" onclick="set_play_game(2)">Jugar</a>
+                  <a class="button-juego" onclick="set_next_game(2)">Jugar</a>
                 </div>
               </div>
+            </div>
+            <div class="col">
+                <div class="">
+                    <img src="{% static 'img/img-proximamente_v2.png' %}" class="img-juegos animate__animated animate__bounceInDown animate__slow" alt="Problema con enlace de foto">
+                    <div class="caja-rondas">
+                        <h4>Rondas</h4>
+                        <input type="number" id="rounds2" name="rounds" value="1">
+                    </div>
+                    <div class="caja-btn animate__animated animate__fadeIn animate__slow mt-3">
+                    <h4 class="">Tragaperras</h4>
+                    <a class="button-juego" onclick="set_next_game(2)">Jugar</a>
+                    </div>
+                </div>
             </div>
             <div class="row mt-5">
                 <div class="col">
@@ -87,28 +100,28 @@
                     <td>
                         <input type="number" id="rounds" name="rounds" value="1">
                     </td>
-                    <td><a onclick="set_play_game(0)">Jugar</a></td>
+                    <td><a onclick="set_next_game(0)">Jugar</a></td>
                 </tr>
                 <tr>
                     <td>Ahorcado</td>
                     <td>
                         <input type="number" id="rounds" name="rounds" value="1">
                     </td>
-                    <td><a onclick="set_play_game(1)">Jugar</a></td>
+                    <td><a onclick="set_next_game(1)">Jugar</a></td>
                 </tr>
                 <tr>
                     <td>Democracia</td>
                     <td>
                         <input type="number" id="rounds" name="rounds" value="1">
                     </td>
-                    <td><a onclick="set_play_game(2)">Jugar</a></td>
+                    <td><a onclick="set_next_game(2)">Jugar</a></td>
                 </tr>
                 <tr>
                     <td>Multi Tragaperras</td>
                     <td>
                         <input type="number" id="rounds" name="rounds" value="1">
                     </td>
-                    <td><a onclick="set_play_game(3)">Jugar</a></td>
+                    <td><a onclick="set_next_game(3)">Jugar</a></td>
                 </tr>
             </tbody>
         </table>
@@ -166,6 +179,6 @@
         <div></div>
         <div></div>
     </div>
-    <!-- End Snow animationr-->
+    <!-- End Snow animation-->
 </body>
 </html>

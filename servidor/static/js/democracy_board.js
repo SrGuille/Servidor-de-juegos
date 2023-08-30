@@ -16,7 +16,7 @@ async function play_game()
 {
     await load_board();
     await create_teams();
-    tell_server_to_start_listening_calls()
+    ready_to_play_game()
     await new Promise(r => setTimeout(r, 10000)); //Wait 10 seconds
     await countdown();
     await start_game();
@@ -156,7 +156,7 @@ async function start_game()
         round += 1;
     }
     await new Promise(r => setTimeout(r, 2000)); //Wait 1 seconds
-    tell_server_to_stop_listening_calls()
+    not_ready_to_play_game()
 }
 
 async function create_teams()

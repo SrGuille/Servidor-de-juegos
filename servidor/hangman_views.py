@@ -4,8 +4,8 @@ from . import hangman_controller
 
 # Create your views here.
 
-def hangman_host_render(request):
-    return render(request, 'hangman_host.html')
+def hangman_admin_render(request):
+    return render(request, 'hangman_admin.html')
 
 def hangman_client_render(request):
     return render(request, 'hangman_client.html')

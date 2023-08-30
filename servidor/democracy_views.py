@@ -5,8 +5,8 @@ from . import main_controller, democracy_controller
 
 # Create your views here.
 
-def democracy_host_render(request):
-    return render(request, 'democracy_host.html')
+def democracy_admin_render(request):
+    return render(request, 'democracy_admin.html')
 
 def democracy_client_render(request):
     return render(request, 'democracy_client.html')

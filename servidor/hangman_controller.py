@@ -81,8 +81,8 @@ def get_censured_sentence():
 # Register player guessed letter and apperances only if it is the turn of the player
 def register_player_guess(guess, player_name):
     valid_guess = False
-    listen_client_calls = main_controller.get_listen_client_calls()
-    if(listen_client_calls):
+    ready_to_play_game = main_controller.is_game_ready_to_play()
+    if(ready_to_play_game):
         main_controller.get_players_lock().acquire()
         player = main_controller.get_player(player_name)
         if(player != None): 
