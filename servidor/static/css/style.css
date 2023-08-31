@@ -44,19 +44,58 @@ body {
 /* --- Democracy game --- */
 .blue-cell{
     position: absolute;
-    background-color: blue;
-    padding: 50px 50px;
+    background-color: #2c782f;
 }
 .orange-cell{
     position: absolute;
-    background-color: orange;
-    padding: 50px 50px;
+    background-color: #b53a33;
+}
+.neutral-cell{
+    position: absolute;
+    background-color: #b5b5b5;
 }
 .character{
     position: absolute;
     background-color: black;
-    padding: 25px 25px;
-    margin: 25px;
+}
+
+#countdown{
+    display: block; 
+    margin-right: auto; 
+    margin-left: auto;  
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: center;
+    height: auto;
+    z-index: 2; 
+    position: relative;
+    font-size: 700px;
+}
+
+#rounds_left{
+    display: block; 
+    margin-right: auto; 
+    margin-left: auto;  
+    margin-top: 80px;
+    text-align: center;
+    height: auto;
+    position: relative;
+    font-size: 50px;
+    color: black;
+}
+
+#result_democracy{
+    display: block; 
+    margin-right: auto; 
+    margin-left: auto;  
+    margin-top: 250px;
+    margin-bottom: auto;
+    text-align: center;
+    height: auto;
+    z-index: 2; 
+    position: relative;
+    font-size: 100px;
+    color: black;
 }
 
 /* CSS variable for rotation degrees*/
@@ -264,33 +303,6 @@ body {
     z-index: 3;
     font-family: 'Lobster', cursive;
     font-size: 12px;
-}
-
-#countdown{
-    display: block; 
-    margin-right: auto; 
-    margin-left: auto;  
-    margin-top: auto;
-    margin-bottom: auto;
-    text-align: center;
-    height: auto;
-    z-index: 2; 
-    position: relative;
-    font-size: 700px;
-}
-
-#result_democracy{
-    display: block; 
-    margin-right: auto; 
-    margin-left: auto;  
-    margin-top: 450px;
-    margin-bottom: auto;
-    text-align: center;
-    height: auto;
-    z-index: 2; 
-    position: relative;
-    font-size: 100px;
-    color: #ed3232;
 }
 
 /* --- Roulette indicator image --- */
