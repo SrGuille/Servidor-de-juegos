@@ -20,8 +20,9 @@ function send_move(move)
     });
 }
 
-function get_my_team()
+async function get_my_team()
 {
+    await new Promise(r => setTimeout(r, 2000));
     $.ajax({
         url: "../get_my_team",
         type: "GET",
@@ -36,7 +37,7 @@ function get_my_team()
 
 async function go_to_wait_screen_after_game()
 {
-    await new Promise(r => setTimeout(r, 42000));
+    await new Promise(r => setTimeout(r, 55000));
     sessionStorage.setItem("played", true) //Set the played flag to true
-    window.location.href = "../wait/";
+    window.location.href = "../wait_room/";
 }

@@ -1,15 +1,17 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.shortcuts import redirect
-from . import roulette_controller, main_controller
+from servidor import main_controller
+from . import roulette_controller
+import json
 
 # Create your views here.
 
 def roulette_admin_render(request):
-    return render(request, 'roulette_admin.html')
+    return render(request, 'roulette/roulette_admin.html')
 
-def roulette_client_render(request):
-    return render(request, 'roulette_client.html')
+def roulette_player_render(request):
+    return render(request, 'roulette/roulette_player.html')
 
 def send_roulette_result(request):
     result = request.GET.get('result')
@@ -22,7 +24,8 @@ def send_roulette_result(request):
 
 def send_player_bets(request):
     global number_bets
-    json_str = request.GET.get('bets')
-    roulette_controller.register_player_bets(json_str)
-    return JsonResponse({'status': 'ok'}, safe=False)
+    bets_str = request.GET.get('bets') #Get json
+    bets = json.loads(bets_str) #Convert json to dict
+    allowed = roulette_controller.register_player_bets(bets)
+    return JsonResponse({'status': allowed}, safe=False)
 

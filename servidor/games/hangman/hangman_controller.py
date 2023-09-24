@@ -1,10 +1,9 @@
 import threading
-from . import models
+from servidor import models
 import json
-from . import main_controller
+from servidor import main_controller
 #from googletrans import Translator
 #from wonderwords import RandomSentence
-from . import oraciones
 
 sentence = ""
 guessed_letters_pos = [] # Binary array of guessed letters
@@ -28,7 +27,8 @@ def create_sentence():
     #sentence = RandomSentence() #defining the random sentence object
     #translated_sentence = translator.translate(sentence, src='en', dest='es') #translating the sentence to spanish
     #sentence = translated_sentence.text #getting the translated sentence
-    sentence = oraciones.get_random_sentence().lower().replace(".", "")
+    #sentence = oraciones.get_random_sentence().lower().replace(".", "")
+    sentence = "hola" # TODO use chatgpt to generate sentences
     print("Sentence: " + sentence)
     guessed_letters_pos = [0] * len(sentence) # Initialize the guessed letters array
     num_spaces_apperances = register_guessed_letter(" ") #Register spaces
@@ -81,7 +81,7 @@ def get_censured_sentence():
 # Register player guessed letter and apperances only if it is the turn of the player
 def register_player_guess(guess, player_name):
     valid_guess = False
-    ready_to_play_game = main_controller.is_game_ready_to_play()
+    ready_to_play_game = main_controller.is_current_game_ready()
     if(ready_to_play_game):
         main_controller.get_players_lock().acquire()
         player = main_controller.get_player(player_name)

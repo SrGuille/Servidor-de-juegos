@@ -1,3 +1,6 @@
+INITIAL_LEFT = 166;
+INITIAL_TOP = 76;
+
 //Create a new button in the buttons row
 function add_button(left, top, id, button_class) 
 {
@@ -15,17 +18,14 @@ function load_regular_numbers_buttons()
     horizontal_step = 32;
     vertical_step = 43;
 
-    initial_left = 266;
-    initial_top = 76;
-
     //Create the buttons in numerical order to assign the correct id
     id = 1;
     for(i = 0; i < 12; i++)
     {
         for(j = 2; j >= 0; j--)
         {
-            button_left = initial_left + i * horizontal_step;
-            button_top = initial_top + j * vertical_step;
+            button_left = INITIAL_LEFT + i * horizontal_step;
+            button_top = INITIAL_TOP + j * vertical_step;
             button_id = id;
             add_button(button_left, button_top,  button_id, "button-number");
             id++;
@@ -35,7 +35,6 @@ function load_regular_numbers_buttons()
 
 function load_third_buttons()
 {
-    initial_left = 266;
     button_top = 205;
     horizontal_step = 128;
 
@@ -43,7 +42,7 @@ function load_third_buttons()
 
     for(i = 0; i < 3; i++)
     {
-        button_left = initial_left + i * horizontal_step;
+        button_left = INITIAL_LEFT + i * horizontal_step;
         add_button(button_left, button_top,  ids_th[i], "button-third");
     }
 }
@@ -51,14 +50,13 @@ function load_third_buttons()
 function load_row_buttons()
 {
     button_left = 650;
-    initial_top = 76;
     vertical_step = 43;
 
     ids_row = ["1R", "2R", "3R"]
 
     for(j = 0; j < 3; j++)
     {
-        button_top = initial_top + j * vertical_step;
+        button_top = INITIAL_TOP + j * vertical_step;
         add_button(button_left, button_top,  ids_row[j], "button-row");
     }
 
@@ -74,7 +72,7 @@ function load_half_buttons()
 
     for(i = 0; i < 6; i++)
     {
-        button_left = initial_left + i * horizontal_step;
+        button_left = INITIAL_LEFT + i * horizontal_step;
         add_button(button_left, button_top,  ids_hf[i], "button-half");
     }
 }

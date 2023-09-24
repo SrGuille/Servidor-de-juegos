@@ -1,9 +1,12 @@
 // Always odd numbers to have a central neutral cell
 ROWS = 15;
 COLS = 15;
-classes = ['neutral-cell', 'blue-cell', 'orange-cell']
+classes = ['neutral-cell', 'green-cell', 'red-cell']
+
+// Character position
 x = 0;
 y = 0;
+
 colors_per_second = Array();
 
 cell_size = 50; // 50x50 px
@@ -21,24 +24,30 @@ async function play_democracy()
     console.log("Board loaded")
     await create_teams();
     console.log("Teams created")
-    ready_to_play_game()
     await new Promise(r => setTimeout(r, 10000)); //Wait 10 seconds
     await countdown();
+    await set_can_players_interact(true); // Players can move
     await main_loop(); 
+    await set_can_players_join(false);
+    await set_can_players_interact(false); // Players can't move
     await new Promise(r => setTimeout(r, 5000)); //Wait 5 seconds
     console.log(colors_per_second)
     send_colors_per_second();
     await new Promise(r => setTimeout(r, 10000)); //Wait 5 seconds
-    window.location.href = "../ranking/";
+    window.location.href = "../ranking_and_prizes/";
     
 }
 
 async function countdown()
 {
+    document.getElementById("start_music").click(); // Start the music
+    var arcade_jump_audio = document.getElementById('arcade_jump_audio');
     for(i = 3; i > 0; i--)
     {
         document.getElementById("countdown").innerHTML = i;
+        arcade_jump_audio.play();
         await new Promise(r => setTimeout(r, 1000)); //Wait 1 seconds
+        arcade_jump_audio.pause();
     }
     document.getElementById("countdown").innerHTML = "";
 }
@@ -46,13 +55,9 @@ async function countdown()
 async function load_board()
 {
     init_logical_board();
-    console.log("Logical board initialized")
     assign_cells();
-    console.log("Cells assigned")
     show_board_cells();
-    console.log("Board cells shown")
     add_character(7,7);
-    console.log("Character added")
     console.log(logical_board)
 }
 
@@ -170,6 +175,7 @@ function move_character(x_moves, y_moves)
 
 async function main_loop()
 {
+    var arcade_jump_audio = document.getElementById('arcade_jump_audio');
     round = 0;
     max_rounds = 30;
     rounds_left = document.getElementById("rounds_left");
@@ -177,12 +183,12 @@ async function main_loop()
     {
         rounds_left.innerHTML = "Fin en " + (max_rounds - round).toString();
         await new Promise(r => setTimeout(r, 1000)); //Wait 1 seconds
+        arcade_jump_audio.play();
         move_with_democracy();
         round += 1;
     }
     rounds_left.innerHTML = "Fin!";
     await new Promise(r => setTimeout(r, 2000)); //Wait 1 seconds
-    not_ready_to_play_game()
 }
 
 async function create_teams()

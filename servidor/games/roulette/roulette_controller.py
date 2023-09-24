@@ -1,15 +1,13 @@
 import threading
-from . import models
+from servidor import models
 import json
-from . import main_controller
+from servidor import main_controller
 
 players_lock = threading.Lock()
 
 # Register player bets only if the roulette is not spinning
-def register_player_bets(json_str):
-    ready_to_play_game = main_controller.is_game_ready_to_play()
-    if(ready_to_play_game):
-        bets = json.loads(json_str) #Convert json to dict
+def register_player_bets(bets):
+    if(main_controller.get_can_players_interact()): # If roulette has not spinned yet
         main_controller.get_players_lock().acquire()
         player = main_controller.get_player(bets['player_name'])
         if(player != None):
@@ -21,6 +19,9 @@ def register_player_bets(json_str):
                 player.coins -= bet.amount #Substract coins
         main_controller.print_players()
         main_controller.get_players_lock().release()
+        return True
+    else:
+        return False
 
 def compute_winner_bets(result):
     result = int(result)
@@ -66,7 +67,7 @@ def assign_prizes(result):
     winner_bets = compute_winner_bets(result)
 
     players = main_controller.get_players()
-    for player in players:
+    for player in players.values():
         for bet in player.elements:
 
             # If bet is winner, add prize

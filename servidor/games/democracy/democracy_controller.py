@@ -1,34 +1,34 @@
 import threading
-from . import models
-import json
-from . import main_controller
+from servidor import main_controller
 import random
 
-num_moves_per_step = 1
-team_names = ['Azul', 'Naranja']
-teams = [[], []]
-coins_per_second = 5
+# Constants
+MOVES_PER_STEP = 1
+TEAM_NAMES = ['Verde', 'Rojo']
+REWARD_PER_ADVANTAGE = 5
+
+# Global variables
+teams = [[], []] # With player's Objects
 
 # Register the move if the player has not reached the maximum number of moves
 def register_player_move(player_name, move):
-    ready_to_play_game = main_controller.is_game_ready_to_play()
-    if(ready_to_play_game):
+    if(main_controller.get_can_players_interact()): # If play time has started and not finished
         main_controller.get_players_lock().acquire()
         player = main_controller.get_player(player_name)
         if(player != None):
             number_previous_moves = len(player.elements)
-            if(number_previous_moves < num_moves_per_step):
+            if(number_previous_moves < MOVES_PER_STEP):
                 player.elements.append(move)
                 print('Player ' + player_name + ' registered move ' + move)
         #main_controller.print_players()
         main_controller.get_players_lock().release()
 
-# Returns the result of the round
+# Returns the result of the round (the sum of the forces)
 def get_democratic_move():
     main_controller.get_players_lock().acquire()
     players = main_controller.get_players()
     forces = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
-    for player in players:
+    for player in players.values():
         for move in player.elements:
             forces[move] = forces[move] + 1
         player.elements = []
@@ -44,50 +44,59 @@ def get_democratic_move():
 def create_teams():
     main_controller.get_players_lock().acquire()
     players = main_controller.get_players()
+    list_players = list(players.values())
     teams_with_names = {0: [], 1: []}
-    for i in range(0, len(players), 2):
+    for i in range(0, len(list_players), 2):
         team = random.randint(0, 1)
-        teams[team].append(players[i])
-        teams_with_names[team].append(players[i].name)
-        if(len(players) > i + 1): # There is a player for the other team
-            teams[(team + 1) % 2].append(players[i+1]) 
-            teams_with_names[(team + 1) % 2].append(players[i+1].name)
+        # Add first player to the random team
+        teams[team].append(list_players[i])
+        teams_with_names[team].append(list_players[i].name)
+        if(len(list_players) > i + 1): # There is a player for the other team
+            # Add second player to the other team
+            teams[(team + 1) % 2].append(list_players[i+1]) 
+            teams_with_names[(team + 1) % 2].append(list_players[i+1].name)
     main_controller.get_players_lock().release()
     return teams_with_names
 
-# Returns the team of a player
+# Returns the team of a player (generallized for n teams)
 def get_my_team(player_name):
     team_counter = 0
     for team in teams:
         for player in team:
             if(player.name == player_name):
-                return team_names[team_counter]
-        team_counter += 1
+                return TEAM_NAMES[team_counter]
+        team_counter += 1 
     return None
 
-def send_colors_per_second(colors_per_second):
-    print(colors_per_second)
-    colors_per_second = json.loads(colors_per_second)
-    number_blue = 0
-    number_orange = 0
+"""
+    Recieves an array with the winner team id of each step (doesn't include neutral steps)
+    Computes the winner team and gives prizes to the players of the winner team
+    If there is a tie, no prizes are given
+    Returns a message with the winner team
+"""
+def decide_winner_and_give_prizes(winner_per_step):
+    print(winner_per_step)
+    # Number of seconds per team
+    steps_team_1 = 0
+    steps_team_2 = 0 
+
     winner_msj = "¡Ha habido un empate!"
 
-    for color in colors_per_second:
-        if(color == 0):
-            number_blue += 1
+    for color in winner_per_step:
+        if(color == 1):
+            steps_team_1 += 1
         else:
-            number_orange += 1
+            steps_team_2 += 1
 
-    winner_advantage = abs(number_blue - number_orange)
+    winner_advantage = abs(steps_team_1 - steps_team_2)
 
-    if(number_blue != number_orange): # There is a winner
-        if(number_blue > number_orange):
-            winner_team = 0
-            winner_msj = "¡Ha ganado el equipo azul con una diferencia de " + str(winner_advantage) + " casillas!"
-        else:
+    if(winner_advantage > 0): # There is a winner
+        if(steps_team_1 > steps_team_2):
             winner_team = 1
-            winner_msj = "¡Ha ganado el equipo naranja con una diferencia de " + str(winner_advantage) + " casillas!" 
+        else:
+            winner_team = 2
 
+        winner_msj = f"¡Ha ganado el equipo {TEAM_NAMES[winner_team - 1]} con una diferencia de {str(winner_advantage)} casillas!"
         give_prizes(winner_team, winner_advantage)
 
     return winner_msj
@@ -95,8 +104,8 @@ def send_colors_per_second(colors_per_second):
 # Give prizes to the winner team
 def give_prizes(winner_team, winner_advantage):
     main_controller.get_players_lock().acquire()
-    for player in teams[winner_team]:
-        player.coins += winner_advantage * coins_per_second
+    for player in teams[winner_team - 1]:
+        player.coins += winner_advantage * REWARD_PER_ADVANTAGE
     main_controller.get_players_lock().release()
 
     

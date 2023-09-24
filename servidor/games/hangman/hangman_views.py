@@ -5,10 +5,10 @@ from . import hangman_controller
 # Create your views here.
 
 def hangman_admin_render(request):
-    return render(request, 'hangman_admin.html')
+    return render(request, 'hangman/hangman_admin.html')
 
-def hangman_client_render(request):
-    return render(request, 'hangman_client.html')
+def hangman_player_render(request):
+    return render(request, 'hangman/hangman_player.html')
 
 def create_sentence(request):
     sentence = hangman_controller.create_sentence()

@@ -43,7 +43,7 @@ function change_image(step)
 async function wait_for_all_players_and_run()
 {
     get_sentence();
-    ready_to_play_game();
+    set_is_current_game_ready(true);
     all_guesses_sent = false;
     while (!all_guesses_sent)
     {
@@ -95,14 +95,14 @@ async function play_game()
 
     await new Promise(r => setTimeout(r, 10000)); //Wait 10 seconds
 
-    window.location.href = "../ranking/";
+    window.location.href = "../ranking_and_prizes/";
     
 }
 
 // Perform a step of the game
 async function perform_step()
 {
-    not_ready_to_play_game();
+    set_is_current_game_ready(false);
     response = await $.ajax({
         url: '../perform_step/',
         type: 'GET',

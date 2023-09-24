@@ -22,7 +22,7 @@ async function get_ranking_from_scores()
         {
             total_coins = create_ranking_table(all_players);
             // Remove the players with 0 coins
-            candidate_players = all_players.map(function(i) {if(i.coins > 0) return i;});
+            candidate_players = all_players.filter(i => i.coins > 0);
             players_prob = candidate_players.map(x => x.coins / total_coins);
             console.log(candidate_players)
             console.log(players_prob)
@@ -117,7 +117,7 @@ async function create_and_spin_roulettes()
 
     await new Promise(r => setTimeout(r, 10000));
 
-    send_prize_winner(winner, prize);
+    send_prize_to_winner(winner, prize);
 }
 
 // Spin the roulette certain random degrees
@@ -162,10 +162,10 @@ function find_roulette_result(spin_degrees, probs, candidates)
 }
 
 // Send the winner and the prize to the server and go to the next game
-function send_prize_winner(winner, prize)
+function send_prize_to_winner(winner, prize)
 {
     $.ajax({
-        url: '../send_prize_winner/',
+        url: '../send_prize_to_winner/',
         type: 'GET',
         data: {winner: winner, prize: prize},
         contentType: 'application/json;charset=UTF-8',

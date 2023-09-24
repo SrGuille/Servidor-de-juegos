@@ -1,15 +1,16 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.shortcuts import redirect
-from . import main_controller, democracy_controller
+from . import democracy_controller
+import json
 
 # Create your views here.
 
 def democracy_admin_render(request):
-    return render(request, 'democracy_admin.html')
+    return render(request, 'democracy/democracy_admin.html')
 
-def democracy_client_render(request):
-    return render(request, 'democracy_client.html')
+def democracy_player_render(request):
+    return render(request, 'democracy/democracy_player.html')
 
 def create_teams(request):
     teams = democracy_controller.create_teams()
@@ -31,6 +32,7 @@ def get_my_team(request):
     return JsonResponse({'team': team}, safe=False)
 
 def send_colors_per_second(request):
-    colors_per_second = request.GET.get('colors_per_second')
-    winner_msj = democracy_controller.send_colors_per_second(colors_per_second)
+    winner_per_step = request.GET.get('colors_per_second')
+    winner_per_step = json.loads(winner_per_step)
+    winner_msj = democracy_controller.decide_winner_and_give_prizes(winner_per_step)
     return JsonResponse({'winner_msj': winner_msj}, safe=False)

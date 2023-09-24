@@ -42,11 +42,11 @@ body {
     font-family: 'Poppins' !important;
 }
 /* --- Democracy game --- */
-.blue-cell{
+.green-cell{
     position: absolute;
     background-color: #2c782f;
 }
-.orange-cell{
+.red-cell{
     position: absolute;
     background-color: #b53a33;
 }

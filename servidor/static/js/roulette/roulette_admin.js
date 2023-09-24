@@ -1,4 +1,5 @@
-// Wait for all players to bet before spinning the roulette
+/* Wait for all players to bet before spinning the roulette
+OLD version before using websockets
 async function wait_for_all_players_and_run()
 {
     ready_to_play_game();
@@ -22,6 +23,23 @@ async function wait_for_all_players_and_run()
         
     }
 
+}*/
+
+// Spin the roulette and send the result to the server
+async function run_and_send_result()
+{
+    result = await spin_roulette(); 
+    send_roulette_result(result);
+}
+
+//Wait for all players to bet before spinning the roulette
+async function wait_for_all_players_and_run()
+{
+    await set_can_players_interact(true); // Players can bet (join is already guaranteed by the server)
+    await listen_in_game_room(); // Wait for all players to bet
+    await set_can_players_join(false);
+    await set_can_players_interact(false); 
+    run_and_send_result(); // Spin the roulette and send the result to the server
 }
 
 // Spin the roulette certain random degrees
@@ -40,13 +58,11 @@ async function spin_roulette()
     chosen_number = roulette_numbers[Math.floor(crutial_degrees / numbers_width)];
     roulette.classList.add("roulette_spin_animation");
 
-    not_ready_to_play_game();
-
     await new Promise(r => setTimeout(r, 9000));
     document.getElementById("result-spin").innerHTML = chosen_number;
 
     await new Promise(r => setTimeout(r, 5000));
-    send_roulette_result(chosen_number);
+    return chosen_number
 }
 
 function send_roulette_result(result)
@@ -58,7 +74,7 @@ function send_roulette_result(result)
         data: {result:result},
         success: function(redirect) 
         {
-            window.location.href = "../ranking/";
+            window.location.href = "../ranking_and_prizes/";
         }
     });
 }
