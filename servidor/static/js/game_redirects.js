@@ -6,15 +6,12 @@
 */
 
 admin_redirects = ['../roulette_admin/', '../hangman_admin/', '../democracy_admin/', '../multibandits_admin/']
-client_redirects = ['../roulette_client/', '../hangman_client/', '../democracy_client/', '../multibandits_client/']
+player_redirects = ['../roulette_player/', '../hangman_player/', '../democracy_player/', '../multibandits_player/']
 
 // Set the game to play with rounds and redirect to it
 function set_next_game(game_id)
 {
-    //table = document.getElementById("game_table");
     rounds = document.getElementById('rounds' + game_id.toString()).value
-    //game_row = table.rows[game_id + 1] // +1 because of the header
-    //rounds = game_row.cells[1].children[0].value; // Value of the input
     console.log(rounds);
     //Django view to set game
     $.ajax({
@@ -48,10 +45,14 @@ async function transition_to_next_game()
     });
 }
 
-async function get_ready_to_play_game() {
+/*
+It is called by the players and gets the next game to join from the server if there is one
+(if there is no game to play it returns -1)
+*/
+async function get_ready_to_join_game() {
     return new Promise(function(resolve, reject) {
         $.ajax({
-            url: '../get_ready_to_play_game/',
+            url: '../get_ready_to_join_game/',
             type: 'GET',
             contentType: 'application/json;charset=UTF-8',
             success: function(response) {
@@ -64,10 +65,10 @@ async function get_ready_to_play_game() {
 }
 
 /* 
-
-It it is called by the player just after having played a game it will redirect to the wait room
-In any other case it gets the next game from the server and redirects to it if there is one
-If there is no game to play it goes to the wait room to wait for the admin to select a game
+Called by a player when he wants to play the next game:
+- If it is called by the player just after having played a game it will redirect to the wait room.
+- (Login + random situation): it gets the next game from the server and redirects to it if there is one
+  If there is no game to play it goes to the wait room to wait for the admin to select a game
 */
 async function play_next_game()
 {
@@ -77,9 +78,9 @@ async function play_next_game()
     {
         listen_in_wait_room();
     }
-    else
+    else 
     {
-        var game_id = await get_ready_to_play_game();
+        var game_id = await get_ready_to_join_game();
         if(game_id != -1) // There is a game to play
         {
             play_game(game_id);
@@ -99,7 +100,7 @@ If there is no game to play it redirects to the game selector
 async function admin_next_game()
 {
     game_id = await transition_to_next_game();
-    if(game_id != -1) // We have a game to play
+    if(game_id != -1) // We have an scheduled game to play
     {
         admin_game(game_id);
     }
@@ -153,7 +154,7 @@ async function notify_clients_game_ready(game_id)
     wait_room_socket.close();
 }
 
-// Listen to the wait room socket and redirect to the game when the admin sends the message
+// Player listens in the wait room socket and goes to the game when the admin sends the message
 async function listen_in_wait_room()
 {
     wait_room_socket = await join_wait_room();
@@ -176,32 +177,43 @@ function admin_game(game_id)
 function play_game(game_id)
 {
     sessionStorage.setItem("played", false) //Set the played flag to false
-    window.location.href = client_redirects[game_id];
+    window.location.href = player_redirects[game_id];
 }
 
 /* 
-Stablish that the current game can't be played, 
-so no one can join it or interact with it 
+Stablish that the current game can/can't be joined
 */
-function not_ready_to_play_game()
+function set_can_players_join(can_join)
 {
-    $.ajax({
-        url: '../not_ready_to_play_game/',
-        type: 'GET',
-        contentType: 'application/json;charset=UTF-8'
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            url: '../set_can_players_join/',
+            type: 'GET',
+            contentType: 'application/json;charset=UTF-8',
+            data: {can_join:can_join},
+            success: function(response) 
+            {
+                resolve();
+            }
+        });
     });
 }
 
 /*
-Stablish that the current game is ready to be played,
-so anyone can join it and interact with it
+Stablish that the current game can/can't be interacted with
 */
-function ready_to_play_game()
+function set_can_players_interact(can_interact)
 {
-    // Listen to client calls
-    $.ajax({
-        url: '../ready_to_play_game/',
-        type: 'GET',
-        contentType: 'application/json;charset=UTF-8'
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            url: '../set_can_players_interact/',
+            type: 'GET',
+            contentType: 'application/json;charset=UTF-8',
+            data: {can_interact:can_interact},
+            success: function(response) 
+            {
+                resolve();
+            }
+        });
     });
 }

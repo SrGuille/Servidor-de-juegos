@@ -31,7 +31,7 @@ DEBUG = True
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
 print(f'IP address: {ip_address}')
-ALLOWED_HOSTS = [ip_address, '127.0.0.1', '192.168.1.50']
+ALLOWED_HOSTS = [ip_address, '127.0.0.1', '192.168.1.61']
 
 # Application definition
 

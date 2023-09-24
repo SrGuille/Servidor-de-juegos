@@ -3,21 +3,17 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from . import main_controller
 
-client_redirects = ['roulette_client_render', 'hangman_client_render', 'democracy_client_render', 'multibandits_client_render']
-
-client_screen_redirects = ['../roulette_client/', '../hangman_client/', '../democracy_client/', '../multibandits_client/']
-
 def login_render(request):
     return render(request, 'login.html')
 
 def game_selector_render(request):
     return render(request, 'game_selector.html')
 
-def ranking_render(request):
-    return render(request, 'ranking.html')
+def ranking_and_prizes_render(request):
+    return render(request, 'ranking_and_prizes.html')
 
-def wait_render(request):
-    return render(request, 'wait.html')
+def wait_room_render(request):
+    return render(request, 'wait_room.html')
 
 def set_game(request):
     game_id = int(request.GET.get('game'))
@@ -29,11 +25,21 @@ def transition_to_next_game(request):
     game_id = main_controller.transition_to_next_game()
     return JsonResponse({'game_id': game_id}, safe=False)
 
-def get_ready_to_play_game(request):
-    game_id = main_controller.get_ready_to_play_game()
+def get_ready_to_join_game(request):
+    game_id = main_controller.get_ready_to_join_game()
     return JsonResponse({'game_id': game_id}, safe=False)
 
-# New player is registered and redirected to the active game client screen
+def set_can_players_join(request):
+    can_join = bool(request.GET.get('can_join'))
+    main_controller.set_can_players_join(can_join)
+    return JsonResponse({'status': 'ok'}, safe=False)
+
+def set_can_players_interact(request):
+    can_interact = bool(request.GET.get('can_interact'))
+    main_controller.set_can_players_interact(can_interact)
+    return JsonResponse({'status': 'ok'}, safe=False)
+
+# New player is registered and redirected to the current game client screen
 def register_player(request):
     name = request.GET.get('name')
     print(name)
@@ -42,25 +48,10 @@ def register_player(request):
     elif(name == 'admin'): #TODO Set up the whole DS and redirect to game selector
         main_controller.game_setup()
         return redirect('game_selector_render')
-    else: #Register player (if necessary) and redirect to the first game client
+    else: #Register player (if necessary) and redirect to the wait room
         main_controller.register_player(name)
-        return redirect('wait_render')
+        return redirect('wait_room_render')
         
-        
-""" 
-If there is a ready game, redirect to it. Otherwise, redirect to wait screen
-Old version of the code (before the use of channels), substituted by the consumer
-def redirect_to_ready_to_play_game(request):
-    player_name = request.GET.get('player_name')
-    player_elements = main_controller.get_player_elements(player_name)
-    if(not main_controller.get_ready_to_play_game() or len(player_elements) > 0): 
-        redirect = '../wait/'
-    else:
-        active_game_id = main_controller.get_active_game()
-        redirect = client_screen_redirects[active_game_id]
-
-    return JsonResponse({'redirect': redirect}, safe=False)
-"""
 
 def get_number_players(request):
     pass
@@ -72,21 +63,9 @@ def get_player_coins(request):
     coins = main_controller.get_player_coins(name)
     return JsonResponse({'player_coins': coins}, safe=False)
 
-def get_remaining_interactions(request):
-    remaining_bets = main_controller.get_remaining_interactions()
-    return JsonResponse({'remaining_interactions': remaining_bets}, safe=False)
-
 def get_players_scores(request):
     ranking = main_controller.get_players_scores()
     return JsonResponse(ranking, safe=False)
-
-def ready_to_play_game(request):
-    main_controller.set_ready_to_play_game(True)
-    return JsonResponse({'status': 'ok'}, safe=False)
-    
-def not_ready_to_play_game(request):
-    main_controller.set_ready_to_play_game(False)
-    return JsonResponse({'status': 'ok'}, safe=False)
 
 def get_available_prizes(request):
     prizes = main_controller.get_available_prizes()
@@ -97,7 +76,7 @@ def create_roulettes(request):
     main_controller.create_prizes_roulette()
     return JsonResponse({'status': 'ok'}, safe=False)
 
-def send_prize_winner(request):
+def send_prize_to_winner(request):
     winner = request.GET.get('winner')
     prize = request.GET.get('prize')
     main_controller.register_prize_winner(winner, prize)
