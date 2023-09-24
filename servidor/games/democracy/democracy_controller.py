@@ -8,7 +8,7 @@ TEAM_NAMES = ['Verde', 'Rojo']
 REWARD_PER_ADVANTAGE = 5
 
 # Global variables
-teams = [[], []] # With player's Objects
+teams = [{}, {}] # With player's Objects
 
 # Register the move if the player has not reached the maximum number of moves
 def register_player_move(player_name, move):
@@ -49,11 +49,11 @@ def create_teams():
     for i in range(0, len(list_players), 2):
         team = random.randint(0, 1)
         # Add first player to the random team
-        teams[team].append(list_players[i])
+        teams[team][list_players[i].name] = list_players[i]
         teams_with_names[team].append(list_players[i].name)
         if(len(list_players) > i + 1): # There is a player for the other team
             # Add second player to the other team
-            teams[(team + 1) % 2].append(list_players[i+1]) 
+            teams[(team + 1) % 2][list_players[i+1].name] = list_players[i+1]
             teams_with_names[(team + 1) % 2].append(list_players[i+1].name)
     main_controller.get_players_lock().release()
     return teams_with_names
@@ -62,9 +62,8 @@ def create_teams():
 def get_my_team(player_name):
     team_counter = 0
     for team in teams:
-        for player in team:
-            if(player.name == player_name):
-                return TEAM_NAMES[team_counter]
+        if(player_name in team):
+            return TEAM_NAMES[team_counter]
         team_counter += 1 
     return None
 
@@ -104,7 +103,8 @@ def decide_winner_and_give_prizes(winner_per_step):
 # Give prizes to the winner team
 def give_prizes(winner_team, winner_advantage):
     main_controller.get_players_lock().acquire()
-    for player in teams[winner_team - 1]:
+    winner_team = teams[winner_team - 1]
+    for player in winner_team.values():
         player.coins += winner_advantage * REWARD_PER_ADVANTAGE
     main_controller.get_players_lock().release()
 
