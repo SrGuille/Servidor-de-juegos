@@ -41,7 +41,7 @@ async function get_available_prizes()
         contentType: 'application/json;charset=UTF-8',
         success: function(all_prizes) 
         {
-            candidate_prizes = all_prizes.map(function(i) {if(i.amount > 0) return i;});
+            candidate_prizes = all_prizes.filter(i => i.amount > 0);
             prizes_prob = candidate_prizes.map(x => x.prob);
             console.log(candidate_prizes)
             console.log(prizes_prob)
@@ -157,8 +157,9 @@ function find_roulette_result(spin_degrees, probs, candidates)
     }
 
     console.log('Error: spin percentage is greater than 1');
+    console.log(probs)
     // If the percentage is greater than 1, we return the last player
-    return candidates[length(candidates) - 1];
+    return candidates[candidates.length - 1];
 }
 
 // Send the winner and the prize to the server and go to the next game

@@ -49,7 +49,7 @@ function load_third_buttons()
 
 function load_row_buttons()
 {
-    button_left = 650;
+    button_left = 550;
     vertical_step = 43;
 
     ids_row = ["1R", "2R", "3R"]

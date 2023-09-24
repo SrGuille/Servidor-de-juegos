@@ -40,8 +40,10 @@ async function play_democracy()
 
 async function countdown()
 {
-    document.getElementById("start_music").click(); // Start the music
+    document.getElementById("enable_sounds").click(); // Trick browser to enable sounds
     var arcade_jump_audio = document.getElementById('arcade_jump_audio');
+    arcade_jump_audio.volume = 0.7;
+    console.log(arcade_jump_audio.volume)
     for(i = 3; i > 0; i--)
     {
         document.getElementById("countdown").innerHTML = i;
@@ -176,6 +178,9 @@ function move_character(x_moves, y_moves)
 async function main_loop()
 {
     var arcade_jump_audio = document.getElementById('arcade_jump_audio');
+    var corriendo_en_la_noche = document.getElementById('corriendo_en_la_noche');
+    corriendo_en_la_noche.volume = 0.2; // TODO Check if it works after play()
+    corriendo_en_la_noche.play();
     round = 0;
     max_rounds = 30;
     rounds_left = document.getElementById("rounds_left");
