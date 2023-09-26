@@ -20,9 +20,10 @@ async function get_ranking_from_scores()
         contentType: 'application/json;charset=UTF-8',
         success: function(all_players) 
         {
+            console.log(all_players)
             total_coins = create_ranking_table(all_players);
             // Remove the players with 0 coins
-            candidate_players = all_players.filter(i => i.coins > 0);
+            candidate_players = all_players.filter(i => i.coins > 0)
             players_prob = candidate_players.map(x => x.coins / total_coins);
             console.log(candidate_players)
             console.log(players_prob)
@@ -62,7 +63,7 @@ function create_ranking_table(players_scores)
     {
         ranking_row = document.createElement("tr");
         player_name_cell = document.createElement("td");
-        player_name_cell.innerHTML = players_ranking[i].player_name;
+        player_name_cell.innerHTML = players_ranking[i].nick; // Name is the nick
         ranking_row.appendChild(player_name_cell);
         
         player_coins_cell = document.createElement("td");
@@ -108,16 +109,19 @@ async function create_and_spin_roulettes()
     await new Promise(r => setTimeout(r, 5000));
 
     // Spin the roulettes
-    winner = spin_roulette(players_roulette_img, players_prob, candidate_players).player_name;
+    winner = spin_roulette(players_roulette_img, players_prob, candidate_players);
     prize = spin_roulette(prizes_roulette_img, prizes_prob, candidate_prizes).type;
+
+    winner_name = winner.name; // Unique name
+    winner_nick = winner.nick; // For displaying purposes
 
     await new Promise(r => setTimeout(r, 6000));
 
-    document.getElementById("result").innerHTML = winner + " ha ganado <br> un " + prize;
+    document.getElementById("result").innerHTML = winner_nick + " ha ganado <br> un " + prize;
 
     await new Promise(r => setTimeout(r, 10000));
 
-    send_prize_to_winner(winner, prize);
+    send_prize_to_winner(winner_name, prize);
 }
 
 // Spin the roulette certain random degrees

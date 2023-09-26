@@ -54,13 +54,14 @@ def set_game(game_id, rounds):
     remaining_rounds = rounds
     can_players_join = True
 
-""" 
-Called between 2 games:
-If there are more rounds of the scheculed game it returns the current game id 
-(if there are no more rounds, it returns -1), and one round is substracted
-When some player/s don't have any coins, next game is some no cost game ignoring the schedule
-"""
-def transition_to_next_game():
+
+def transition_to_next_game() -> int:
+    """ 
+        Called between 2 games:
+        - If there are more rounds of the scheculed game it returns the current game id 
+          (if there are no more rounds, it returns -1), and one round is substracted
+        - When some player/s don't have any coins, next game is some no cost game ignoring the schedule
+    """
     global current_game_id, remaining_rounds, no_cost_current_game_id
 
     # Compensate the players with 0 coins who didn't won anything in the previous no cost game
@@ -116,16 +117,41 @@ def give_coins_to_0_coins_players():
             player.coins += FREE_COINS_FOR_0_COINS_PLAYERS
     players_lock.release()
 
-# If it does not exist, it registers the player and adds a prize of each type
-def register_player(name):
+def register_player(name: str, nick: str) -> None:
+    """
+        If it does not exist, it registers the player and adds a prize of each type
+    """
     players_lock.acquire()
     if(players.get(name) == None): # If player doesn't exist
         id = len(players) + 1
-        players[name] = models.Player(name, id)
+        players[name] = models.Player(name, nick, id)
         add_prizes() # Player brings 1 prize of each type
+    else: 
+        players[name].logged = True
+        players[name].nick = nick
     players_lock.release()
     print_players()
     print_prizes()
+
+def logout(name: str) -> None:
+    """
+        Sets logged to False so the player is not required to play
+    """
+    players_lock.acquire()
+    players[name].logged = False
+    players_lock.release()
+    print_players()
+
+def get_number_logged_players() -> int:
+    """
+        Returns the number of players who are logged
+        TODO when database just maintain in memory logged players
+    """
+    number_players = 0
+    for player in players.values():
+        if(player.logged):
+            number_players += 1
+    return number_players
 
 def get_player_elements(name):
     players_lock.acquire()
@@ -145,11 +171,11 @@ def add_prizes():
 # Gets how many players haven't interacted yet
 def get_remaining_interactions():
     players_lock.acquire()
-    number_players = len(players)
+    number_players = get_number_logged_players()
     number_interactions = 0
 
     for player in players.values():
-        if(len(player.elements) > 0): #If player has elements (bets, etc.)
+        if(len(player.elements) > 0 and player.logged): #If player has elements (bets, etc.)
             number_interactions += 1
 
     players_lock.release()
@@ -162,7 +188,7 @@ def get_players_scores():
     players_scores = []
     players_lock.acquire()
     for player in players.values(): # Create a list of dicts
-        players_scores.append({'player_name': player.name, 'coins': player.coins})
+        players_scores.append({'name': player.name, 'nick': player.nick, 'coins': player.coins})
     players_lock.release()
     return players_scores
 
@@ -203,18 +229,22 @@ def some_player_has_0_coins():
     players_lock.release()
     return False
 
-# Empty the bets list of all players
-def reset_elements():
+def reset_elements() -> None:
+    """
+        Resets the elements of all players
+    """
     for player in players.values():
         player.elements = []
     print_players()
 
 
-""" 
-    The probability of the out of stock prize is distributed among the other available prizes
-    depending on their actual probability to cover the empty space
-#"""
+
 def adjust_prizes_probabilities(out_of_stock_prize):
+    """ 
+        The probability of the out of stock prize is distributed 
+        among the other available prizes depending on 
+        their actual probability to cover the empty space
+    """
     out_of_stock_prob = out_of_stock_prize.prob
     for prize in prizes.values():
         if(prize.amount > 0):
@@ -245,6 +275,7 @@ def create_prizes_roulette():
 def print_players():
     for player in players.values():
         print(f"Name: {player.name}")
+        print(f"Nick: {player.nick}")
         print(f"Coins: {player.coins}")
         print(f"Elements: {player.elements}")
 

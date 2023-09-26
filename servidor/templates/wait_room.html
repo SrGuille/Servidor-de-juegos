@@ -16,6 +16,9 @@
 </head>
 <body class="fondo">
     <div class="container">
+        <div class="logout-button">
+            <button onclick="logout()">Logout</button>
+        </div>
         <div class="row justify-content-center row-login" id="register_form">
             <div class="col-md-4 col-xs-12 text-center animate__animated animate__fadeIn animate__slow caja-login">
                 <h1 id="wait">¡Espera a que haya un juego preparado!</h1>
@@ -78,5 +81,21 @@
 <script>
     // Play next game or wait for a game to be ready
     play_next_game();
+
+    function logout()
+    {
+        $.ajax({
+            url: '../logout/',
+            type: 'GET',
+            contentType: 'application/json;charset=UTF-8',
+            data: {name: sessionStorage.getItem("player_name")},
+                success: function(response) {
+                    window.location.href = "../";
+                },
+                error: function(response) {
+                    alert("Error al cerrar sesión");
+                }
+        });
+    }
 </script>
 </html>
