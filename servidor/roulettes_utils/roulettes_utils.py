@@ -19,7 +19,7 @@ def create_players_roulette(players):
 
     for player in players.values():
         if(player.coins > 0): # If player has coins
-            labels.append(player.name)
+            labels.append(player.nick)
             sizes.append(player.coins)
 
     sizes = np.array(sizes)

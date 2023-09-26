@@ -39,22 +39,33 @@ def set_can_players_interact(request):
     main_controller.set_can_players_interact(can_interact)
     return JsonResponse({'status': 'ok'}, safe=False)
 
-# New player is registered and redirected to the current game client screen
+ 
 def register_player(request):
+    """
+        New player is registered and redirected to the current game client screen
+    """
     name = request.GET.get('name')
     print(name)
     if(name == ''):
         return JsonResponse({'status': 'error'}, safe=False)
+    
     elif(name == 'admin'): #TODO Set up the whole DS and redirect to game selector
         main_controller.game_setup()
         return redirect('game_selector_render')
+    
     else: #Register player (if necessary) and redirect to the wait room
-        main_controller.register_player(name)
+        nick = request.GET.get('nick')
+        if(nick == ''): # If the player has not set a nick, use the name
+            nick = name
+        main_controller.register_player(name, nick)
         return redirect('wait_room_render')
         
+def logout(request):
+    name = request.GET.get('name')
+    main_controller.logout(name)
+    return JsonResponse({'status': 'ok'}, safe=False)
 
 def get_number_players(request):
-    pass
     number_players = main_controller.get_number_players()
     return JsonResponse({'players': number_players}, safe=False)
 

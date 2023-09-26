@@ -19,7 +19,9 @@
             <div class="col-md-4 col-xs-12 text-center animate__animated animate__fadeIn animate__slow caja-login">
                 <form action="./register_player/" method="GET">
                     <label class="form-label fs-2 fw-bold nombre" for="name">Tu nombre</label>
-                    <input class="form-control" type="text" id="name" name="name" required>
+                    <input class="form-control" type="text" id="name" name="name" maxlength="15" required>
+                    <label class="form-label fs-2 fw-bold nombre" for="name">Tu nombre artístico (opcional)</label>
+                    <input class="form-control" type="text" id="nick" name="nick" maxlength="20">
                     <input class="button-juego" onclick="register_name()" type="submit" value="Jugar">
                 </form>
             </div>
@@ -83,7 +85,7 @@
     function register_name() 
     {
         // Will be shared between all pages
-        name = document.getElementById("name").value;
+        name = document.getElementById("name").value; // Unique name
         sessionStorage.setItem("player_name", name);
         sessionStorage.setItem("played", false);
     }

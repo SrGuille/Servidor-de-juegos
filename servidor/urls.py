@@ -15,6 +15,7 @@ urlpatterns = [
     path('transition_to_next_game/', main_views.transition_to_next_game, name='transition_to_next_game'),
     
     path('register_player/', main_views.register_player, name='register_player'),
+    path('logout/', main_views.logout, name='logout'),
     
     path('get_players_scores/', main_views.get_players_scores, name='get_players_scores'),
     path('get_available_prizes/', main_views.get_available_prizes, name='get_available_prizes'),
