@@ -40,6 +40,17 @@ El año que viene estarán disponibles:
 
   Un juego son 7 apuestas de todos los jugadores, y en cada una se pide a cada jugador que apueste las monedas que quiera a una de ellas. Después de que todos apuesten cada jugador verá en su móvil cuánto dinero ha ganado su apuesta, y en la tele a qué tragaperras han apostado los demás en esa ocasión. Además, también aparecerá a modo de recordatorio cuántas personas han apostado a cada máquina a lo largo del juego. De esta manera los jugadores se fijarán en qué personas repiten las apuestas a la misma máquina y qué máquinas son las más populares y podrán decidir si cambian a esa.
 
+- Juego de los saludos: a cada jugador se le asignan varios otros jugadores a los que debe saludar y el objetivo es que se cruce con todos en un mapa laberíntico, utilizando los controles de cruceta habituales de los videojuegos. Algunos de esos jugadores también querrán saludarle a él, pero otros no, por lo que el juego es una mezcla entre un juego de saludos voluntarios e involuntarios (pilla-pilla). Gana el primer jugador que salude a todos los de su lista. Por cada jugador saludado, se ganan 3 monedas. El ganador se lleva 30 monedas extra.
+
+  Para que el juego sea completamente justo, la inicialización del mismo debe cumplir varios requisitos:
+  - Cada jugador tiene en su lista a N otros jugadores (a los que debe pillar o saludar voluntariamente): garantiza que todos tengan el mismo número de tareas de buscar jugadores.
+  - Cada jugador aparece en la lista de otros N jugadores: garantiza que todos tengan el mismo número de tareas de ser buscados.
+  
+  Sin embargo, estas dos condiciones no bastan para que sea justo: si se asignan las listas aleatoriamente puede ocurrir que haya algún jugador que tenga que saludar a muchos jugadores que no quieren saludarle, mientras que otros no tengan que saludar a nadie que no quiera saludarle. Para evitar esto, se añade la siguiente condición:
+  - Todos los jugadores deben realizar M saludos voluntarios (el otro jugador también quiere saludarle): garantiza que las características de los saludos que realizan estén en igualdad de condiciones. Cada jugador debe pillar a |jugadores| - M jugadores y saludar voluntariamente a M jugadores.
+  
+  La inicialización del juego consiste en crear un grafo dirigido de jugadores donde cada uno tenga N aristas de entrada y N aristas de salida, y que M de ellas sean bidireccionales (2 aristas de tipos distintos forman una). Se prueban experimentalmente varios valores de N y M para quedarse con el grafo más balanceado posible en cuanto a número de inputs, outputs y bidireccionales. El algoritmo es completamente determinista, dependiendo únicamente en el |jugadores|.
+
 AGRADECIMIENTOS (de Guille): 
 - A Toña por ayudar con la programación, ideas y apoyo moral.
 - A Florin por realizar el diseño de la mayoría de pantallas con temática navideña (y pese a eso no haber jugado).
