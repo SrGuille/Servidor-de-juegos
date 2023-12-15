@@ -1,5 +1,5 @@
 import threading
-from servidor import models
+from servidor import classes
 import json
 from servidor import main_controller
 #from googletrans import Translator
@@ -91,7 +91,7 @@ def register_player_guess(guess, player_name):
             if(guess not in guessed_letters): # If the letter has not been guessed yet
                 
                 valid_guess = True
-                player.elements.append(models.Guess(guess)) # Add the guess to the player elements
+                player.elements.append(classes.Guess(guess)) # Add the guess to the player elements
                 if(len(guess) == len(sentence)): # If the guess is a sentence guess
                     
                     if(guess == sentence): # If the guess is correct

@@ -14,7 +14,8 @@ urlpatterns = [
     path('set_game/', main_views.set_game, name='set_game'),
     path('transition_to_next_game/', main_views.transition_to_next_game, name='transition_to_next_game'),
     
-    path('register_player/', main_views.register_player, name='register_player'),
+    path('login_player/', main_views.login_player, name='login_player'),
+    path('get_players_names/', main_views.get_players_names, name='get_players_names'),
     path('logout/', main_views.logout, name='logout'),
     
     path('get_players_scores/', main_views.get_players_scores, name='get_players_scores'),

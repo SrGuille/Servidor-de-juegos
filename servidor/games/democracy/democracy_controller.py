@@ -2,7 +2,7 @@ import threading
 from servidor import main_controller
 import random
 from typing import List, Tuple, Dict
-from servidor.models import Player
+from servidor.classes import Player
 
 # Constants
 MOVES_PER_STEP = 1
