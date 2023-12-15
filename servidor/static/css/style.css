@@ -130,8 +130,29 @@ body {
     background-attachment: fixed;
  }
 .row-login{
-    margin-top: 40vh !important;
+    margin-top: 25vh !important;
 }
+
+.form-dos-columnas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Esto separa las dos columnas */
+    gap: 30px; /* Añade espacio entre las columnas y filas, ajusta según sea necesario */
+}
+
+.columna {
+    flex: 0 0 42%; /* Ajusta este valor para cambiar el ancho inicial de las columnas */
+    max-width: 42%; /* Asegura que las columnas no excedan este ancho */
+    /* Añade margen y relleno según lo necesites */
+}
+
+.columna-boton {
+    width: 100%; /* Hace que el contenedor del botón ocupe el ancho completo */
+    display: flex;
+    justify-content: center; /* Centra el botón horizontalmente */
+    margin-top: 20px; /* Añade espacio arriba del botón, ajusta según sea necesario */
+}
+
  
 
 /* --- Game selector --- */

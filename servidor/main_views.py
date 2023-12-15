@@ -40,16 +40,17 @@ def set_can_players_interact(request):
     return JsonResponse({'status': 'ok'}, safe=False)
 
  
-def register_player(request):
+def login_player(request):
     """
-        New player is registered and redirected to the current game client screen
+        New player is loged and redirected to the current game client screen
     """
     name = request.GET.get('name')
+    nick = request.GET.get('nick')
     print(name)
     if(name == ''):
         return JsonResponse({'status': 'error'}, safe=False)
     
-    elif(name == 'admin'): #TODO Set up the whole DS and redirect to game selector
+    elif(nick == 'admin'): #TODO Set up the whole DS and redirect to game selector
         main_controller.game_setup()
         return redirect('game_selector_render')
     
@@ -57,8 +58,12 @@ def register_player(request):
         nick = request.GET.get('nick')
         if(nick == ''): # If the player has not set a nick, use the name
             nick = name
-        main_controller.register_player(name, nick)
+        main_controller.login_player(name, nick)
         return redirect('wait_room_render')
+    
+def get_players_names(request):
+    players_names = main_controller.get_players_names()
+    return JsonResponse({'names': players_names}, safe=False)
         
 def logout(request):
     name = request.GET.get('name')

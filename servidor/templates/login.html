@@ -16,13 +16,19 @@
 <body class="fondo">
     <div class="container">
         <div class="row justify-content-center row-login" id="register_form">
-            <div class="col-md-4 col-xs-12 text-center animate__animated animate__fadeIn animate__slow caja-login">
-                <form action="./register_player/" method="GET">
-                    <label class="form-label fs-2 fw-bold nombre" for="name">Tu nombre</label>
-                    <input class="form-control" type="text" id="name" name="name" maxlength="15" required>
-                    <label class="form-label fs-2 fw-bold nombre" for="name">Tu nombre artístico (opcional)</label>
-                    <input class="form-control" type="text" id="nick" name="nick" maxlength="20">
-                    <input class="button-juego" onclick="register_name()" type="submit" value="Jugar">
+            <div class="col-md-8 col-xs-12 text-center animate__animated animate__fadeIn animate__slow caja-login">
+                <form action="./login_player/" method="GET" class="form-dos-columnas">
+                    <div class="columna">
+                        <label class="form-label fs-2 fw-bold nombre" for="name">Nombre</label>
+                        <select class="form-select" id="select_players" name="name"></select>
+                    </div>
+                    <div class="columna">
+                        <label class="form-label fs-2 fw-bold nombre" for="nick">Nombre artístico</label>
+                        <input class="form-control" type="text" id="nick" name="nick" maxlength="20">
+                    </div>
+                    <div class="columna-boton">
+                        <input class="button-juego" onclick="register_name()" type="submit" value="Jugar">
+                    </div>
                 </form>
             </div>
         </div>
@@ -81,13 +87,44 @@
     <!-- End Snow animationr-->
 </body>
 <script>
+    $(document).ready(function() 
+    {
+        get_players_names();
+    });
+
     // JS session storage
     function register_name() 
     {
         // Will be shared between all pages
-        name = document.getElementById("name").value; // Unique name
+        name = document.getElementById("select_players").value; // Unique name
         sessionStorage.setItem("player_name", name);
         sessionStorage.setItem("played", false);
+    }
+
+    // Get all players names and add them to the select
+    function get_players_names()
+    {
+        $.ajax({
+            url: 'get_players_names/',
+            type: 'GET',
+            data: {},
+            contentType: 'application/json;charset=UTF-8',
+            success: function(response) 
+            {
+                add_names_to_select(response.names);
+            }
+        });
+    }
+
+    function add_names_to_select(names)
+    {
+        var select = document.getElementById("select_players");
+        for (var i = 0; i < names.length; i++) 
+        {
+            var option = document.createElement("option");
+            option.text = names[i];
+            select.add(option);
+        }
     }
 </script>
 </html>

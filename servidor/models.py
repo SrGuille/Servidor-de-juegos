@@ -1,31 +1,33 @@
 from django.db import models
-from typing import List
-
 # Create your models here.
 
-class Player():
-    def __init__(self, name: str, nick: str, id: int):
-        self.name: str = name
-        self.nick:str = nick
-        self.id: int = id
-        self.logged: bool = True
-        self.coins: int = 200 #Initial coins
-        self.elements: List[any] = [] #List of game elements
+class Player(models.Model):
+    name = models.CharField(max_length=20)
+    nick = models.CharField(max_length=25, blank=True, null=True) #Optional
+    coins = models.IntegerField(default=200)
+    attributes = models.CharField(max_length=100)
 
-# For roulette and multibandits
-class Bet():
-    def __init__(self, type: str, amount: int):
-        self.type: str = type
-        self.amount: int = amount
+class Prize(models.Model):
+    type = models.CharField(max_length=20)
+    prob = models.FloatField()
+    value = models.IntegerField()
+    amount = models.IntegerField()
 
-class Prize():
-    def __init__(self, type: str, prob: float, value: int):
-        self.type: str = type
-        self.prob: float = prob
-        self.value: int = value
-        self.amount: int = 0 #Will be incremented when players are registered
+class Coins_evolution(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    coins = models.IntegerField()
+    date = models.DateField(auto_now_add=True)
+    game_number = models.IntegerField()
+    
+    class Meta: # Define primary key
+        unique_together = ('player', 'date', 'game_number')
 
-# For hangman
-class Guess():
-    def __init__(self, letter):
-        self.letter = letter
+class Prizes_evolution(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    prize = models.ForeignKey(Prize, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    game_number = models.IntegerField()
+
+    class Meta: # Define primary key
+        unique_together = ('player', 'prize', 'date', 'game_number')
+        

@@ -1,5 +1,5 @@
 import threading
-from servidor import models
+from servidor import classes
 import json
 from servidor import main_controller
 
@@ -14,7 +14,7 @@ def register_player_bets(bets):
             list_bets = bets['bets']
             list_bets = json.loads(list_bets) #Convert string to list
             for player_bet in list_bets: #Add bets to player
-                bet = models.Bet(player_bet['type'], player_bet['amount'])
+                bet = classes.Bet(player_bet['type'], player_bet['amount'])
                 player.elements.append(bet) #Add bet to player
                 player.coins -= bet.amount #Substract coins
         main_controller.print_players()

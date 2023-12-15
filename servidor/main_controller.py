@@ -4,13 +4,20 @@ matplotlib.use('Agg') # Needed to avoid the error "RuntimeError: main thread is 
 import numpy as np
 import threading
 from . import models
+from . import queries as q
+from . import classes
+from . import constants as c
 from .roulettes_utils import roulettes_utils
+
+from typing import List
 
 players_lock = threading.Lock() # Lock for the players list
 
 players = {}
 
-GAME_NAMES = ['Ruleta', 'Ahorcado', "Democracia", "Tragaperras"]
+GAME_NAMES = c.GAME_NAMES
+
+INITIAL_COINS = c.INITIAL_COINS
 
 # Controls the current game and the number of rounds
 current_game_id = -1
@@ -30,16 +37,16 @@ In case of some player has 0 coins, a no cost game is randomly played
 and the players with 0 coins after it get some free coins 
 It is stored in a different variable than current_game_id to don't lose the current game id
 """ 
-NO_COST_GAMES = ['Ahorcado', 'Democracia'] # Games that don't cost coins to play
+NO_COST_GAMES = c.NO_COST_GAMES
 
 no_cost_current_game_id = -1
-FREE_COINS_FOR_0_COINS_PLAYERS = 15
+FREE_COINS_FOR_0_COINS_PLAYERS = c.FREE_COINS_FOR_0_COINS_PLAYERS
 
 prizes = {
-    "Dulce": models.Prize("Dulce", 0.25, 5), 
-    "Regalo pequeño": models.Prize("Regalo pequeño", 0.25, 20), 
-    "Regalo mediano": models.Prize("Regalo mediano", 0.25, 30), 
-    "Regalo grande": models.Prize("Regalo grande", 0.25, 40)
+    "Dulce": classes.Prize("Dulce", 0.25, 5), 
+    "Regalo pequeño": classes.Prize("Regalo pequeño", 0.25, 20), 
+    "Regalo mediano": classes.Prize("Regalo mediano", 0.25, 30), 
+    "Regalo grande": classes.Prize("Regalo grande", 0.25, 40)
 }
 
 
@@ -117,14 +124,14 @@ def give_coins_to_0_coins_players():
             player.coins += FREE_COINS_FOR_0_COINS_PLAYERS
     players_lock.release()
 
-def register_player(name: str, nick: str) -> None:
+def login_player(name: str, nick: str) -> None:
     """
-        If it does not exist, it registers the player and adds a prize of each type
+        Log in a player with its name and nick
     """
     players_lock.acquire()
     if(players.get(name) == None): # If player doesn't exist
         id = len(players) + 1
-        players[name] = models.Player(name, nick, id)
+        players[name] = classes.Player(name, nick, id)
         add_prizes() # Player brings 1 prize of each type
     else: 
         players[name].logged = True
@@ -132,6 +139,22 @@ def register_player(name: str, nick: str) -> None:
     players_lock.release()
     print_players()
     print_prizes()
+
+    is_player_first_time = q.is_player_first_time(name)
+
+    print(f"Is player first time: {is_player_first_time}")
+
+    if(is_player_first_time is not None):
+        if(is_player_first_time):
+            q.reset_player(name, nick)
+            q.add_new_prizes()
+
+def get_players_names() -> List[str]:
+    """
+        Gets the names of all players from DB
+    """
+    players_names = q.get_players_names()
+    return players_names
 
 def logout(name: str) -> None:
     """
