@@ -1,3 +1,8 @@
+.big-text {
+    font-size: 3em; /* Para todos los textos grandes */
+    text-align: center; /* Centra el texto horizontalmente */
+}
+
 /* --- Ranking ---*/
 .box-roulette{
     display: flex;
@@ -53,7 +58,22 @@ body {
     cursor: pointer;
 }
 
+.login-button button {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-end;
+}
+
 .logout-button button:hover {
+    background-color: #d32f2f;
+}
+
+.login-button button:hover {
     background-color: #d32f2f;
 }
 
@@ -112,6 +132,16 @@ body {
     position: relative;
     font-size: 100px;
     color: black;
+}
+
+.democracy_button {
+    padding: 5vw; /* Usar viewport width para el padding */
+    width: 30vw; /* Ancho basado en el ancho del viewport */
+    height: 30vw; /* Altura basada en el ancho del viewport */
+    box-sizing: border-box; /* Incluir padding y border en el ancho y alto */
+    border: none;
+    background-color: #f0f0f0; /* Color de fondo de ejemplo */
+    /* Añadir prefijos de proveedor si es necesario */
 }
 
 /* CSS variable for rotation degrees*/
@@ -311,16 +341,18 @@ body {
     display: none;
 }
  /* --- Ahorcado --- */
-#palabra-ahorcado{
+ #palabra-ahorcado {
+    width: 100%; /* o un valor específico mayor que 400px si es necesario */
     margin-left: auto;
     margin-right: auto;
     position: relative;
-    top: 45px;
+    top: -20px;
     text-align: center;
 }
 
+
 #ahorcado{
-    width: 300px;
+    width: 400px;
     height: auto;
     display: block;
     margin-left: auto;
@@ -332,14 +364,14 @@ body {
 }
 
 #ahorcados{
-    width: 30px;
+    width: 400px;
     height: auto;
     position: absolute;
-    top: 250px;
-    left: 660px;
+    top: 310px;
+    left: 1000px;
     z-index: 3;
     font-family: 'Lobster', cursive;
-    font-size: 12px;
+    font-size: 18px;
 }
 
 /* --- Roulette indicator image --- */
@@ -357,8 +389,8 @@ body {
 
 /* --- Casino Roulette image --- */
 #roulette{
-    width: 1000px;
-    height: 1000px;
+    width: 900px;
+    height: 900px;
     display: block;
     margin-left: auto;
     margin-right: auto;

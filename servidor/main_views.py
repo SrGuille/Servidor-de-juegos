@@ -61,7 +61,7 @@ def login_player(request):
         main_controller.login_player(name, nick)
         return redirect('wait_room_render')
     
-def get_players_names(request):
+def get_players_names(request): # For the login player selector
     players_names = main_controller.get_players_names()
     return JsonResponse({'names': players_names}, safe=False)
         

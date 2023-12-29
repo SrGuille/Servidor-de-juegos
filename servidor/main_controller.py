@@ -13,7 +13,7 @@ from typing import List
 
 players_lock = threading.Lock() # Lock for the players list
 
-players = {}
+players_elems = {} # Dict with the elements of each player	
 
 GAME_NAMES = c.GAME_NAMES
 
@@ -42,14 +42,6 @@ NO_COST_GAMES = c.NO_COST_GAMES
 no_cost_current_game_id = -1
 FREE_COINS_FOR_0_COINS_PLAYERS = c.FREE_COINS_FOR_0_COINS_PLAYERS
 
-prizes = {
-    "Dulce": classes.Prize("Dulce", 0.25, 5), 
-    "Regalo pequeño": classes.Prize("Regalo pequeño", 0.25, 20), 
-    "Regalo mediano": classes.Prize("Regalo mediano", 0.25, 30), 
-    "Regalo grande": classes.Prize("Regalo grande", 0.25, 40)
-}
-
-
 # TODO Maybe init everything here
 def game_setup():
     pass
@@ -71,6 +63,8 @@ def transition_to_next_game() -> int:
     """
     global current_game_id, remaining_rounds, no_cost_current_game_id
 
+    reset_elements() # Reset the elements of all players
+
     # Compensate the players with 0 coins who didn't won anything in the previous no cost game
     #TODO, maybe don't give coins to players who reached 0 coins in the previous game when DB exists
     if(no_cost_current_game_id != -1): # If there was a no cost game
@@ -79,7 +73,8 @@ def transition_to_next_game() -> int:
     
     # If some player has 0 coins, redirect to a no cost game
     if(some_player_has_0_coins()): 
-        no_cost_current_game_id = np.random.randint(0, len(NO_COST_GAMES))
+        no_cost_game = np.random.choice(NO_COST_GAMES)
+        no_cost_current_game_id = GAME_NAMES.index(no_cost_game)
         set_can_players_join(True)
         return no_cost_current_game_id
     else:
@@ -118,36 +113,30 @@ def set_can_players_interact(value):
     can_players_interact = value
 
 def give_coins_to_0_coins_players():
-    players_lock.acquire()
-    for player in players.values():
-        if(player.coins == 0):
-            player.coins += FREE_COINS_FOR_0_COINS_PLAYERS
-    players_lock.release()
+    zero_coins_players = q.get_0_coins_players()
+    for player in zero_coins_players:
+        q.add_coins_to_player(player.name, FREE_COINS_FOR_0_COINS_PLAYERS)
 
 def login_player(name: str, nick: str) -> None:
     """
         Log in a player with its name and nick
     """
     players_lock.acquire()
-    if(players.get(name) == None): # If player doesn't exist
-        id = len(players) + 1
-        players[name] = classes.Player(name, nick, id)
-        add_prizes() # Player brings 1 prize of each type
-    else: 
-        players[name].logged = True
-        players[name].nick = nick
+    players_elems[name] = []
     players_lock.release()
-    print_players()
-    print_prizes()
 
     is_player_first_time = q.is_player_first_time(name)
-
     print(f"Is player first time: {is_player_first_time}")
 
     if(is_player_first_time is not None):
         if(is_player_first_time):
             q.reset_player(name, nick)
             q.add_new_prizes()
+        else:
+            q.change_player_nick(name, nick)
+
+    print_players()
+    print_prizes()
 
 def get_players_names() -> List[str]:
     """
@@ -158,152 +147,118 @@ def get_players_names() -> List[str]:
 
 def logout(name: str) -> None:
     """
-        Sets logged to False so the player is not required to play
+        Sets logged to False so the player is not required to play and deletes its elements
     """
+    q.logout_player(name) # Erase the player's nick in DB
     players_lock.acquire()
-    players[name].logged = False
+    del players_elems[name]
     players_lock.release()
     print_players()
 
-def get_number_logged_players() -> int:
-    """
-        Returns the number of players who are logged
-        TODO when database just maintain in memory logged players
-    """
-    number_players = 0
-    for player in players.values():
-        if(player.logged):
-            number_players += 1
-    return number_players
-
 def get_player_elements(name):
     players_lock.acquire()
-    player = players[name]
-    player_elements =  player.elements
+    player_elements = players_elems[name]
     players_lock.release()
     return player_elements
 
-# Adds a prize of each type to the prizes list
-def add_prizes():
-    for prize in prizes.values():
-        if(prize.type == "Dulce"): # If it is a candy, a lot of them
-            prize.amount += 10
-        else:
-            prize.amount += 1
-
 # Gets how many players haven't interacted yet
 def get_remaining_interactions():
+    logged_players = q.get_logged_players()
+    num_logged_players = len(logged_players)
+    num_interactions = 0
+
     players_lock.acquire()
-    number_players = get_number_logged_players()
-    number_interactions = 0
-
-    for player in players.values():
-        if(len(player.elements) > 0 and player.logged): #If player has elements (bets, etc.)
-            number_interactions += 1
-
+    for player in logged_players:
+        if len(players_elems[player.name]) > 0:
+            num_interactions += 1
     players_lock.release()
-    print(f"Number players: {number_players}")
-    print(f"Remaining interactions: {number_players - number_interactions}")
-    return number_players - number_interactions
+
+    print(f"Number players: {num_logged_players}")
+    print(f"Remaining interactions: {num_logged_players - num_interactions}")
+    return num_logged_players - num_interactions
 
 # Returns the players and their coins (all players, not only the ones with coins)
 def get_players_scores():
     players_scores = []
+    """
     players_lock.acquire()
     for player in players.values(): # Create a list of dicts
         players_scores.append({'name': player.name, 'nick': player.nick, 'coins': player.coins})
-    players_lock.release()
+    players_lock.release()"""
+
+    logged_players = q.get_logged_players()
+    for player in logged_players:
+        players_scores.append({'name': player.name, 'nick': player.nick, 'coins': player.coins})
     return players_scores
 
 # Returns the prizes and their amount (only the ones with amount > 0)
 def get_available_prizes():
     available_prizes = []
-    for prize in prizes.values():
-        if(prize.amount > 0):
-            available_prizes.append({'type': prize.type, 'prob': prize.prob, 'amount': prize.amount})
-
+    for prize in q.get_available_prizes():
+        available_prizes.append({'type': prize.type, 'prob': prize.prob, 'amount': prize.amount})
     return available_prizes
 
-def get_players():
-    return players
+def get_players_elems():
+    # Returns the whole dict
+    return players_elems
 
 def get_players_lock():
     return players_lock
 
-def get_player(name):
-    return players[name]
+def get_player_elems(name):
+    player_elems = None
+    if name in players_elems:
+        player_elems = players_elems[name]
+    return player_elems
 
 # Returns the coins of a player
 def get_player_coins(name):
-    players_lock.acquire()
-    player = players[name]
-    coins = 0
-    if(player != None):
-        coins = player.coins
-    players_lock.release()
+    coins = q.get_player_coins(name)
     return coins
 
 def some_player_has_0_coins():
-    players_lock.acquire()
-    for player in players.values():
-        if(player.coins == 0):
-            players_lock.release()
-            return True
-    players_lock.release()
-    return False
+    if(len(q.get_0_coins_players()) > 0):
+        return True
+    else:
+        return False
 
 def reset_elements() -> None:
     """
         Resets the elements of all players
     """
-    for player in players.values():
-        player.elements = []
-    print_players()
-
-
-
-def adjust_prizes_probabilities(out_of_stock_prize):
-    """ 
-        The probability of the out of stock prize is distributed 
-        among the other available prizes depending on 
-        their actual probability to cover the empty space
-    """
-    out_of_stock_prob = out_of_stock_prize.prob
-    for prize in prizes.values():
-        if(prize.amount > 0):
-            prize.prob += (out_of_stock_prob * prize.prob) / (1 - out_of_stock_prob)
-        
+    for player in players_elems:
+        players_elems[player] = []
+    print_players()     
 
 # Register that the player has paid for the prize and the prize has been given
 def register_prize_winner(winner, prize_type):
-    players_lock.acquire()
-    player = players[winner]
-    prize = prizes[prize_type]
-    if(player != None):
-        player.coins -= prize.value
-        prize.amount -= 1
+    prize = q.get_prize(prize_type)
+    q.add_coins_to_player(winner, -prize.value) # Substract the prize value from the player's coins
+    q.decrement_prize_amount(prize)
+    if(prize.amount == 0):
+        q.adjust_prizes_probabilities(prize)
 
-    if(prize.amount == 0): # If there are no more prizes of this type
-        adjust_prizes_probabilities(prize)
-    players_lock.release()
     print_players()
     print_prizes()
 
 def create_players_roulette():
-    roulettes_utils.create_players_roulette(players)
+    logged_players = q.get_logged_players()
+    roulettes_utils.create_players_roulette(logged_players)
 
 def create_prizes_roulette():
-    roulettes_utils.create_prizes_roulette(prizes)
+    available_prizes = q.get_available_prizes()
+    roulettes_utils.create_prizes_roulette(available_prizes)
 
 def print_players():
-    for player in players.values():
-        print(f"Name: {player.name}")
-        print(f"Nick: {player.nick}")
-        print(f"Coins: {player.coins}")
-        print(f"Elements: {player.elements}")
+    for player in q.get_logged_players():
+        if player.name in players_elems: # If key exists
+            print(f"Name: {player.name}")
+            print(f"Nick: {player.nick}")
+            print(f"Coins: {player.coins}")
+            print(f"Elements: {players_elems[player.name]}")
 
 def print_prizes():
-    for prize in prizes.values():
+    for prize in q.get_available_prizes():
         print(f"Type: {prize.type}")
         print(f"Prob: {prize.prob}")
         print(f"Amount: {prize.amount}")

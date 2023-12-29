@@ -1,10 +1,11 @@
 from django.db import models
+from servidor import constants as c
 # Create your models here.
 
 class Player(models.Model):
     name = models.CharField(max_length=20)
     nick = models.CharField(max_length=25, blank=True, null=True) #Optional
-    coins = models.IntegerField(default=200)
+    coins = models.IntegerField(default=c.INITIAL_COINS)
     attributes = models.CharField(max_length=100)
 
 class Prize(models.Model):

@@ -1,213 +1,272 @@
-import threading
-from servidor import classes
-import json
+from servidor.classes import Actor, HangmanPlayer, Guess
+from typing import List, Tuple
 from servidor import main_controller
-#from googletrans import Translator
-#from wonderwords import RandomSentence
+from . import use_openai_api as oai_api
+from servidor import queries as q
+import random
+import math
 
-sentence = ""
-guessed_letters_pos = [] # Binary array of guessed letters
-guessed_letters = [] # Array of guessed letters
-round_player_guess_appearances = []
-player_cumulative_appearances = []
-player_guessed_letters = []
-round_winner_players = []
-step_fails_players = []
-coins_per_guessed_letter = 10
-coins_per_sentence_guess = 0
-loss_coins_per_wrong_guess = 10
+original_sentence = ""
+without_tildes_sentence = "" # Sentence without tildes
+
+logged_players_names = []
+revealed_letters_pos = [] # Binary array of guessed letters
+revealed_letters = [] # Array of guessed letters
+
+hangman_players = {} # Dictionary of name: HangmanPlayer
+step_correct_guesses = {} # Dictionary of letter: [Guess]
+num_step_wrong_guesses = 0
+game_winners = []
+eliminated_players = [] 
+
+COINS_PER_GUESSED_LETTER = 5
+pot_per_sentence_guess = 105 # Initial pot
+COINS_POT_DECREASE_PER_STEP = 5
+LOSS_COINS_PER_SENTENCE_WRONG_GUESS = 20
+MAX_WRONG_GUESSES_PER_ROUND = 0 # Initialized in the init function
+LOSS_COINS_PER_HANG_WRONG_GUESS = 5
+
 letters_to_guess = 0
-step = 0
-max_steps = 5
+hang_step = 0
+MAX_HANG_STEPS = 5
+ALPHABET = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 
+            'j', 'k', 'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 
+            'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
-# Use library to generate spanish random words
-def create_sentence():
-    global sentence, guessed_letters_pos, letters_to_guess, coins_per_sentence_guess, player_cumulative_appearances
-    #translator = Translator() #defining the translator object
-    #sentence = RandomSentence() #defining the random sentence object
-    #translated_sentence = translator.translate(sentence, src='en', dest='es') #translating the sentence to spanish
-    #sentence = translated_sentence.text #getting the translated sentence
-    #sentence = oraciones.get_random_sentence().lower().replace(".", "")
-    sentence = "hola" # TODO use chatgpt to generate sentences
-    print("Sentence: " + sentence)
-    guessed_letters_pos = [0] * len(sentence) # Initialize the guessed letters array
-    num_spaces_apperances = register_guessed_letter(" ") #Register spaces
-    letters_to_guess = len(sentence) - num_spaces_apperances # Calculate the number of letters to guess
-    coins_per_sentence_guess = (letters_to_guess * coins_per_guessed_letter) / 2 # Calculate the number of coins per sentence guess
+def get_sentence_params() -> Tuple[List[Actor], str]:
+    """
+        Returns a list of 1 or 2 random actors (name and random attribute) and a repeated letter (or None)
+    """
+    num_actors = random.randint(1, 2)
+    use_repeated_letter = random.randint(0, 1)
+    repeated_letter = None
+    if(use_repeated_letter == 1):
+        repeated_letter = random.choice(ALPHABET)
     
-    reset_variables() # Initialize the variables
-    main_controller.get_players_lock().acquire()
-    player_cumulative_appearances = [0] * len(main_controller.get_players()) # Cumulative apperances of the guess of each player in all the rounds
-    main_controller.get_players_lock().release()
+    # Choose num_actors players randomly
+    random_actors = random.sample(logged_players_names, num_actors)
+    actors = []
+    for actor in random_actors: # Get one attribute of each actor
+        all_attributes = q.get_player_attributes(actor).split(',')
+        attribute = random.choice(all_attributes) # choose 1 attribute randomly
+        actor = Actor(actor, attribute)
+        actors.append(actor)
 
+    return actors, repeated_letter
+
+def parse_sentence_to_without_tildes(sentence: str) -> str:
+    """
+        Remove the tildes from the sentence and convert it to lowercase
+    """
+    without_tildes_sentence = sentence.lower().replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u').replace('ü', 'u')
+    return without_tildes_sentence
+    
+# Use library to generate spanish random words
+def create_sentence() -> str:
+    global original_sentence, without_tildes_sentence, logged_players_names, revealed_letters_pos, letters_to_guess
+    
+    logged_players_names = q.get_logged_players_names()    
+    actors, repeated_letter = get_sentence_params()
+    prompt = oai_api.generate_prompt(actors, repeated_letter)
+    original_sentence = oai_api.generate_sentence(prompt)
+    #original_sentence = "En un arranque de gula, Toña ganó un guante dorado robándole los gusanos a un galgo"
+    without_tildes_sentence = parse_sentence_to_without_tildes(original_sentence)
+
+    revealed_letters_pos = [0] * len(original_sentence) # Initialize the guessed letters array
+    num_spaces_apperances = reveal_guessed_letter(" ") #Register spaces
+    num_commas_apperances = reveal_guessed_letter(",") #Register commas
+    #letters_to_guess = len(sentence) - num_spaces_apperances - num_commas_apperances # Calculate the number of letters to guess
+    #COINS_PER_SENTENCE_GUESS = (letters_to_guess * COINS_PER_GUESSED_LETTER) / 2 # Calculate the number of coins per sentence guess
+    
+    initialize_variables() # Initialize the global variables
+    
     print(get_censured_sentence())
-    return get_censured_sentence()
+    return get_censured_sentence(), pot_per_sentence_guess
+
+def initialize_variables():
+    global logged_players_names, hangman_players, MAX_WRONG_GUESSES_PER_ROUND, pot_per_sentence_guess, game_winners, eliminated_players, revealed_letters, step_correct_guesses, num_step_wrong_guesses, hang_step
+    
+    hangman_players = {} # Dictionary of name: HangmanPlayer
+    logged_players_names = q.get_logged_players_names()
+    for player_name in logged_players_names:
+        hangman_players[player_name] = HangmanPlayer()
+    pot_per_sentence_guess = 80 # Initial pot
+    
+    logged_players_names = []
+    revealed_letters = [] # Array of guessed letters
+
+    game_winners = []
+    eliminated_players = [] 
+    hang_step = 0
+    MAX_WRONG_GUESSES_PER_ROUND = math.floor(len(logged_players_names) / 4)
+
+    reset_step_variables() # Initialize the step variables
 
 # Initialize the guessed letters array
-def reset_variables():
-    global round_player_guess_appearances, player_guessed_letters, player_final_guesses, round_winner_players, step_fails_players
-    main_controller.get_players_lock().acquire()
-    players = main_controller.get_players()
-    round_player_guess_appearances = [0] * len(players) # Apperances of the guess of each player in the round
-    player_guessed_letters = [None] * len(players) # Last letter guessed by each player
-    player_final_guesses = [None] * len(players) # Final guess of each player
-    round_winner_players = [] # Winner players of the round
-    step_fails_players = [] # Fails players of the round
-    main_controller.reset_elements() # Empty the elements list of all players and recieve calls from clients
-    main_controller.get_players_lock().release()
+def reset_step_variables():
+    """
+        All the needed variables to start a new step are initialized
+    """
+    global step_correct_guesses, num_step_wrong_guesses, pot_per_sentence_guess
+    step_correct_guesses = {} # Dictionary of letter: [Guess]
+    num_step_wrong_guesses = 0
+    main_controller.reset_elements() # Empty the elements list of all players
+    pot_per_sentence_guess -= COINS_POT_DECREASE_PER_STEP # Decrease the pot
 
 # Register guessed letter positions in the binary array
-def register_guessed_letter(letter):
+def reveal_guessed_letter(letter):
     apperances = 0
-    for i in range(len(sentence)):
-        if(sentence[i] == letter):
-            guessed_letters_pos[i] = 1
-            guessed_letters.append(letter)
+    for i in range(len(without_tildes_sentence)):
+        if(without_tildes_sentence[i] == letter):
+            revealed_letters_pos[i] = 1
+            revealed_letters.append(letter)
             apperances += 1
 
     return apperances
 
-# Get the sentence with _ instead of the letters that have not been guessed yet
+# Get the sentence with '_' instead of the letters that have not been guessed yet
 def get_censured_sentence():
     censured_sentence = ""
-    for i in range(len(sentence)):
-        if(guessed_letters_pos[i] == 1):
-            censured_sentence += sentence[i]
+    for i in range(len(original_sentence)):
+        if(revealed_letters_pos[i] == 1):
+            censured_sentence += original_sentence[i]
         else:
             censured_sentence += "_"
 
     return censured_sentence
 
-# Register player guessed letter and apperances only if it is the turn of the player
-def register_player_guess(guess, player_name):
+def register_player_guess(guess: str, name: str) -> bool:
+    """
+        Register the player guess if it is valid (letter guess or sentence guess)
+        and if the player is allowed to guess (not eliminated) TODO
+    """
+    global num_step_wrong_guesses, game_winners, eliminated_players
     valid_guess = False
-    ready_to_play_game = main_controller.is_current_game_ready()
-    if(ready_to_play_game):
+    eliminated = False
+    winner = False
+    if(main_controller.get_can_players_interact()):
         main_controller.get_players_lock().acquire()
-        player = main_controller.get_player(player_name)
-        if(player != None): 
-            player_id = player.id
-            guess = guess.lower()
-            if(guess not in guessed_letters): # If the letter has not been guessed yet
-                
+        player_guesses = main_controller.get_player_elems(name)
+        if(player_guesses != None): # If player exists in memory
+            guess = parse_sentence_to_without_tildes(guess) # Remove tildes and convert to lowercase
+            if(len(guess) == len(without_tildes_sentence)): # If the guess is a sentence guess
                 valid_guess = True
-                player.elements.append(classes.Guess(guess)) # Add the guess to the player elements
-                if(len(guess) == len(sentence)): # If the guess is a sentence guess
-                    
-                    if(guess == sentence): # If the guess is correct
-                        round_winner_players.append(player)
-                        round_player_guess_appearances[player_id - 1] = 0
-                    else:
-                        step_fails_players.append(player)
-                        round_player_guess_appearances[player_id - 1] = 0
+                player_guesses.append(guess) # Add guess to player
+                if(guess == without_tildes_sentence): # If the guess is correct
+                    winner = True
+                    game_winners.append(name) # Earnings will be updated in the perform_step function
+                else: # Eliminate the player from the game
+                    eliminated = True
+                    eliminated_players.append(name)
+                    hangman_players[name].earnings -= LOSS_COINS_PER_SENTENCE_WRONG_GUESS
 
-                elif(len(guess) == 1): # If the guess is a letter guess
-                    
-                    player_guessed_letters[player_id - 1] = guess
-                    num_apperances = sentence.count(guess)
-                    round_player_guess_appearances[player_id - 1] = num_apperances
-                    player_cumulative_appearances[player_id - 1] += num_apperances
+            # If the guess is a valid letter guess (not revealed yet and in the alphabet)
+            elif(len(guess) == 1 and guess not in revealed_letters and guess in ALPHABET): 
+                valid_guess = True
+                player_guesses.append(guess) # Add guess to player
+                hangman_player = hangman_players[name]
+                num_apperances = without_tildes_sentence.count(guess)
 
+                if num_apperances == 0:
+                    hangman_player.num_wrong_guesses += 1
+                    num_step_wrong_guesses += 1
                 else:
-                    valid_guess = False
+                    if(guess in step_correct_guesses): # Add player to the list of players that have guessed that letter
+                        step_correct_guesses[guess].players.append(name)
+                    else:
+                        step_correct_guesses[guess] = Guess(num_apperances, name)
 
         main_controller.get_players_lock().release()
 
-    return valid_guess
+    return valid_guess, eliminated, winner
+
+def get_best_guess_and_players():
+    """
+        Returns the best guesses, the number of apperances and the players that have guessed them
+    """
+    best_guesses_and_players = {} # Dictionary of letter: [players]
+    best_guess_apperances = 0
+    for guessed_letter in step_correct_guesses: # Dictionary of letter: Guess
+        guess_appereances = step_correct_guesses[guessed_letter].num_appereances
+        if(guess_appereances > best_guess_apperances): # Found the best of all
+            best_guess_apperances = guess_appereances
+            best_guesses_and_players.clear() # Delete all past best guesses
+            best_guesses_and_players[guessed_letter] = step_correct_guesses[guessed_letter].players
+        elif(guess_appereances == best_guess_apperances): # Add new best guess (equal quality)
+            if guessed_letter not in best_guesses_and_players:
+                best_guesses_and_players[guessed_letter] = []
+            else:
+                best_guesses_and_players[guessed_letter].append(step_correct_guesses[guessed_letter].players)
+
+    return best_guesses_and_players, best_guess_apperances
+
 
 def perform_step():
-    global step
-
-    partially_guessed_sentence = get_censured_sentence()
-    round_winner_names = []
-    hanged_candidates_names = []
-
+    global hang_step, game_winners, num_step_wrong_guesses, pot_per_sentence_guess
+    game_end = False
     main_controller.get_players_lock().acquire()
  
     # If there are players with correct guesses, end
-    if(len(round_winner_players) > 0): # If there are players with correct guesses, end
-        update_round_winners_coins(round_winner_players)
-        round_winner_names = get_player_names(round_winner_players)
+    if(len(game_winners) > 0): # If there are players with correct guesses, end
+        update_game_winners_coins(game_winners)
+        partially_guessed_sentence = original_sentence # Reveal sentence
+        game_end = True
     else:
-        # If there are players with incorrect guesses
-        if(len(step_fails_players) > 0):
-            substract_coins_step_fails(step_fails_players)
-
-        best_guess_apperances = max(round_player_guess_appearances)
-        if(best_guess_apperances > 0):
-            winner_guesses_and_players = search_guesses_and_players(round_player_guess_appearances, best_guess_apperances)
-            update_step_winners_coins(winner_guesses_and_players)
-            partially_guessed_sentence = get_censured_sentence()
+        best_guesses_and_players, best_guess_apperances = get_best_guess_and_players()
+        step_winners(best_guesses_and_players, best_guess_apperances) # Reveal best letters and assign earnings
+        partially_guessed_sentence = get_censured_sentence()
         
-        # Candidates to be hanged
-        worst_cumulative_guess_apperances = min(player_cumulative_appearances)
-        hanged_candidates = search_players(player_cumulative_appearances, worst_cumulative_guess_apperances)
-        hanged_candidates_names = get_player_names(hanged_candidates)
+        if num_step_wrong_guesses > MAX_WRONG_GUESSES_PER_ROUND: # Advance to the next hang step
+            hang_step += 1
+        if(hang_step > MAX_HANG_STEPS): # Loss condition
+            game_winners = ["Loss"]
+            substract_wrong_guesses_coins()
+            game_end = True
 
-        step += 1
-        if(step >= round): # Lose condition
-            round_winner_names = ["Loss"]
-            substract_hanged_players_coins(hanged_candidates)
+    for player in hangman_players:
+        print(f"{player}: {hangman_players[player].earnings}")
+        print(f"{player}: {hangman_players[player].num_wrong_guesses}")
 
-
+    if game_end:
+        earnings_to_coins()
+    
+    reset_step_variables()
     main_controller.get_players_lock().release()
     
-    return hanged_candidates_names, partially_guessed_sentence, round_winner_names
+    return partially_guessed_sentence, hang_step, game_winners, pot_per_sentence_guess
 
+def earnings_to_coins():
+    """
+        Convert the earnings of the players to coins in DB
+    """
+    for player_name in hangman_players:
+        q.add_coins_to_player(player_name, hangman_players[player_name].earnings)
 
-# For every guess with the number of apperances, get the players that have made it (needs the lock)
-def search_guesses_and_players(apperances, number):
-    all_players = main_controller.get_players()
-    guesses_and_players = {}
-    for i in range(len(apperances)):
-        if(apperances[i] == number):
-            guessed_letter = player_guessed_letters[i]
-            if(guessed_letter not in guesses_and_players):
-                guesses_and_players[guessed_letter] = [all_players[i]] # Add player to the list of players that have guessed that letter
-            else:
-                guesses_and_players[guessed_letter].append(all_players[i])
-    return guesses_and_players
-
-def search_players(apperances, number):
-    all_players = main_controller.get_players()
-    players = []
-    for i in range(len(apperances)):
-        if(apperances[i] == number):
-            players.append(all_players[i])
-    return players
-
-def get_player_names(list_of_players):
-    names = []
-    for player in list_of_players:
-        names.append(player.name)
-    return names
-
-# Update the coins of the players that have guessed some letters correctly    
-def update_step_winners_coins(winner_guesses_and_players):
-    main_controller.get_players_lock().acquire()
-
-    for guess in winner_guesses_and_players:
-        apperances = register_guessed_letter(guess)
-        total_coins_prize = coins_per_guessed_letter * apperances
-
+def step_winners(winner_guesses_and_players, num_apperances):
+    """
+        Register the best letters and accumulate the earnings of the players that have guessed them
+    """
+    for guessed_letter in winner_guesses_and_players:
+        reveal_guessed_letter(guessed_letter) # Reveal letters
+        total_coins_prize = COINS_PER_GUESSED_LETTER * num_apperances
+        winners = winner_guesses_and_players[guessed_letter]
         # Give the proportional part of the coins to each player
-        for player in winner_guesses_and_players[guess]:
-            player.coins += round(total_coins_prize / len(winner_guesses_and_players[guess])) # Add coins to the player
+        for winner in winner_guesses_and_players[guessed_letter]:
+            earnings = math.ceil(total_coins_prize / len(winners))
+            hangman_players[winner].earnings += earnings # Accumulate earnings
 
-    main_controller.get_players_lock().release()
+def substract_wrong_guesses_coins():
+    """
+        Substract coins to all players that have done wrong guesses (hang punishment)
+    """
+    for player_name in hangman_players:
+        num_wrong_guesses = hangman_players[player_name].num_wrong_guesses
+        hangman_players[player_name].earnings -= LOSS_COINS_PER_HANG_WRONG_GUESS * num_wrong_guesses
 
-# Update the coins of the players that have been hanged
-def substract_hanged_players_coins(hanged_players):
-    for player in hanged_players:
-        player_id = player.id
-        num_guessed_letters = player_cumulative_appearances[player_id]
-        num_non_guessed_letters = letters_to_guess - num_guessed_letters
-        player.coins -= round(coins_per_guessed_letter * num_non_guessed_letters)
-
-def update_round_winners_coins(round_winner_players):
-    for player in round_winner_players:
-        player.coins += round(coins_per_sentence_guess / len(round_winner_players))
-
-def substract_coins_step_fails(step_fails_players):
-    for player in step_fails_players:
-        player.coins -= round(loss_coins_per_wrong_guess / len(step_fails_players))
+def update_game_winners_coins(game_winners):
+    """
+        Divide the prize between the players that have guessed the sentence
+        (accumulate it in the player's earnings)
+    """
+    for name in game_winners:
+        hangman_players[name].earnings += math.ceil(pot_per_sentence_guess / len(game_winners))

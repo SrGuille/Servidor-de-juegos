@@ -2,21 +2,23 @@ import threading
 from servidor import classes
 import json
 from servidor import main_controller
+from servidor import queries as q
 
 players_lock = threading.Lock()
 
-# Register player bets only if the roulette is not spinning
-def register_player_bets(bets):
+def register_player_bets(name, bets):
+    """
+        Register the bets of a player if the roulette is not spinning
+    """
     if(main_controller.get_can_players_interact()): # If roulette has not spinned yet
         main_controller.get_players_lock().acquire()
-        player = main_controller.get_player(bets['player_name'])
-        if(player != None):
-            list_bets = bets['bets']
-            list_bets = json.loads(list_bets) #Convert string to list
-            for player_bet in list_bets: #Add bets to player
+        player_bets = main_controller.get_player_elems(name)
+        if(player_bets != None): # If player exists in memory
+            bets = json.loads(bets) #Convert string to list
+            for player_bet in bets: #Add bets to player
                 bet = classes.Bet(player_bet['type'], player_bet['amount'])
-                player.elements.append(bet) #Add bet to player
-                player.coins -= bet.amount #Substract coins
+                player_bets.append(bet) #Add bet to player
+                q.add_coins_to_player(name, -bet.amount) #Substract coins
         main_controller.print_players()
         main_controller.get_players_lock().release()
         return True
@@ -66,20 +68,19 @@ def assign_prizes(result):
 
     winner_bets = compute_winner_bets(result)
 
-    players = main_controller.get_players()
-    for player in players.values():
-        for bet in player.elements:
+    players_elems = main_controller.get_players_elems()
+    for player_name in players_elems:
+        for bet in players_elems[player_name]:
 
             # If bet is winner, add prize
             if (bet.type in winner_bets):
                 if (bet.type in x2_bets):
-                    player.coins += bet.amount * 2
+                    q.add_coins_to_player(player_name, bet.amount * 2)
                 elif (bet.type in x3_bets):
-                    player.coins += bet.amount * 3
+                    q.add_coins_to_player(player_name, bet.amount * 3)
 
             if (bet.type == result): # If bet is winner, add prize
-                player.coins += bet.amount * 36
+                q.add_coins_to_player(player_name, bet.amount * 36)
                     
-
     main_controller.print_players()
                 
