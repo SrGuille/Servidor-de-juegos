@@ -18,7 +18,6 @@ def send_roulette_result(request):
     print(result)
     main_controller.get_players_lock().acquire()
     roulette_controller.assign_prizes(result)
-    main_controller.reset_elements()
     main_controller.get_players_lock().release()
     return JsonResponse({'status': 'ok'}, safe=False)
 
@@ -26,6 +25,8 @@ def send_player_bets(request):
     global number_bets
     bets_str = request.GET.get('bets') #Get json
     bets = json.loads(bets_str) #Convert json to dict
-    allowed = roulette_controller.register_player_bets(bets)
+    name = bets['player_name']
+    bets = bets['bets']
+    allowed = roulette_controller.register_player_bets(name, bets)
     return JsonResponse({'status': allowed}, safe=False)
 

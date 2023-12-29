@@ -76,6 +76,7 @@ async function play_next_game()
     // If the player has already played its turn, redirect to the wait room
     if(played) 
     {
+        console.log("Ya has jugado tu turno, espera a que el resto de jugadores acaben");
         listen_in_wait_room();
     }
     else 
@@ -87,6 +88,7 @@ async function play_next_game()
         }
         else // No game to play
         {
+            console.log("No hay juego listo, redirigiendo a la sala de espera...");
             listen_in_wait_room();
         }
     } 

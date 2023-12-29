@@ -8,6 +8,7 @@
     <script src="{% static 'js/game_redirects.js' %}"></script>
     <script src="{% static 'js/in_game_room.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <audio src="{% static 'sounds/sonido_ruleta.mp3' %}" id="spinning_roulette_audio"></audio>
 </head>
 <body class="fondo">
     <div class="container">
@@ -16,8 +17,9 @@
         </row>
         <row>
             <img id="roulette" src="{% static 'img/roulette_img.png' %}"/>
-        </row>
+        </row>        
         <div id="result-spin"></div>
+        <button id="enable_sounds" style="display: none;"></button>
     </div>
     <!-- Snow animation-->
     <div class="tpl-snow">

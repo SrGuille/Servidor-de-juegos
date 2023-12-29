@@ -1,7 +1,9 @@
 // Always odd numbers to have a central neutral cell
-ROWS = 15;
-COLS = 15;
+ROWS = 19;
+COLS = 19;
 classes = ['neutral-cell', 'green-cell', 'red-cell']
+
+MAX_ROUNDS = 32;
 
 // Character position
 x = 0;
@@ -9,11 +11,11 @@ y = 0;
 
 colors_per_second = Array();
 
-cell_size = 50; // 50x50 px
+cell_size = 45; // 50x50 px
 cell_padding = cell_size / 2; // 25px
-initial_left = 750;
+initial_left = 720;
 initial_top = 150;
-character_size = 30; // 30x30 px
+character_size = 28; // 30x30 px
 character_margin = (cell_size - character_size) / 2; // 10px
 
 var logical_board = new Array(ROWS);
@@ -41,9 +43,8 @@ async function play_democracy()
 async function countdown()
 {
     document.getElementById("enable_sounds").click(); // Trick browser to enable sounds
-    var arcade_jump_audio = document.getElementById('arcade_jump_audio');
     arcade_jump_audio.volume = 0.7;
-    console.log(arcade_jump_audio.volume)
+    arcade_jump_audio.play();
     for(i = 3; i > 0; i--)
     {
         document.getElementById("countdown").innerHTML = i;
@@ -59,7 +60,7 @@ async function load_board()
     init_logical_board();
     assign_cells();
     show_board_cells();
-    add_character(7,7);
+    add_character(9,9); // Start in the central cell
     console.log(logical_board)
 }
 
@@ -177,16 +178,13 @@ function move_character(x_moves, y_moves)
 
 async function main_loop()
 {
-    var arcade_jump_audio = document.getElementById('arcade_jump_audio');
-    var corriendo_en_la_noche = document.getElementById('corriendo_en_la_noche');
-    corriendo_en_la_noche.volume = 0.2; // TODO Check if it works after play()
+    corriendo_en_la_noche.volume = 0.2;
     corriendo_en_la_noche.play();
     round = 0;
-    max_rounds = 30;
     rounds_left = document.getElementById("rounds_left");
-    while(round < max_rounds)
+    while(round < MAX_ROUNDS)
     {
-        rounds_left.innerHTML = "Fin en " + (max_rounds - round).toString();
+        rounds_left.innerHTML = "Fin en " + (MAX_ROUNDS - round).toString();
         await new Promise(r => setTimeout(r, 1000)); //Wait 1 seconds
         arcade_jump_audio.play();
         move_with_democracy();

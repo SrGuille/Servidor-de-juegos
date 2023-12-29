@@ -17,7 +17,7 @@ def create_players_roulette(players):
     labels = []
     sizes = []
 
-    for player in players.values():
+    for player in players:
         if(player.coins > 0): # If player has coins
             labels.append(player.nick)
             sizes.append(player.coins)
@@ -35,7 +35,7 @@ def create_prizes_roulette(prizes):
     labels = []
     sizes = []
 
-    for prize in prizes.values():
+    for prize in prizes:
         if(prize.amount > 0): # If there are prizes of this type
             label = prize.type.replace("Regalo", "R.")
             labels.append(label)

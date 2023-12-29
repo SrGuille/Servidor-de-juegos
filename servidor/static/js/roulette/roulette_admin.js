@@ -52,11 +52,16 @@ async function spin_roulette()
     extra_degrees = extra_spins * 360;
 
     roulette = document.getElementById("roulette");
-
+    // quien lea esto es masón (29/12/23) - Juanda
+    
     crutial_degrees = Math.floor(Math.random() * 360);
     roulette.style.setProperty('--rotation_degrees', extra_degrees + crutial_degrees + 'deg');
     chosen_number = roulette_numbers[Math.floor(crutial_degrees / numbers_width)];
     roulette.classList.add("roulette_spin_animation");
+    
+    document.getElementById("enable_sounds").click(); // Trick browser to enable sounds
+    spinning_roulette_audio.volume = 0.2; // TODO Check if it works after play()
+    spinning_roulette_audio.play();
 
     await new Promise(r => setTimeout(r, 9000));
     document.getElementById("result-spin").innerHTML = chosen_number;

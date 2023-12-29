@@ -114,6 +114,11 @@ async function create_and_spin_roulettes()
 
     winner_name = winner.name; // Unique name
     winner_nick = winner.nick; // For displaying purposes
+    
+    document.getElementById("enable_sounds").click(); // Trick browser to enable sounds
+    spinning_roulette_audio.volume = 0.2;
+    spinning_roulette_audio.currentTime = 3;
+    spinning_roulette_audio.play();
 
     await new Promise(r => setTimeout(r, 6000));
 
