@@ -30,7 +30,7 @@ DEBUG = True
 # Automatically get the IP address of the machine
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
-ALLOWED_HOSTS = [ip_address, '127.0.0.1', '192.168.1.70', '192.168.90.50']
+ALLOWED_HOSTS = [ip_address, '127.0.0.1', '192.168.1.70', '192.168.90.50', '192.168.1.58']
 
 # Application definition
 
@@ -65,6 +65,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 ROOT_URLCONF = 'servidor_juegos.urls'
 
