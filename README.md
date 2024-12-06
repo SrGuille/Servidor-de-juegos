@@ -1,7 +1,7 @@
 # Servidor-de-juegos
 Este es un proyecto de un servidor de videojuegos pensado para pasar un buen rato con amigos en Navidad.
 
-CONDICIONES PREVIAS: Se recomienda ser entre 5 y 15 personas. Para participar todos deben traer dulces y 3 regalos de precios ascendentes, llamados regalo pequeño, mediano y grande.
+CONDICIONES PREVIAS: Se recomienda ser entre 5 y 15 personas. Para participar todos deben traer 3 regalos de precios ascendentes, llamados regalo pequeño, mediano y grande.
 
 SERVIDOR: El juego discurrirá en una red local. Idealmente el ordenador que haga de servidor deberá ser conectado a un televisor que todos puedan ver para mostrar los escenarios de los juegos. Ese ordenador además realizará la labor de administrador del juego.
 
