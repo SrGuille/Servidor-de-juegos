@@ -130,12 +130,12 @@ def add_coins_to_player(name, coins):
         Give coins to a player, it can be negative. If the quantitity is going to be negative, we put it to 0
     """
     try:
-        jugador = Player.objects.get(name=name)
-        if jugador.coins + coins < 0:
-            jugador.coins = 0
+        player = Player.objects.get(name=name)
+        if player.coins + coins < 0:
+            player.coins = 0
         else:
-            jugador.coins += coins
-        jugador.save()
+            player.coins += coins
+        player.save()
 
     except Player.DoesNotExist:
         print('No existe el jugador ' + name + ' al que se le quieren dar monedas')
@@ -189,12 +189,31 @@ def decrement_prize_amount(prize):
     prize.amount -= 1
     prize.save()
 
-def insert_coins_evolution(player, coins, game_number):
+def insert_coins_evolution(player, coins, game_number): #TODO implement game number
     """
-        Insert a new coins_evolution object in DB
+        Insert a new coins_evolution object in DB 
     """
     coins_evolution = Coins_evolution(player=player, coins=coins, game_number=game_number)
     coins_evolution.save()
+
+def get_current_game_number():
+    """
+        The current game number is queried by getting the highest value of current's date game number
+    """
+    today = 0 # TODO manage dates
+    current_game_number = (
+        Coins_evolution.objects
+        .filter(date=today)
+        .order_by('-game_number')
+        .first()
+    )
+    return current_game_number
+
+def get_player_coins_at_game_number(player, game_number):
+    """
+        Get the number of coins that a player has at a specific game number
+    """
+    return Coins_evolution.objects.get(player=player, game_number=game_number)
 
 
 def insert_prize_evolution(player, prize, game_number):
