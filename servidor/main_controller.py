@@ -231,9 +231,12 @@ def reset_elements() -> None:
     print_players()     
 
 # Register that the player has paid for the prize and the prize has been given
-def register_prize_winner(winner, prize_type):
+def register_prize_winner(winner: str, prize_type: str):
     prize = q.get_prize(prize_type)
-    q.add_coins_to_player(winner, -prize.value) # Substract the prize value from the player's coins
+    player_coins = q.get_player_coins(winner)
+    prize_coins = player_coins * prize.value # The cost depends on the player's coins
+    
+    q.add_coins_to_player(winner, -prize_coins) # Substract the prize value from the player's coins
     q.decrement_prize_amount(prize)
     if(prize.amount == 0):
         q.adjust_prizes_probabilities(prize)
