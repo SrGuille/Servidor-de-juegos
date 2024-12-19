@@ -11,7 +11,7 @@ class Player(models.Model):
 class Prize(models.Model):
     type = models.CharField(max_length=20)
     prob = models.FloatField()
-    value = models.IntegerField()
+    value = models.FloatField()
     amount = models.IntegerField()
 
 class Coins_evolution(models.Model):

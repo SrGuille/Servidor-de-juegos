@@ -47,7 +47,7 @@ def login_player(request):
     name = request.GET.get('name')
     nick = request.GET.get('nick')
     print(name)
-    if(name == ''):
+    if(name == '' or name == None):
         return JsonResponse({'status': 'error'}, safe=False)
     
     elif(nick == 'admin'): #TODO Set up the whole DS and redirect to game selector
