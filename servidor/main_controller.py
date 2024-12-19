@@ -149,11 +149,12 @@ def logout(name: str) -> None:
     """
         Sets logged to False so the player is not required to play and deletes its elements
     """
-    q.logout_player(name) # Erase the player's nick in DB
-    players_lock.acquire()
-    del players_elems[name]
-    players_lock.release()
-    print_players()
+    if(name is not None):
+        q.logout_player(name) # Erase the player's nick in DB
+        players_lock.acquire()
+        del players_elems[name]
+        players_lock.release()
+        print_players()
 
 def get_player_elements(name):
     players_lock.acquire()

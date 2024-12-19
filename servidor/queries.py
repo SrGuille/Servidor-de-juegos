@@ -34,7 +34,7 @@ def logout_player(name):
         jugador.save()
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' que se quiere desloguear')
+        print('No existe el jugador ' + name + 'que se quiere desloguear')
 
 def reset_player(name, nick):
     """
@@ -48,7 +48,7 @@ def reset_player(name, nick):
         jugador.save()
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' que se quiere resetear')
+        print('No existe el jugador ' + name + 'que se quiere resetear')
 
 def change_player_nick(name, nick):
     """
@@ -61,7 +61,7 @@ def change_player_nick(name, nick):
         jugador.save()
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' al que se le quiere cambiar el nick')
+        print('No existe el jugador ' + name + 'al que se le quiere cambiar el nick')
 
 def add_new_prizes():
     """
@@ -116,7 +116,7 @@ def get_player_attributes(name):
         return jugador.attributes
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' del que se quieren obtener los atributos')
+        print('No existe el jugador ' + name + 'del que se quieren obtener los atributos')
 
 def get_0_coins_players():
     """
@@ -138,7 +138,7 @@ def add_coins_to_player(name, coins):
         player.save()
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' al que se le quieren dar monedas')
+        print('No existe el jugador ' + name + 'al que se le quieren dar monedas')
 
 def get_player_coins(name):
     """
@@ -149,7 +149,7 @@ def get_player_coins(name):
         return jugador.coins
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' del que se quieren obtener las monedas')
+        print('No existe el jugador ' + name + 'del que se quieren obtener las monedas')
 
 def get_available_prizes():
     """

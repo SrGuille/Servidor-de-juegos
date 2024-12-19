@@ -25,4 +25,4 @@ class HangmanPlayer():
 class Guess():
     def __init__(self, num_appereances: int, first_player: str):
         self.num_appereances: int = num_appereances
-        self.players: [str] = [first_player] # List of players that guessed this letter (the rest will be added later)
+        self.players: List[str] = [first_player] # List of players that guessed this letter (the rest will be added later)
