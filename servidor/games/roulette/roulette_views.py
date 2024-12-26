@@ -27,6 +27,7 @@ def send_player_bets(request):
     bets = json.loads(bets_str) #Convert json to dict
     name = bets['player_name']
     bets = bets['bets']
+    bets = json.loads(bets) #Convert string to list
     allowed = roulette_controller.register_player_bets(name, bets)
-    return JsonResponse({'status': allowed}, safe=False)
+    return JsonResponse({'allowed': allowed}, safe=False)
 

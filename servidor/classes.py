@@ -26,3 +26,22 @@ class Guess():
     def __init__(self, num_appereances: int, first_player: str):
         self.num_appereances: int = num_appereances
         self.players: List[str] = [first_player] # List of players that guessed this letter (the rest will be added later)
+
+
+class GunmanPlayer():
+    def __init__(self):
+        self.bullets: int = 1
+        self.shields: int = 2
+        self.action: str = None
+        self.lives: int = 2 # For the special duel
+
+    def to_dict(self): 
+        return {
+            'action': self.action,
+            'bullets': self.bullets,
+            'shields': self.shields,
+            'lives': self.lives
+        }
+    
+    def to_string(self):
+        return f"Action: {self.action}, Bullets: {self.bullets}, Shields: {self.shields}, Lives: {self.lives}"

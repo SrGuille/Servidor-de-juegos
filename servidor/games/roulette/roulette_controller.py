@@ -14,11 +14,14 @@ def register_player_bets(name, bets):
         main_controller.get_players_lock().acquire()
         player_bets = main_controller.get_player_elems(name)
         if(player_bets != None): # If player exists in memory
-            bets = json.loads(bets) #Convert string to list
-            for player_bet in bets: #Add bets to player
-                bet = classes.Bet(player_bet['type'], player_bet['amount'])
-                player_bets.append(bet) #Add bet to player
-                q.add_coins_to_player(name, -bet.amount) #Substract coins
+            if len(bets) > 0:
+                for player_bet in bets: #Add bets to player
+                    bet = classes.Bet(player_bet['type'], player_bet['amount'])
+                    player_bets.append(bet) #Add bet to player
+                    q.add_coins_to_player(name, -bet.amount) #Substract coins
+            else: # If the bet is empty, add a null bet
+                bets = classes.Bet('Null', 0)
+                player_bets.append(bets)
         main_controller.print_players()
         main_controller.get_players_lock().release()
         return True
@@ -71,6 +74,8 @@ def assign_prizes(result):
     players_elems = main_controller.get_players_elems()
     for player_name in players_elems:
         for bet in players_elems[player_name]:
+            if bet.type == 'Null': # If bet is null, skip it
+                continue
 
             # If bet is winner, add prize
             if (bet.type in winner_bets):

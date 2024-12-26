@@ -164,19 +164,20 @@ def get_player_elements(name):
 
 # Gets how many players haven't interacted yet
 def get_remaining_interactions():
-    logged_players = q.get_logged_players()
-    num_logged_players = len(logged_players)
-    num_interactions = 0
-
-    players_lock.acquire()
-    for player in logged_players:
-        if len(players_elems[player.name]) > 0:
-            num_interactions += 1
-    players_lock.release()
+    num_logged_players = len(q.get_logged_players())
+    num_interactions = get_number_interactions()
 
     print(f"Number players: {num_logged_players}")
     print(f"Remaining interactions: {num_logged_players - num_interactions}")
     return num_logged_players - num_interactions
+
+def get_number_interactions():
+    num_interactions = 0
+    logged_players = q.get_logged_players()
+    for player in logged_players:
+        if len(players_elems[player.name]) > 0:
+            num_interactions += 1
+    return num_interactions
 
 # Returns the players and their coins (all players, not only the ones with coins)
 def get_players_scores():

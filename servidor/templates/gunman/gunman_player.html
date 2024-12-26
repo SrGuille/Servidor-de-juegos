@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=0.6, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>Cruceta de Control</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="{% static 'js/gunman/gunman_player.js' %}"></script>
+    <script src="{% static 'js/game_redirects.js' %}"></script>
+    <script src="{% static 'js/in_game_room.js' %}"></script>
+    <!--Bootstrap 5.1.3-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <!--Libreria animaciones-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body class="fondo">
+    <div class="container">
+        <div class="stats-box-container">
+            <div class="stats-box">
+                <div id="bullets" class="stat">
+                    <span id="bullet-count">0</span>
+                    <img src="{% static 'img/gunman/reload.png' %}" alt="Bullet" class="bullet-image">
+                </div>
+                <div id="shields" class="stat">
+                    <span id="shield-count">0</span>
+                    <img src="{% static 'img/gunman/shield.png' %}" alt="Bullet" class="bullet-image">
+                </div>
+                <div style="display: none;" id="lives" class="stat">
+                    <span id="lives-count">0</span>
+                    <img src="{% static 'img/gunman/lives.png' %}" alt="Lives" class="lives-image">
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="button shoot" id="shoot" onclick="send_player_action_notify('shoot')">
+                <img src="{% static 'img/gunman/shoot.png' %}" alt="Shoot" class="button-image">
+            </button>
+            <button class="button shield" id="shield" onclick="send_player_action_notify('shield')">
+                <img src="{% static 'img/gunman/shield.png' %}" alt="Shield" class="button-image">
+            </button>
+            <button class="button reload" id="reload" onclick="send_player_action_notify('reload')">
+                <img src="{% static 'img/gunman/reload.png' %}" alt="Reload" class="button-image">
+            </button>
+        </div>
+    </div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) 
+    {
+        get_player_data_and_play();
+    });
+</script>
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f0f0f0;
+    }
+
+    .stats-box-container {
+        display: flex;
+        justify-content: center; /* Centers the stats-box horizontally */
+        margin-bottom: 30px;
+    }
+
+    .stats-box {
+        background-color: white;
+        border: 2px solid #333;
+        border-radius: 8px;
+        padding: 10px 15px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex; /* Flexbox to align the stats horizontally */
+        gap: 15px; /* Adds space between bullets and lives */
+    }
+
+    .stat {
+        font-size: 18px;
+        margin: 0;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Space between the bullet and the number */
+    }
+
+    .bullet-image, .shield-image, .lives-image {
+        width: 20px; /* Smaller size */
+        height: auto;
+        object-fit: contain;
+    }
+
+    #bullet-count, #shield-count, #lives-count {
+        font-size: 18px;
+    }
+
+    .controls {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .button {
+        width: 150px;
+        height: 150px;
+        border: none;
+        border-radius: 10px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .button:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .button:disabled {
+        background-color: #d3d3d3; /* Gray background */
+        color: #a9a9a9; /* Light gray text */
+        cursor: not-allowed; /* Shows a "not-allowed" cursor */
+        box-shadow: none; /* Remove shadow to emphasize it's disabled */
+        transform: none; /* Disable animations */
+    }
+
+    .button-image {
+        width: 80%;
+        height: 80%;
+        object-fit: contain;
+    }
+
+    .shoot {
+        background-color: #ff4444;
+        color: white;
+    }
+
+    .shield {
+        background-color: #44aa44;
+        color: white;
+    }
+
+    .reload {
+        background-color: #4444ff;
+        color: white;
+    }
+</style>
+
+</html>

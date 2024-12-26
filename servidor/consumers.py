@@ -7,6 +7,7 @@ from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 import json
 from . import main_controller
+from .games.gunman import gunman_views
 
 
 """ 
@@ -88,10 +89,22 @@ class InGameRoom(WebsocketConsumer):
     In case it was, it will inform the admin to proceed
     """
     def receive(self, text_data):
+        main_controller.get_players_lock().acquire()
         print('A player has interacted')
-        # Check if the player is the last one remaining
-        if main_controller.get_remaining_interactions() == 0:
-            self.send_last_player()
+        game_id = main_controller.get_ready_to_join_game() # Get the game id
+        print('game_id', game_id)
+        if game_id == 0: # Roulette
+            # Check if the player is the last one remaining
+            if main_controller.get_remaining_interactions() == 0:
+                self.send_last_player()
+        elif game_id == 2 or game_id == 4: # Ahorcado or BNumber
+            self.notify_admin_update()
+        elif game_id == 3: # Gunman
+            if gunman_views.gunman_game.get_remaining_interactions() == 0:
+                self.send_last_player()
+        
+        main_controller.get_players_lock().release()
+
 
     # Adds the user to the room group
     def join_room(self):
@@ -117,6 +130,27 @@ class InGameRoom(WebsocketConsumer):
     def send_last_player_type(self, event):
         self.send(text_data=json.dumps({
             'last_player': True
+        }))
+
+
+    def notify_admin_update(self):
+        """
+        Broadcasts a message that the admin can interpret as “Update needed.”
+        """
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'admin_update_needed'
+            }
+        )
+
+    # This function must match the 'type' in group_send above
+    def admin_update_needed(self, event):
+        """
+        Sends a minimal JSON saying “admin_update_needed”: true
+        """
+        self.send(text_data=json.dumps({
+            'admin_update_needed': True
         }))
 
 

@@ -30,12 +30,14 @@ def get_ready_to_join_game(request):
     return JsonResponse({'game_id': game_id}, safe=False)
 
 def set_can_players_join(request):
-    can_join = bool(request.GET.get('can_join'))
+    can_join_str = request.GET.get('can_join')
+    can_join = can_join_str.lower() == 'true'  # Convert string to boolean
     main_controller.set_can_players_join(can_join)
     return JsonResponse({'status': 'ok'}, safe=False)
 
 def set_can_players_interact(request):
-    can_interact = bool(request.GET.get('can_interact'))
+    can_interact_str = request.GET.get('can_interact')
+    can_interact = can_interact_str.lower() == 'true'  # Convert string to boolean
     main_controller.set_can_players_interact(can_interact)
     return JsonResponse({'status': 'ok'}, safe=False)
 

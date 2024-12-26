@@ -3,6 +3,7 @@ from. import main_views
 from .games.democracy import democracy_views
 from .games.hangman import hangman_views
 from .games.roulette import roulette_views
+from .games.gunman import gunman_views
 
 urlpatterns = [
     # Main views
@@ -46,10 +47,21 @@ urlpatterns = [
     # Democracy views
     path('democracy_admin/', democracy_views.democracy_admin_render, name='democracy_admin_render'),
     path('democracy_player/', democracy_views.democracy_player_render, name='democracy_player_render'),
+    path('init_clock/', democracy_views.init_clock, name='init_clock'),
     path('send_player_move/', democracy_views.send_player_move, name='send_player_move'),
     path('get_democratic_move/', democracy_views.get_democratic_move, name='get_democratic_move'),
     path('get_my_team/', democracy_views.get_my_team, name='get_my_team'),
     path('send_colors_per_second/', democracy_views.send_colors_per_second, name='send_colors_per_second'),
     path('create_teams/', democracy_views.create_teams, name='create_teams'),
 
+    # Gunman views
+    path('gunman_admin/', gunman_views.gunman_admin_render, name='gunman_admin_render'),
+    path('gunman_player/', gunman_views.gunman_player_render, name='gunman_player_render'),
+    path('create_initial_duel/', gunman_views.create_initial_duel, name='create_initial_duel'),
+    path('create_special_duel/', gunman_views.create_special_duel, name='create_special_duel'),
+    path('send_player_action/', gunman_views.send_player_action, name='send_player_action'),
+    path('get_duel_data/', gunman_views.get_duel_data, name='get_duel_data'),
+    path('duel_step/', gunman_views.duel_step, name='duel_step'),
+    path('special_duel_step/', gunman_views.special_duel_step, name='special_duel_step')
+    
 ]

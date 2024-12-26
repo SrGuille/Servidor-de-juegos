@@ -5,8 +5,8 @@
     Once the next game is known, the admin will display it and will send a message to all the clients to join it.
 */
 
-admin_redirects = ['../roulette_admin/', '../hangman_admin/', '../democracy_admin/', '../multibandits_admin/']
-player_redirects = ['../roulette_player/', '../hangman_player/', '../democracy_player/', '../multibandits_player/']
+admin_redirects = ['../roulette_admin/', '../hangman_admin/', '../democracy_admin/', '../gunman_admin/', '../blind_numbers_admin/']
+player_redirects = ['../roulette_player/', '../hangman_player/', '../democracy_player/', '../gunman_player/', '../blind_numbers_player/']
 
 // Set the game to play with rounds and redirect to it
 function set_next_game(game_id)
@@ -22,8 +22,7 @@ function set_next_game(game_id)
         success: function(response)
         {
             console.log(response);
-            notify_clients_game_ready(game_id);
-            window.location.href = admin_redirects[game_id];
+            admin_game(game_id);
         }
     });
 }
@@ -192,7 +191,7 @@ function set_can_players_join(can_join)
             url: '../set_can_players_join/',
             type: 'GET',
             contentType: 'application/json;charset=UTF-8',
-            data: {can_join:can_join},
+            data: {can_join:can_join.toString()},
             success: function(response) 
             {
                 resolve();
@@ -211,10 +210,11 @@ function set_can_players_interact(can_interact)
             url: '../set_can_players_interact/',
             type: 'GET',
             contentType: 'application/json;charset=UTF-8',
-            data: {can_interact:can_interact},
+            data: {can_interact:can_interact.toString()},
             success: function(response) 
             {
                 resolve();
+                console.log("Can players interact: " + can_interact);
             }
         });
     });

@@ -91,7 +91,8 @@ async function create_and_spin_roulettes()
         contentType: 'application/json;charset=UTF-8',
     });
 
-    document.getElementById("ranking").style="display:none;";
+    document.getElementById("title").innerHTML = "Premios";
+    document.getElementById("ranking_container").style="display:none;";
     document.getElementById("result").style="display:flex;";
     document.getElementById("indicador1").style="display:flex;";
     document.getElementById("indicador2").style="display:flex;";
@@ -165,9 +166,8 @@ function find_roulette_result(spin_degrees, probs, candidates)
         }
     }
 
-    console.log('Error: spin percentage is greater than 1');
+    console.log('Error: roulette result not found, returning the last option');
     console.log(probs)
-    // If the percentage is greater than 1, we return the last player
     return candidates[candidates.length - 1];
 }
 
