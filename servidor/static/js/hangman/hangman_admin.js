@@ -102,10 +102,8 @@ async function play_hangman()
     {
         await set_can_players_join(true);
         await notify_clients_game_ready(game_id) // Tell them to rejoin the game
-        await set_can_players_interact(true);
         await listen_in_game_room(); // Wait for all players to guess
         await set_can_players_join(false);
-        await set_can_players_interact(false); 
 
         await perform_step();
 

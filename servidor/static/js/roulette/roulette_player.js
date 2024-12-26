@@ -68,16 +68,19 @@ function bet(button)
     if(available_coins >= coin_bet_number) //If the player has enough coins
     {
         bet_pos = find_bet(button.id);
+        let bet_label = button.querySelector(".bet-label");
         
         //If the bet is already in the list, change the number of coins
         if(bet_pos != -1)
         {
             bets[bet_pos].amount += coin_bet_number;
+            bet_label.innerHTML = bets[bet_pos].amount;
             //new_opacity = bets[bet_pos].amount * 10;
         }
         else //If not, add it to the list
         {
             bets.push(new Bet(button.id, coin_bet_number));
+            bet_label.innerHTML = bets[bets.length - 1].amount;
             //new_opacity = coin_bet_number * 10;
         }
 
@@ -97,8 +100,10 @@ function unbet(button)
     bet_pos = find_bet(button.id);
     if(bet_pos != -1)
     {
+        let bet_label = button.querySelector(".bet-label");
+        bet_label.innerHTML = "0";
         available_coins += bets[bet_pos].amount;
-        bets.splice(bet_pos, 1);
+        bets.splice(bet_pos, 1); // Remove the bet from the list
         button.style.opacity = '0%'; 
 
         document.getElementById("available_coins").innerHTML = available_coins + " monedas disponibles";
@@ -106,8 +111,7 @@ function unbet(button)
     }
 }
 
-function send_bets() 
-{
+async function send_bets() {
     //Send the bets to the server using AJAX
     bets_json = JSON.stringify(bets);
 
@@ -124,10 +128,13 @@ function send_bets()
         type: 'GET',
         data: {bets:player_bets},
         contentType: 'application/json;charset=UTF-8',
-        success: function(response) {
-            notify_player_has_interacted();
-            sessionStorage.setItem("played", true) //Set the played flag to true
-            window.location.href = "../wait_room/";
+        success: async function(response) {
+            if(response.allowed == true)
+            {
+                await notify_player_has_interacted();
+                sessionStorage.setItem("played", true) //Set the played flag to true
+                window.location.href = "../wait_room/";
+            }  
         }
     });
 }

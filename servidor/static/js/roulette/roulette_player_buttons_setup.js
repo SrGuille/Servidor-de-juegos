@@ -10,6 +10,15 @@ function add_button(left, top, id, button_class)
     new_button.className = button_class;
     new_button.style = "top: " + top + "px; left: " + left + "px";
     new_button.onclick = function() {bet_unbet(this)};
+
+     // Add a span element to display the betted coins
+     const bet_label = document.createElement("span");
+     bet_label.className = "bet-label";
+     bet_label.innerHTML = "0"; // Default bet amount is 0
+     
+     // Append the label to the button
+     new_button.appendChild(bet_label);
+
     buttons_row.appendChild(new_button);
 }
 
@@ -83,5 +92,5 @@ function buttons_setup()
     load_third_buttons();
     load_row_buttons();
     load_half_buttons();
-    add_button(230, 119, 0, "button-number");
+    add_button(130, 119, 0, "button-number");
 }

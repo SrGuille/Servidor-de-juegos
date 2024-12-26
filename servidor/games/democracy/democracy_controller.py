@@ -4,56 +4,75 @@ import random
 from typing import List, Tuple, Dict
 from servidor import queries as q
 import math
+import time
 
 # Constants
 MOVES_PER_STEP = 1
 TEAM_NAMES = ['Verde', 'Rojo']
 REWARD_PER_ADVANTAGE = 5
+clock_time = 0 
 
 # Global variables
 teams_with_names = {0: [], 1: []} # Dict with the players of each team (with player's names)
 
+def init_clock() -> int:
+    """Initialize the game clock, synched with the admin client"""
+    global clock_time
+    clock_time = time.time()
 
-def register_player_move(name: str, move: str) -> None:
+def get_time_until_next_second() -> float:
+    """
+        Returns the time until the next second starts
+    """
+    time_since_clock = time.time() - clock_time
+    return 1000 - (time_since_clock * 1000)
+
+def register_player_move(name: str, move: str) -> Tuple[bool, int, float]:
     """
         Register the move if the player has not reached 
-        the maximum number of moves in an step
+        the maximum number of moves in an step (1)
     """
-
+    time_until_next_second = -1 # For the case where the game is not ready
     if(main_controller.get_can_players_interact()): # If play time has started and not finished
-        main_controller.get_players_lock().acquire()
+        main_controller.get_players_lock().acquire() # Lock to don't race with get_democratic_move()
+        time_until_next_second = get_time_until_next_second()
         player_moves = main_controller.get_player_elems(name)
         if(player_moves != None): # If player exists in memory
             number_previous_moves = len(player_moves)
-            if(number_previous_moves < MOVES_PER_STEP):
+            if(number_previous_moves < MOVES_PER_STEP): # Record the move
                 player_moves.append(move)
                 print('Player ' + name + ' registered move ' + move)
         main_controller.get_players_lock().release()
 
+    return time_until_next_second
 
-def get_players_moves() -> Dict[str, int]:
+def get_and_reset_players_moves() -> Dict[str, int]:
     """
-        Returns the count of all types of moves of all players in a dictionary
+        Returns the count of all types of moves of all players in a dictionary and resets the moves of all players
     """
-    main_controller.get_players_lock().acquire()
-
     players_moves = main_controller.get_players_elems()
     total_moves = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
     for player_name, player_moves in players_moves.items():
         for move in player_moves:
             total_moves[move] += 1
-        players_moves[player_name] = []  # Reemplazar con una nueva lista vacía
-
-    main_controller.get_players_lock().release()
+        players_moves[player_name] = []  # Reset the moves of the player
 
     return total_moves
+
 
 def get_democratic_move()-> Tuple[int, int]:
     """ 
         Returns the result of the step (the sum of the forces in both directions)
         divided by 2 (to avoid too much movement)
     """
-    forces = get_players_moves()
+    main_controller.get_players_lock().acquire()
+
+    global clock_time
+    clock_time = time.time()  # Reset the clock time
+
+    forces = get_and_reset_players_moves()
+
+    main_controller.get_players_lock().release()
 
     vertical_sign = 0
     horizontal_sign = 0

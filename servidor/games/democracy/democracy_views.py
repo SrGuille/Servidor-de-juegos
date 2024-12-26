@@ -16,11 +16,15 @@ def create_teams(request):
     teams = democracy_controller.create_teams()
     return JsonResponse({'teams': teams}, safe=False)
 
+def init_clock(request): # Called by the admin client
+    democracy_controller.init_clock()
+    return JsonResponse({'status': 'ok'}, safe=False)
+
 def send_player_move(request):
     player_name = request.GET.get('player_name')
     move = request.GET.get('move')
-    democracy_controller.register_player_move(player_name, move)
-    return JsonResponse({'status': 'ok'}, safe=False)
+    time_until_next_second = democracy_controller.register_player_move(player_name, move)
+    return JsonResponse({'time_until_next_second': time_until_next_second}, safe=False)
 
 def get_democratic_move(request):
     vertical_force, horizontal_force = democracy_controller.get_democratic_move()

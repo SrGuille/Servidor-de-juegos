@@ -111,6 +111,7 @@
     function add_names_to_select(names)
     {
         let player_name = sessionStorage.getItem("player_name");
+        console.log(player_name);
         var select = document.getElementById("select_players");
         for (var i = 0; i < names.length; i++) 
         {

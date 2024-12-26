@@ -20,7 +20,7 @@
     <div id="buttons_row">
         <img id="apuesta" style="width: 500px; margin-top: 50px; margin-left: 100px;" src="{% static 'img/roulette_bet.png' %}"/>
         
-        <div class="row" style="margin-left: 250px; ">
+        <div class="row" style="margin-left: 250px;">
             <div class="col-3">
                 <button id="send" onclick="send_bets()" class="button-send">Enviar</button><br>
             </div>
@@ -29,23 +29,75 @@
             </div>
         </div>
         
-        <div style="position:absolute; left: 700px; top: 100px">
-            <label style="font-size:20px">Borrar apuesta</label>
-            <label class="switch" >
-                <input type="checkbox" id="delete_bet">
-                <span class="slider round"></span>
-            </label>
-            <br>
-            <br>
-            <br>
-            <label id="available_coins" style="font-size:20px"></label>
-            <br>
-            <br>
-            <label id="betted_coins" style="font-size:20px"></label>
+        <div class="betting-panel">
+            <div class="betting-option">
+                <label>Borrar apuesta</label>
+                <label class="switch">
+                    <input type="checkbox" id="delete_bet">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="coin-info">
+                <label id="available_coins"></label>
+                <label id="betted_coins"></label>
+            </div>
         </div>
     </div>
 </body>
-</html>
+
+<style>
+.betting-panel {
+    position: absolute;
+    left: 700px;
+    top: 100px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.betting-option {
+    margin-bottom: 20px;
+}
+
+.betting-option label {
+    font-size: 20px;
+    font-weight: 500;
+    color: #333;
+    margin-right: 15px;
+}
+
+.coin-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.coin-info label {
+    font-size: 20px;
+    color: #444;
+    padding: 8px 0;
+    border-bottom: 2px solid #eee;
+}
+
+/* Enhance existing switch styles if needed */
+.switch {
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.bet-label {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 2px;
+    padding: 2px 4px;
+}
+</style>
 
 <script>
     document.addEventListener("DOMContentLoaded", function(event) {
