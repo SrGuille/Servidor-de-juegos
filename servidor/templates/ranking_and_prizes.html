@@ -21,26 +21,38 @@
     <div class="ranking-container">
         <h1 id="title" class="titulo-pantalla fw-bold" style="z-index: 2;">Clasificación</h1>
         <div id="ranking_container" class="table-wrapper">
-            <table class="table table-striped animate__animated animate__fadeIn animate__slow" id="ranking">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Monedas</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-ranking">
-                </tbody>
-            </table>
+            <div class="ranking-columns">
+                <table class="table table-striped animate__animated animate__fadeIn animate__slow" id="ranking-left">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Monedas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-ranking-left">
+                    </tbody>
+                </table>
+                <table class="table table-striped animate__animated animate__fadeIn animate__slow" id="ranking-right">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Monedas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-ranking-right">
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div class="row box-roulette" style="margin-left: auto; margin-right: auto;">
+    <div class="row box-roulette" id="roulettes_container" style="margin-left: auto; margin-right: auto;">
         <div class="col-5 align-content-center">
-            <img id="indicador1" class="indicador1" src="{% static 'img/indicator.png' %}" alt="">
+            <img id="indicador1" style="display: flex;" class="indicador1" src="{% static 'img/indicator.png' %}" alt="">
             <div id="players_roulette_div"></div>
         </div>
         <div class="col-5 justify-content-center">
-            <img id="indicador2" class="indicador2" src="{% static 'img/indicator.png' %}" alt="">
+            <img id="indicador2" style="display: flex;" class="indicador2" src="{% static 'img/indicator.png' %}" alt="">
             <div id="prizes_roulette_div"></div>
         </div>
     </div>
@@ -49,107 +61,141 @@
 </body>
 
 <style>
-.ranking-container {
-    width: 90%;
-    max-width: 600px;
-    margin: 2rem auto;
-}
+    /* Ranking Container Styles */
+    .ranking-container {
+        width: 90%;
+        max-width: 800px; /* Increased from 600px */
+        margin: 2rem auto;
+    }
 
-.ranking-title {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 1.5rem;
-}
+    .table-wrapper {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 10px;
+        padding: 40px; /* Increased from 20px */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
 
-.table-wrapper {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+    /* Table Layout Styles */
+    .ranking-columns {
+        display: flex;
+        gap: 4rem; /* Increased from 2rem for more space between columns */
+        justify-content: center;
+        width: 100%;
+        padding: 0 20px; /* Added horizontal padding */
+    }
 
-#ranking {
-    margin-bottom: 0;
-}
-
-/* Encabezados de columna */
-#ranking thead th {
-    font-size: 2rem;  /* Fuente más grande para los encabezados */
-    font-weight: bold;
-    padding: 12px 15px;
-    color: #444;
-}
-
-/* Celdas de datos */
-#ranking tbody td {
-    font-size: 1.5rem;    /* Fuente más pequeña para los datos */
-    font-weight: normal;
-    padding: 8px 15px;  /* Padding vertical reducido para filas más estrechas */
-    vertical-align: middle;
-    border-bottom: 1px solid #eee;
-}
-
-/* Última fila sin borde inferior */
-#ranking tbody tr:last-child td {
-    border-bottom: none;
-}
-
-#ranking tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.box-roulette{
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    padding-top: 0px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 1500px;
-}
-#ranking{
-    width: 50%;
-    text-align: center;
-    margin-top: 5%;
-    margin-inline: auto;
-}
-#ranking tr{
-    font-size: 28px;
-}
-.indicador1{
-    width: 80px;
-    height: auto;
-    z-index: 2;
-    margin-left: 255px;
-    display: none;
-    position: relative;
-    top: 75px;
-}
-.indicador2{
-    width: 80px;
-    height: auto;
-    z-index: 2;
-    margin-left: 255px;
-    display: none;
-    position: relative;
-    top: 75px;
-}
-
-#result {
-    position: relative;
-    top: -80px;
-    text-align: center;
-    margin: 0 auto;
-}
-
+    #ranking-left, #ranking-right {
+        flex: 1;
+        max-width: 450px; /* Increased from 400px */
+        text-align: center;
+        margin-top: 5%;
+    }
+    
+    /* Hide right table by default */
+    #ranking-right {
+        display: none;
+    }
+    
+    /* Show both tables when split-columns class is added */
+    .split-columns #ranking-left,
+    .split-columns #ranking-right {
+        display: table;
+        width: 50%;
+    }
+    
+    /* Table Styling */
+    .table {
+        margin: 0 auto;
+        width: 100%;
+    }
+    
+    .table th, 
+    .table td {
+        width: 50%;
+        font-size: 1.5rem;
+        padding: 8px 15px;
+        vertical-align: middle;
+        text-align: center;
+    }
+    
+    .table th {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #444;
+        padding: 12px 15px;
+    }
+    
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .table tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+    
+    /* Roulette Section Styles */
+    .box-roulette {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        padding-top: 0px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 1500px;
+    }
+    
+    .indicador1,
+    .indicador2 {
+        width: 80px;
+        height: auto;
+        z-index: 2;
+        margin-left: 255px;
+        position: relative;
+        top: 75px;
+    }
+    
+    /* Result Display */
+    #result {
+        position: relative;
+        top: -80px;
+        text-align: center;
+        margin: 0 auto;
+    }
+    
+    /* Title Styles */
+    #title {
+        z-index: 2;
+    }
+    
+    /* Legacy Styles (kept for compatibility) */
+    #ranking {
+        width: 50%;
+        text-align: center;
+        margin-top: 5%;
+        margin-inline: auto;
+        margin-bottom: 0;
+    }
+    
+    #ranking tr {
+        font-size: 28px;
+    }
 </style>
 <script>
-        document.addEventListener("DOMContentLoaded", function(event) 
+    document.addEventListener("DOMContentLoaded", function(event) 
+    {
+        // We come from a special duel
+        if (sessionStorage.getItem('special_duel') === 'true')
+        {
+            after_special_duel();
+        }
+        else // We come from a regular game
         {
             get_ranking_and_spin_roulettes();
-        });
+        }
+    });
 </script>
 </html>

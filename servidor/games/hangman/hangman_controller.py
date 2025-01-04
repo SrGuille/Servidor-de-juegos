@@ -1,6 +1,6 @@
 from servidor.classes import Actor, HangmanPlayer, Guess
 from typing import List, Tuple
-from servidor import main_controller
+from servidor import main_controller, main_views
 from . import use_openai_api as oai_api
 from servidor import queries as q
 import random
@@ -110,7 +110,7 @@ def reset_step_variables():
     global step_correct_guesses, num_step_wrong_guesses, pot_per_sentence_guess
     step_correct_guesses = {} # Dictionary of letter: [Guess]
     num_step_wrong_guesses = 0
-    main_controller.reset_elements() # Empty the elements list of all players
+    main_views.main_controller_.reset_elements() # Empty the elements list of all players
     pot_per_sentence_guess -= COINS_POT_DECREASE_PER_STEP # Decrease the pot
 
 # Register guessed letter positions in the binary array
@@ -144,9 +144,9 @@ def register_player_guess(guess: str, name: str) -> bool:
     valid_guess = False
     eliminated = False
     winner = False
-    if(main_controller.get_can_players_interact()):
-        main_controller.get_players_lock().acquire()
-        player_guesses = main_controller.get_player_elems(name)
+    if(main_views.main_controller_.get_can_players_interact()):
+        main_views.main_controller_.get_players_lock().acquire()
+        player_guesses = main_views.main_controller_.get_player_elems(name)
         if(player_guesses != None): # If player exists in memory
             guess = parse_sentence_to_without_tildes(guess) # Remove tildes and convert to lowercase
             if(len(guess) == len(without_tildes_sentence)): # If the guess is a sentence guess
@@ -176,7 +176,7 @@ def register_player_guess(guess: str, name: str) -> bool:
                     else:
                         step_correct_guesses[guess] = Guess(num_apperances, name)
 
-        main_controller.get_players_lock().release()
+        main_views.main_controller_.get_players_lock().release()
 
     return valid_guess, eliminated, winner
 
@@ -204,7 +204,7 @@ def get_best_guess_and_players():
 def perform_step():
     global hang_step, game_winners, num_step_wrong_guesses, pot_per_sentence_guess
     game_end = False
-    main_controller.get_players_lock().acquire()
+    main_views.main_controller_.get_players_lock().acquire()
  
     # If there are players with correct guesses, end
     if(len(game_winners) > 0): # If there are players with correct guesses, end
@@ -231,7 +231,7 @@ def perform_step():
         earnings_to_coins()
     
     reset_step_variables()
-    main_controller.get_players_lock().release()
+    main_views.main_controller_.get_players_lock().release()
     
     return partially_guessed_sentence, hang_step, game_winners, pot_per_sentence_guess
 

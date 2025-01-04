@@ -6,8 +6,9 @@ They can iniciate request from the server to the client
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 import json
-from . import main_controller
+from . import main_views
 from .games.gunman import gunman_views
+from .games.roulette import roulette_views
 
 
 """ 
@@ -89,13 +90,13 @@ class InGameRoom(WebsocketConsumer):
     In case it was, it will inform the admin to proceed
     """
     def receive(self, text_data):
-        main_controller.get_players_lock().acquire()
+        main_views.main_controller_.get_players_lock().acquire()
         print('A player has interacted')
-        game_id = main_controller.get_ready_to_join_game() # Get the game id
+        game_id = main_views.main_controller_.get_ready_to_join_game() # Get the game id
         print('game_id', game_id)
         if game_id == 0: # Roulette
             # Check if the player is the last one remaining
-            if main_controller.get_remaining_interactions() == 0:
+            if roulette_views.roulette_game.get_remaining_interactions() == 0:
                 self.send_last_player()
         elif game_id == 2 or game_id == 4: # Ahorcado or BNumber
             self.notify_admin_update()
@@ -103,8 +104,7 @@ class InGameRoom(WebsocketConsumer):
             if gunman_views.gunman_game.get_remaining_interactions() == 0:
                 self.send_last_player()
         
-        main_controller.get_players_lock().release()
-
+        main_views.main_controller_.get_players_lock().release()
 
     # Adds the user to the room group
     def join_room(self):

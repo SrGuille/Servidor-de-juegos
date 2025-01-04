@@ -30,7 +30,7 @@ DEBUG = True
 # Automatically get the IP address of the machine
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
-ALLOWED_HOSTS = [ip_address, '127.0.0.1', '192.168.1.37', '192.168.1.131']
+ALLOWED_HOSTS = [ip_address, '127.0.0.1', '192.168.1.47', '192.168.1.131']
 
 # Application definition
 

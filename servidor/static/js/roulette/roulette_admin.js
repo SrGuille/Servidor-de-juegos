@@ -29,6 +29,7 @@ async function wait_for_all_players_and_run()
 async function run_and_send_result()
 {
     result = await spin_roulette(); 
+    console.log(result);
     send_roulette_result(result);
 }
 
