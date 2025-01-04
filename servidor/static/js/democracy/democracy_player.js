@@ -27,7 +27,7 @@ async function get_my_team()
 {
     await new Promise(r => setTimeout(r, 2000));
     $.ajax({
-        url: "../get_my_team",
+        url: "../get_my_team_democracy",
         type: "GET",
         data: {player_name:player_name},
         success: function(response) {
@@ -70,47 +70,85 @@ async function go_to_wait_screen_after_game()
 
 /*
 This function sends the move to the server synched with the server clock
-If the player sends a new move before the second is over, it will be sent when the second is over
-If the player sends more moves after that, only the last one will be sent at the end of the second 
+Only the first move of each second is sent, the rest are ignored
 */
 function try_send_move(move) {
-    const now = Date.now();
-    const time_elapsed = now - last_move_try_time;  // How much time has passed since last move
 
-    // If there's no previous move, try to send now (it will be accepted if the game is ready)
+    // First move: try to send now (it will be accepted if the game is ready)
     if (time_until_next_second == -1) {
         send_move(move);
         return;
     }
+
+    const now = Date.now();
+    const time_elapsed = now - last_move_try_time;  // How much time has passed since last move
 
     // We've waited longer than time_until_next_second, we're in a new second
     if (time_elapsed >= time_until_next_second) {
         send_move(move);
         return;
     }
-
-    // We have already sent a move in this second, we have to wait until the next second
-    if (timeout_id !== null) { // Clear any previous scheduled send during this second
-        clearTimeout(timeout_id);
-        timeout_id = null;  // Reset the timeout ID
-        console.log("Timeout cleared");
-    }
-    
-    // How much time is left until the next second
-    const remaining_time = time_until_next_second - time_elapsed;
-    
-    timeout_id = setTimeout(() => { // Schedule the move for the start of the next second
-        if (move) {
-            send_move(move);
-        }
-    }, remaining_time);
 }
 
 let time_until_next_second = -1;  // Time until next second from server
 let last_move_try_time = 0;   // When tried to send the move
-let timeout_id = null;   // Timeout for scheduled move
 
 function send_move(move) {
+    last_move_try_time = Date.now();  // Track when tried to send the move
+    $.ajax({
+        url: "../send_player_move",
+        type: "GET",
+        data: {move: move, player_name: player_name},
+        success: function(response) {
+            time_until_next_second = response.time_until_next_second;
+        }
+    });
+}
+
+/**
+ * 
+ * 
+    This function sends the move to the server synched with the server clock
+    If the player sends a new move before the second is over, it will be sent when the second is over
+    If the player sends more moves after that, only the last one will be sent at the end of the second 
+    function try_send_move(move) {
+        const now = Date.now();
+        const time_elapsed = now - last_move_try_time;  // How much time has passed since last move
+
+        // If there's no previous move, try to send now (it will be accepted if the game is ready)
+        if (time_until_next_second == -1) {
+            send_move(move);
+            return;
+        }
+
+        // We've waited longer than time_until_next_second, we're in a new second
+        if (time_elapsed >= time_until_next_second) {
+            send_move(move);
+            return;
+        }
+
+        // We have already sent a move in this second, we have to wait until the next second
+        if (timeout_id !== null) { // Clear any previous scheduled send during this second
+            clearTimeout(timeout_id);
+            timeout_id = null;  // Reset the timeout ID
+            console.log("Timeout cleared");
+        }
+        
+        // How much time is left until the next second
+        const remaining_time = time_until_next_second - time_elapsed;
+        
+        timeout_id = setTimeout(() => { // Schedule the move for the start of the next second
+            if (move) {
+                send_move(move);
+            }
+        }, remaining_time);
+    }
+
+ * let time_until_next_second = -1;  // Time until next second from server
+ * let last_move_try_time = 0;   // When tried to send the move
+ * let timeout_id = null;   // Timeout for scheduled move
+ * 
+ * function send_move(move) {
     clearTimeout(timeout_id); // Clear any previous scheduled send during this second
     last_move_try_time = Date.now();  // Track when tried to send the move
     $.ajax({
@@ -122,3 +160,4 @@ function send_move(move) {
         }
     });
 }
+ */

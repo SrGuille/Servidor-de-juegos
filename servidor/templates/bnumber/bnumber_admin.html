@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Hangman game</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/bnumber/bnumber_admin.js' %}"></script>
+    <script src="{% static 'js/game_redirects.js' %}"></script>
+    <script src="{% static 'js/in_game_room.js' %}"></script>
+    <audio src="{% static 'sounds/arcade_jump.wav' %}" id="arcade_jump_audio"></audio>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+</head>
+<body class="fondo" style="top: 100px;">
+    <div id="seconds_left"></div>
+    <div id="bnumber-result"></div>
+    <!-- Lado izquierdo (Verde) -->
+    <div id="team-green" class="game-half left-side">
+        <div class="number-list">
+            <button class="number-button empty-number" id="0">0</button>
+            <button class="number-button empty-number" id="1">1</button>
+            <button class="number-button empty-number" id="2">2</button>
+            <button class="number-button empty-number" id="3">3</button>
+            <button class="number-button empty-number" id="4">4</button>
+            <button class="number-button empty-number" id="5">5</button>
+            <button class="number-button empty-number" id="6">6</button>
+            <button class="number-button empty-number" id="7">7</button>
+            <button class="number-button empty-number" id="8">8</button>
+        </div>
+        <div class="new-number-container">
+            <span class="new-number-label">Siguiente:</span>
+            <span id="new-number" class="new-number">5</span>
+        </div>
+    </div>
+    
+    <!-- Línea divisoria central -->
+    <div class="divider"></div>
+    
+    <!-- Lado derecho (Rojo) -->
+    <div id="team-red" class="game-half right-side">
+        <div class="number-list">
+            <button id="0" class="number-button empty-number">0</button>
+            <button id="1" class="number-button empty-number">1</button>
+            <button id="2" class="number-button empty-number">2</button>
+            <button id="3" class="number-button empty-number">3</button>
+            <button id="4" class="number-button empty-number">4</button>
+            <button id="5" class="number-button empty-number">5</button>
+            <button id="6" class="number-button empty-number">6</button>
+            <button id="7" class="number-button empty-number">7</button>
+            <button id="8" class="number-button empty-number">8</button>
+        </div>
+        <div class="new-number-container">
+            <span class="new-number-label">Siguiente:</span>
+            <span class="new-number">5</span>
+        </div>
+    </div>
+    <div id="countdown"></div>
+    <button id="enable_sounds" style="display: none;"></button>
+</body>
+
+
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        play_bnumber();
+    });
+</script>
+
+<style>
+     body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        position: relative; /* Add this to allow absolute children positioning */
+    }
+    
+    .game-half {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    
+    .left-side {
+        background-color: #4CAF50;  /* Verde */
+    }
+    
+    .right-side {
+        background-color: #f44336;  /* Rojo */
+    }
+    
+    .divider {
+        width: 4px;
+        background-color: #333;
+        height: 100vh;
+    }
+    
+    .number-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin: 20px 0;
+    }
+    
+    .number-button {
+        width: 70px;
+        height: 70px;
+        border-radius: 40px;
+        border: 2px solid white;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #333;
+        font-size: 40px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .number-button:hover {
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .new-number-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 10px 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .new-number-label {
+        font-size: 30px;
+        color: #333;
+    }
+    
+    .new-number {
+        font-size: 30px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .empty-number {
+        color: #dbcbcb !important;  /* Gray color for empty positions */
+    }
+    
+    .filled-number {
+        color: #000000 !important;  /* Black color for real numbers */
+    }
+
+    #countdown {
+        display: block; 
+        position: absolute; /* Change to absolute */
+        left: 0;
+        right: 0;
+        margin-right: auto; 
+        margin-left: auto;  
+        margin-top: auto;
+        margin-bottom: auto;
+        text-align: center;
+        height: auto;
+        z-index: 2; 
+        font-size: 700px;
+    }
+
+    #seconds_left {
+        display: block; 
+        position: absolute; /* Change to absolute */
+        left: 0;
+        right: 0;
+        margin-right: auto; 
+        margin-left: auto;  
+        margin-top: -80px;
+        text-align: center;
+        height: auto;
+        font-size: 50px;
+        color: black;
+    }
+
+    #bnumber-result {
+        display: block; 
+        position: absolute; /* Change to absolute */
+        left: 0;
+        right: 0;
+        margin-right: auto; 
+        margin-left: auto;  
+        margin-top: 100px;
+        margin-bottom: auto;
+        text-align: center;
+        height: auto;
+        z-index: 2; 
+        font-size: 100px;
+        color: black;
+    }
+</style>

@@ -147,6 +147,9 @@ async function play_special_duel(player1, player2)
         }
     }
     await set_can_players_join(false); 
+    await new Promise(r => setTimeout(r, 5000)); // Wait 5 seconds 
+    sessionStorage.setItem('special_duel_winner', special_duel_result.winner);
+    window.location.href = "../ranking_and_prizes/";
 }
 
 async function duel_step()

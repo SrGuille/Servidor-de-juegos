@@ -34,8 +34,8 @@ async function play_democracy()
     await set_can_players_interact(false); // Players can't move
     await new Promise(r => setTimeout(r, 5000)); //Wait 5 seconds
     console.log(colors_per_second)
-    send_colors_per_second();
-    await new Promise(r => setTimeout(r, 10000)); //Wait 5 seconds
+    await send_colors_per_second();
+    await new Promise(r => setTimeout(r, 3000)); //Wait 3 seconds
     window.location.href = "../ranking_and_prizes/";
     
 }
@@ -211,7 +211,7 @@ async function main_loop()
 async function create_teams()
 {
     await $.ajax({
-        url: "../create_teams",
+        url: "../create_teams_democracy",
         type: "GET",
         success: function(response) {
             console.log(response.teams);

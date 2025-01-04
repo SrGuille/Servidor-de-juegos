@@ -13,6 +13,10 @@ function get_player_data_and_play()
                 shields = player_data.shields;
                 lives = player_data.lives;
                 is_special_duel = response.is_special_duel;
+                // Handle bool or string
+                is_special_duel = typeof response.is_special_duel === 'string' 
+                 ? response.is_special_duel.toLowerCase() === 'true'
+                 : Boolean(response.is_special_duel);
                 display_stats(bullets, shields, lives, is_special_duel); 
                 update_buttons(bullets, shields); // Disable the shoot and shield buttons if there are no bullets and vice versa
             }

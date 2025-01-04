@@ -4,6 +4,7 @@ from .games.democracy import democracy_views
 from .games.hangman import hangman_views
 from .games.roulette import roulette_views
 from .games.gunman import gunman_views
+from .games.bnumber import bnumber_views
 
 urlpatterns = [
     # Main views
@@ -50,9 +51,9 @@ urlpatterns = [
     path('init_clock/', democracy_views.init_clock, name='init_clock'),
     path('send_player_move/', democracy_views.send_player_move, name='send_player_move'),
     path('get_democratic_move/', democracy_views.get_democratic_move, name='get_democratic_move'),
-    path('get_my_team/', democracy_views.get_my_team, name='get_my_team'),
+    path('get_my_team_democracy/', democracy_views.get_my_team_democracy, name='get_my_team_democracy'),
     path('send_colors_per_second/', democracy_views.send_colors_per_second, name='send_colors_per_second'),
-    path('create_teams/', democracy_views.create_teams, name='create_teams'),
+    path('create_teams_democracy/', democracy_views.create_teams_democracy, name='create_teams_democracy'),
 
     # Gunman views
     path('gunman_admin/', gunman_views.gunman_admin_render, name='gunman_admin_render'),
@@ -62,6 +63,19 @@ urlpatterns = [
     path('send_player_action/', gunman_views.send_player_action, name='send_player_action'),
     path('get_duel_data/', gunman_views.get_duel_data, name='get_duel_data'),
     path('duel_step/', gunman_views.duel_step, name='duel_step'),
-    path('special_duel_step/', gunman_views.special_duel_step, name='special_duel_step')
+    path('special_duel_step/', gunman_views.special_duel_step, name='special_duel_step'),
+
+    # BNumber views
+    path('bnumber_admin/', bnumber_views.bnumber_admin_render, name='bnumber_admin_render'),
+    path('bnumber_player/', bnumber_views.bnumber_player_render, name='bnumber_player_render'),
+    path('create_teams_bnumber/', bnumber_views.create_teams_bnumber, name='create_teams_bnumber'),
+    path('get_my_team_bnumber/', bnumber_views.get_my_team_bnumber, name='get_my_team_bnumber'),
+    path('send_position/', bnumber_views.send_position, name='send_position'),
+    path('get_bnumber_data/', bnumber_views.get_bnumber_data, name='get_bnumber_data'),
+    path('finish_bnumber/', bnumber_views.finish_bnumber, name='finish_bnumber'),
+
+    # Economic policy views
+    path('decide_call_special_duel_or_santa/', main_views.decide_call_special_duel_or_santa, name='decide_call_special_duel_or_santa'),
+    path('balance_inflation_deflation/', main_views.balance_inflation_deflation, name='balance_inflation_deflation')
     
 ]

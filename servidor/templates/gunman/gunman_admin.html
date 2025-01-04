@@ -71,7 +71,16 @@
 </html>
 <script>
     document.addEventListener("DOMContentLoaded", function(event) {
-        play_rey_de_la_pista();
+        if (sessionStorage.getItem('special_duel') === 'true')
+        {   
+            player1 = sessionStorage.getItem('special_duel_player1');
+            player2 = sessionStorage.getItem('special_duel_player2');
+            play_special_duel(player1, player2);
+        }
+        else
+        {
+            play_rey_de_la_pista();
+        }
     });
 </script>
 

@@ -1,16 +1,17 @@
-from servidor import main_controller
+from servidor import main_views
 import random
 from servidor import queries as q
 from servidor.classes import GunmanPlayer
 from copy import deepcopy  # Add this import at the top
+import threading
 
 class GunmanGame:
-    COINS_TO_STEAL = 10
-    is_special_duel = False
-
     def __init__(self):
         self.remaining_players = [] # List of players that have not participated in any duel
         self.duel_players = {}
+        self.players_lock = threading.Lock()
+        self.COINS_TO_STEAL = 10
+        self.is_special_duel = False
 
     def create_initial_duel(self):
         """
@@ -58,12 +59,12 @@ class GunmanGame:
         return new_player
 
     def register_player_action(self, name, action):
-        allowed = main_controller.get_can_players_interact()
+        allowed = main_views.main_controller_.get_can_players_interact()
         if allowed and name in self.duel_players.keys():
-            main_controller.get_players_lock().acquire()
+            self.players_lock.acquire()
             self.duel_players[name].action = action
             self.update_bullets(self.duel_players[name])
-            main_controller.get_players_lock().release()
+            self.players_lock.release()
         return allowed
 
     def update_bullets(self, player):
@@ -76,6 +77,7 @@ class GunmanGame:
             player.shields -= 1
         elif player.action == "reload":
             player.bullets += 1
+            player.shields += 1
 
     def get_duel_data(self, name):
         """
@@ -92,13 +94,13 @@ class GunmanGame:
         """
         Returns the number of remaining interactions in the duel
         """
-        have_interacted = []
+        have_not_interacted = []
         remaining_interactions = 0
         for player in self.duel_players.keys():
             if self.duel_players[player].action is None:
                 remaining_interactions += 1
-                have_interacted.append(player)
-        print(f"Have interacted: {have_interacted}")
+                have_not_interacted.append(player)
+        print(f"Have not interacted: {have_not_interacted}")
         print("All players: ", self.duel_players.keys())
         print(f"Remaining interactions: {remaining_interactions}")
         return remaining_interactions
@@ -203,11 +205,8 @@ class GunmanGame:
         return winner, loser
 
     def steal_coins(self, winner, loser):
-        main_controller.get_players_lock().acquire()
         q.add_coins_to_player(winner, self.COINS_TO_STEAL)
         q.add_coins_to_player(loser, -self.COINS_TO_STEAL)
-        main_controller.get_players_lock().release()
-
 
     def special_duel_step(self):
         """
