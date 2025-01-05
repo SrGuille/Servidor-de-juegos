@@ -241,12 +241,14 @@ def get_stored_game_number():
     else:
         stored_game_number = stored_game_number.game_number
     return stored_game_number
-
+   
 def get_player_coins_at_game_number(player, game_number):
     """
-        Get the number of coins that a player has at a specific game number
+        Get the coins of a player at a specific game number
     """
-def get_player_coins_at_game_number(player, game_number):
+    # Check the type of the player parameter
+    if isinstance(player, str):
+        player = Player.objects.get(name=player)
     try:
         # Intenta obtener el objeto Coins_evolution
         coins_evolution = Coins_evolution.objects.get(player=player, game_number=game_number)
@@ -264,6 +266,18 @@ def insert_prize_evolution(player_name, prize_type, game_number):
     prize = Prize.objects.get(type=prize_type)
     prize_evolution = Prizes_evolution(player=player, prize=prize, game_number=game_number)
     prize_evolution.save()
+
+def get_prize_winner(game_number):
+    """
+        Get the winner of a prize in a specific game number
+    """
+    try:
+        prize_evolution = Prizes_evolution.objects.get(game_number=game_number)
+        prize_winner = prize_evolution.player.name
+
+    except Prizes_evolution.DoesNotExist:
+        prize_winner = None
+    return prize_winner
 
 def set_player_last_rich_duel_game_number(player, game_number):
     """
