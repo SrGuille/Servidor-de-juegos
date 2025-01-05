@@ -6,6 +6,7 @@ from . import queries as q
 from . import constants as c
 from .roulettes_utils import roulettes_utils
 from typing import List
+from . import stats as s
 
 class MainController:
     def __init__(self):
@@ -18,6 +19,16 @@ class MainController:
         print(f"Stored game number: {self.game_number}")
         print(f"Remaining games: {q.get_remaining_prizes()}")
         self.transition_to_next_game()
+
+        # TODO comment stats 2024
+        prizes_evolution, prize_winners = s.get_prizes_evolution()
+        coins_evolution = s.get_coins_evolution()
+        s.plot_coins_evolution(coins_evolution, prize_winners, width=10, height=8, year=2024, id='global')
+        s.plot_prizes_evolution(prizes_evolution, width=8, height=5, year=2024)
+        
+        splited_coins_evolution = s.split_coins_evolution(coins_evolution)
+        for id, group in enumerate(splited_coins_evolution):
+            s.plot_coins_evolution(group, prize_winners, width=10, height=5, year=2024, id=id + 1)
 
         # Game control flags
         """ 
