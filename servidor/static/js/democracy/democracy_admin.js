@@ -14,7 +14,7 @@ colors_per_second = Array();
 cell_size = 45; // 50x50 px
 cell_padding = cell_size / 2; // 25px
 initial_left = 720;
-initial_top = 150;
+initial_top = 120;
 character_size = 28; // 30x30 px
 character_margin = (cell_size - character_size) / 2; // 10px
 
@@ -34,8 +34,8 @@ async function play_democracy()
     await set_can_players_interact(false); // Players can't move
     await new Promise(r => setTimeout(r, 5000)); //Wait 5 seconds
     console.log(colors_per_second)
-    send_colors_per_second();
-    await new Promise(r => setTimeout(r, 10000)); //Wait 5 seconds
+    await send_colors_per_second();
+    await new Promise(r => setTimeout(r, 3000)); //Wait 3 seconds
     window.location.href = "../ranking_and_prizes/";
     
 }
@@ -56,7 +56,7 @@ async function countdown()
 }
 
 async function load_board()
-{
+{   
     init_logical_board();
     assign_cells();
     show_board_cells();
@@ -176,28 +176,42 @@ function move_character(x_moves, y_moves)
         + character_size + "px; height: " + character_size + "px;";
 }
 
+// Initialize the clock
+async function init_clock()
+{
+    await $.ajax({
+        url: "../init_clock",
+        type: "GET",
+        success: function(response) {
+            console.log("Clock initialized");
+        }
+    });
+}
+
 async function main_loop()
 {
     corriendo_en_la_noche.volume = 0.2;
     corriendo_en_la_noche.play();
     round = 0;
     rounds_left = document.getElementById("rounds_left");
+    
+    init_clock(); // Initialize the clock
     while(round < MAX_ROUNDS)
     {
         rounds_left.innerHTML = "Fin en " + (MAX_ROUNDS - round).toString();
-        await new Promise(r => setTimeout(r, 1000)); //Wait 1 seconds
+        await new Promise(r => setTimeout(r, 1000)); //Wait 1 second
         arcade_jump_audio.play();
         move_with_democracy();
         round += 1;
     }
     rounds_left.innerHTML = "Fin!";
-    await new Promise(r => setTimeout(r, 2000)); //Wait 1 seconds
+    await new Promise(r => setTimeout(r, 2000)); //Wait 2 seconds
 }
 
 async function create_teams()
 {
     await $.ajax({
-        url: "../create_teams",
+        url: "../create_teams_democracy",
         type: "GET",
         success: function(response) {
             console.log(response.teams);

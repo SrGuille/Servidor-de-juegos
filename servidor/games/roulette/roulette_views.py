@@ -5,6 +5,8 @@ from servidor import main_controller
 from . import roulette_controller
 import json
 
+roulette_game = roulette_controller.RouletteGame()
+
 # Create your views here.
 
 def roulette_admin_render(request):
@@ -16,9 +18,7 @@ def roulette_player_render(request):
 def send_roulette_result(request):
     result = request.GET.get('result')
     print(result)
-    main_controller.get_players_lock().acquire()
-    roulette_controller.assign_prizes(result)
-    main_controller.get_players_lock().release()
+    roulette_game.assign_prizes(result)
     return JsonResponse({'status': 'ok'}, safe=False)
 
 def send_player_bets(request):
@@ -27,6 +27,7 @@ def send_player_bets(request):
     bets = json.loads(bets_str) #Convert json to dict
     name = bets['player_name']
     bets = bets['bets']
-    allowed = roulette_controller.register_player_bets(name, bets)
-    return JsonResponse({'status': allowed}, safe=False)
+    bets = json.loads(bets) #Convert string to list
+    allowed = roulette_game.register_player_bets(name, bets)
+    return JsonResponse({'allowed': allowed}, safe=False)
 

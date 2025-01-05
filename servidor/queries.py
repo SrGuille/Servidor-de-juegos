@@ -34,21 +34,25 @@ def logout_player(name):
         jugador.save()
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' que se quiere desloguear')
+        print('No existe el jugador ' + name + 'que se quiere desloguear')
 
 def reset_player(name, nick):
     """
         Reset the player's nick and coins
+        This is innecessary except for the nick (as the other values are the default ones)
     """
 
     try:
         jugador = Player.objects.get(name=name)
         jugador.nick = nick
         jugador.coins = c.INITIAL_COINS
+        jugador.prizes_earned = 0
+        jugador.last_rich_duel_game_number = -1
+        jugador.last_aid_game_number = -1
         jugador.save()
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' que se quiere resetear')
+        print('No existe el jugador ' + name + 'que se quiere resetear')
 
 def change_player_nick(name, nick):
     """
@@ -61,7 +65,7 @@ def change_player_nick(name, nick):
         jugador.save()
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' al que se le quiere cambiar el nick')
+        print('No existe el jugador ' + name + 'al que se le quiere cambiar el nick')
 
 def add_new_prizes():
     """
@@ -116,7 +120,7 @@ def get_player_attributes(name):
         return jugador.attributes
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' del que se quieren obtener los atributos')
+        print('No existe el jugador ' + name + 'del que se quieren obtener los atributos')
 
 def get_0_coins_players():
     """
@@ -138,7 +142,13 @@ def add_coins_to_player(name, coins):
         player.save()
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' al que se le quieren dar monedas')
+        print('No existe el jugador ' + name + 'al que se le quieren dar monedas')
+
+def get_player(name):
+    """
+        Gets the player object from DB
+    """
+    return Player.objects.get(name=name)
 
 def get_player_coins(name):
     """
@@ -149,7 +159,7 @@ def get_player_coins(name):
         return jugador.coins
 
     except Player.DoesNotExist:
-        print('No existe el jugador ' + name + ' del que se quieren obtener las monedas')
+        print('No existe el jugador ' + name + 'del que se quieren obtener las monedas')
 
 def get_available_prizes():
     """
@@ -182,6 +192,18 @@ def get_prize(prize_type):
     except Prize.DoesNotExist:
         print('No existe el premio ' + prize_type + ' que se quiere obtener')
 
+def increment_player_prizes_earned(player_name: str):
+    """
+        Increment by 1 the number of prizes earned by a player
+    """
+    try:
+        player = Player.objects.get(name=player_name)
+        player.prizes_earned += 1
+        player.save()
+
+    except Player.DoesNotExist:
+        print('No existe el jugador ' + player_name + 'al que se le quiere incrementar el número de premios ganados')
+
 def decrement_prize_amount(prize):
     """
         Decrement by 1 to the amount of a prize object
@@ -189,36 +211,96 @@ def decrement_prize_amount(prize):
     prize.amount -= 1
     prize.save()
 
-def insert_coins_evolution(player, coins, game_number): #TODO implement game number
+def insert_coins_evolution(player, game_number): #TODO implement game number
     """
         Insert a new coins_evolution object in DB 
     """
-    coins_evolution = Coins_evolution(player=player, coins=coins, game_number=game_number)
+    # Delete any existing coins_evolution for the given player and game_number
+    Coins_evolution.objects.filter(player=player, game_number=game_number).delete()
+
+    coins_evolution = Coins_evolution(player=player, coins=player.coins, game_number=game_number)
     coins_evolution.save()
 
-def get_current_game_number():
+def get_coins_evolution(player, game_number):
     """
-        The current game number is queried by getting the highest value of current's date game number
-    """
-    today = 0 # TODO manage dates
-    current_game_number = (
-        Coins_evolution.objects
-        .filter(date=today)
-        .order_by('-game_number')
-        .first()
-    )
-    return current_game_number
-
-def get_player_coins_at_game_number(player, game_number):
-    """
-        Get the number of coins that a player has at a specific game number
+        Get the coins evolution of a player at a specific game number
     """
     return Coins_evolution.objects.get(player=player, game_number=game_number)
 
+def get_stored_game_number():
+    """
+        The current game number is queried by getting the highest value of current's date game number
+    """
+    #today = 0 # TODO manage dates
+    stored_game_number = (Prizes_evolution.objects
+        .order_by('-game_number')
+        .first()
+    )
+    if stored_game_number is None:
+        stored_game_number = 0
+    else:
+        stored_game_number = stored_game_number.game_number
+    return stored_game_number
+   
+def get_player_coins_at_game_number(player, game_number):
+    """
+        Get the coins of a player at a specific game number
+    """
+    # Check the type of the player parameter
+    if isinstance(player, str):
+        player = Player.objects.get(name=player)
+    try:
+        # Intenta obtener el objeto Coins_evolution
+        coins_evolution = Coins_evolution.objects.get(player=player, game_number=game_number)
+        coins = coins_evolution.coins
+    except Coins_evolution.DoesNotExist:
+        # Si no existe, asigna un valor predeterminado
+        coins = 0
+    return coins
 
-def insert_prize_evolution(player, prize, game_number):
+def insert_prize_evolution(player_name, prize_type, game_number):
     """
         Insert a new prizes_evolution object in DB
     """
+    player = Player.objects.get(name=player_name)
+    prize = Prize.objects.get(type=prize_type)
     prize_evolution = Prizes_evolution(player=player, prize=prize, game_number=game_number)
     prize_evolution.save()
+
+def get_prize_winner(game_number):
+    """
+        Get the winner of a prize in a specific game number
+    """
+    try:
+        prize_evolution = Prizes_evolution.objects.get(game_number=game_number)
+        prize_winner = prize_evolution.player.name
+
+    except Prizes_evolution.DoesNotExist:
+        prize_winner = None
+    return prize_winner
+
+def set_player_last_rich_duel_game_number(player, game_number):
+    """
+        Set the last rich duel game number of a player
+    """
+    player.last_rich_duel_game_number = game_number
+    player.save()
+
+def set_player_last_aid_game_number(player, game_number):
+    """
+        Set the last aid game number of a player (duel poor role or visited by santa)
+    """
+    player.last_aid_game_number = game_number
+    player.save()
+
+def get_remaining_prizes():
+    """
+        Get the remaining prizes in DB, which are the remaining games to be played
+    """
+    prize_amount = 0
+    prizes = Prize.objects.all()
+    for prize in prizes:
+        prize_amount += prize.amount
+
+    return prize_amount
+

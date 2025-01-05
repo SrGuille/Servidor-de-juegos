@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Hangman game</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/gunman/gunman_admin.js' %}"></script>
+    <script src="{% static 'js/game_redirects.js' %}"></script>
+    <script src="{% static 'js/in_game_room.js' %}"></script>
+    <audio src="{% static 'sounds/arcade_jump.wav' %}" id="arcade_jump_audio"></audio>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+</head>
+<body class="fondo" style="top: 100px;">
+    <!-- Caja de texto para mensajes -->
+    <div id="message-box" class="message-box">Duelo</div>
+
+    <!-- Contenedor principal para los jugadores -->
+    <div class="container">
+        <!-- Jugador 1 -->
+        <div class="column" id="player1">
+            <div class="stats-box-container">
+                <div class="stats-box">
+                    <div id="bullets" class="stat">
+                        <span id="bullet-count">0</span>
+                        <img src="{% static 'img/gunman/reload.png' %}" alt="Bullet" class="bullet-image">
+                    </div>
+                    <div id="shields" class="stat">
+                        <span id="shield-count">0</span>
+                        <img src="{% static 'img/gunman/shield.png' %}" alt="Shield" class="shield-image">
+                    </div>
+                    <div style="display: none;" id="lives" class="stat">
+                        <span id="lives-count">0</span>
+                        <img src="{% static 'img/gunman/lives.png' %}" alt="Lives" class="lives-image">
+                    </div>
+                </div>
+            </div>
+            <div class="name"></div>
+            <div class="action">
+                <img id="action_image" style="max-width: 100%; max-height: 100%;">
+            </div>
+        </div>
+
+        <!-- Jugador 2 -->
+        <div class="column" id="player2">
+            <div class="stats-box-container">
+                <div class="stats-box">
+                    <div id="bullets" class="stat">
+                        <span id="bullet-count">0</span>
+                        <img src="{% static 'img/gunman/reload.png' %}" alt="Bullet" class="bullet-image">
+                    </div>
+                    <div id="shields" class="stat">
+                        <span id="shield-count">0</span>
+                        <img src="{% static 'img/gunman/shield.png' %}" alt="Shield" class="shield-image">
+                    </div>
+                    <div style="display: none;" id="lives" class="stat">
+                        <span id="lives-count">0</span>
+                        <img src="{% static 'img/gunman/lives.png' %}" alt="Lives" class="lives-image">
+                    </div>
+                </div>
+            </div>
+            <div class="name"></div>
+            <div class="action">
+                <img id="action_image" style="max-width: 100%; max-height: 100%;">
+            </div>
+        </div>
+    </div>
+    <button id="enable_sounds" style="display: none;"></button>
+</body>
+
+
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        if (sessionStorage.getItem('special_duel') === 'true')
+        {   
+            player1 = sessionStorage.getItem('special_duel_player1');
+            player2 = sessionStorage.getItem('special_duel_player2');
+            play_special_duel(player1, player2);
+        }
+        else
+        {
+            play_rey_de_la_pista();
+        }
+    });
+</script>
+
+<style>
+    body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centrar todo horizontalmente */
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f0f0f0;
+    }
+
+    .message-box {
+        width: 40%;
+        text-align: center;
+        font-size: 48px;
+        font-weight: bold;
+        color: #333;
+        margin-top: 150px;
+        margin-bottom: 50px; /* Espacio debajo del cuadro de mensaje */
+        padding: 10px 0;
+        background-color: #f9f9f9;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+        display: flex;
+        justify-content: center; /* Alineación horizontal de los jugadores */
+        gap: 20px; /* Espacio entre las cajas de los jugadores */
+    }
+
+    .column {
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centrar contenido dentro de cada jugador */
+        gap: 15px;
+        border: 2px solid #333;
+        border-radius: 10px;
+        background-color: #f5f5f5;
+        padding: 15px;
+    }
+
+    .stats-box-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .stats-box {
+        background-color: white;
+        border: 2px solid #333;
+        border-radius: 8px;
+        padding: 10px 15px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        gap: 15px;
+    }
+
+    .stat {
+        font-size: 18px;
+        margin: 0;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .bullet-image {
+        width: 20px;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .name {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .action {
+        width: 150px;
+        height: 150px;
+        border: 2px dashed #ccc;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .bullet-image, .shield-image, .lives-image {
+        width: 30px; /* Scales the image to fit */
+        height: auto;
+        object-fit: contain;
+    }
+
+
+</style>

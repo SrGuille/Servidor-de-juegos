@@ -3,6 +3,41 @@
     text-align: center; /* Centra el texto horizontalmente */
 }
 
+.titulo-pantalla {
+    font-family: 'Lobster', cursive;
+    font-size: 4em;
+    color: #c23616;
+    text-align: center;
+    margin-bottom: 40px;
+    text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+    position: relative;
+    animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+    0% { 
+        color: #c23616;
+        text-shadow: 2px 2px 4px rgba(255,0,0,0.5);
+    }
+    50% { 
+        color: #598362;
+        text-shadow: 2px 2px 4px rgba(89,131,98,0.5);
+    }
+    100% { 
+        color: #c23616;
+        text-shadow: 2px 2px 4px rgba(255,0,0,0.5);
+    }
+}
+
+.titulo-pantalla::before,
+.titulo-pantalla::after {
+    content: '❄';
+    color: #598362;
+    margin: 0 20px;
+    font-size: 0.8em;
+    animation: sparkle 2s infinite;
+}
+
 /* --- Ranking ---*/
 .box-roulette{
     display: flex;
@@ -112,7 +147,7 @@ body {
     display: block; 
     margin-right: auto; 
     margin-left: auto;  
-    margin-top: 80px;
+    margin-top: 60px;
     text-align: center;
     height: auto;
     position: relative;
@@ -189,17 +224,20 @@ body {
 .row-gselector{
     margin-top: 30vh !important;
 }
-.img-juegos{
+.img-juegos {
     width: 200px;
     position: relative;
     top: -400px;
-    opacity: 0,9;
+    opacity: 0.9;
+    mask-image: linear-gradient(to top, black 90%, transparent 100%); /* Make it transparent at the top */
+    -webkit-mask-image: linear-gradient(to top, black 90%, transparent 100%); /* Make it transparent at the top */
 }
-.caja-rondas{
+.caja-rondas {
     z-index: 2;
     position: relative;
     top: -600px;
-    left: 105px;
+    left: 50%;
+    transform: translateX(-50%);
     background: antiquewhite;
     border-radius: 50%;
     width: 200px;
@@ -207,6 +245,7 @@ body {
     opacity: 0;
     transition: 0.6s;
 }
+
 .caja-rondas:hover{
     opacity: 1;
     transition: 0.6s;

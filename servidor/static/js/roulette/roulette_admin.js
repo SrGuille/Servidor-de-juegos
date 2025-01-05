@@ -29,16 +29,15 @@ async function wait_for_all_players_and_run()
 async function run_and_send_result()
 {
     result = await spin_roulette(); 
+    console.log(result);
     send_roulette_result(result);
 }
 
 //Wait for all players to bet before spinning the roulette
 async function wait_for_all_players_and_run()
 {
-    await set_can_players_interact(true); // Players can bet (join is already guaranteed by the server)
     await listen_in_game_room(); // Wait for all players to bet
     await set_can_players_join(false);
-    await set_can_players_interact(false); 
     run_and_send_result(); // Spin the roulette and send the result to the server
 }
 

@@ -84,22 +84,13 @@
         <div></div>
         <div></div>
     </div>
-    <!-- End Snow animationr-->
+    <!-- End Snow animation-->
 </body>
 <script>
     $(document).ready(function() 
     {
-        get_players_names();
+        get_players_names(); 
     });
-
-    // JS session storage
-    function register_name() 
-    {
-        // Will be shared between all pages
-        name = document.getElementById("select_players").value; // Unique name
-        sessionStorage.setItem("player_name", name);
-        sessionStorage.setItem("played", false);
-    }
 
     // Get all players names and add them to the select
     function get_players_names()
@@ -116,15 +107,36 @@
         });
     }
 
+    // Adds server names to the select
     function add_names_to_select(names)
     {
+        let player_name = sessionStorage.getItem("player_name");
+        console.log(player_name);
         var select = document.getElementById("select_players");
         for (var i = 0; i < names.length; i++) 
         {
             var option = document.createElement("option");
             option.text = names[i];
             select.add(option);
+            if (player_name == null && i === 0) { // If the player name is unknown, select the first option
+                option.selected = true;
+            }
+            else if (player_name == names[i]) { // If the player name is known, select it
+                option.selected = true;
+            }
         }
     }
+
+    // Its called when the user clicks the button to register
+    function register_name() 
+    {
+        // Save the selected name (not the index) and nick in the session storage
+        let name = document.getElementById("select_players").value;
+        let nick = document.getElementById("nick").value; 
+        sessionStorage.setItem("player_name", name);
+        sessionStorage.setItem("player_nick", nick); 
+        sessionStorage.setItem("played", false);
+    }
+
 </script>
 </html>

@@ -2,7 +2,7 @@
 {% load static %}
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=0.6, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
     <title>Cruceta de Control</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -15,77 +15,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     <!--Libreria animaciones-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <style>
-        body {
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f7f7f7;
-        }
-
-        .d-pad {
-            display: grid;
-            grid-template-columns: repeat(3, auto);
-            grid-template-rows: repeat(3, auto);
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100px; /* fixed size for demonstration, adjust as needed */
-            height: 100px; /* fixed size for demonstration, adjust as needed */
-            background-color: #ddd;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .spacer {
-            width: 100px;
-            height: 100px;
-        }
-
-        .label-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100px; /* ajusta al tamaño de los botones y espaciadores */
-            height: 100px;
-        }
-
-        .center-label {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* Estilos adicionales para el label central, como tamaño de fuente, color, etc. */
-            font-size: 16px;
-        }
-    </style>
 </head>
 <body class="fondo">
     <div class="container">
         <div class="d-pad">
             <div class="spacer"></div>
-            <button id="up" onclick="send_move('up')" class="button">ARRIBA</button>
+            <button id="up" onclick="try_send_move('up')" class="button">↑</button>
             <div class="spacer"></div>
             
-            <button id="left" onclick="send_move('left')" class="button">IZQUIERDA</button>
-            <div class="label-container">
-                <div id="team" class="center-label">EQUIPO</div>
-            </div>
-            <button onclick="send_move('right')" class="button">DERECHA</button>
+            <button id="left" onclick="try_send_move('left')" class="button">←</button>
+            <div id="team" style="pointer-events: none; user-select: none;" class="center-label">EQUIPO</div>
+            <button onclick="try_send_move('right')" class="button">→</button>
             
             <div class="spacer"></div>
-            <button id="down" onclick="send_move('down')" class="button">ABAJO</button>
+            <button id="down" onclick="try_send_move('down')" class="button">↓</button>
             <div class="spacer"></div>
         </div>
     </div>
@@ -108,4 +52,90 @@
         lastTap = currentTime;
     });
 </script>
+
+<style>
+    body {
+        margin: 0;
+        background: linear-gradient(135deg, #e8e8e8 0%, #dcdcdc 100%); /* Grises claros */
+        font-family: 'Arial', sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden; /* Evita desplazamientos innecesarios */
+    }
+
+    .container {
+        position: fixed;
+        width: 350px; /* Reduce el tamaño del marco */
+        height: 350px; /* Reduce el tamaño del marco */
+        top: 50%; /* Centrado vertical */
+        left: 50%; /* Centrado horizontal */
+        transform: translate(-50%, -50%); /* Ajusta para centrar */
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+        display: flex; /* Alineación interna */
+        justify-content: center; /* Alineación horizontal */
+        align-items: center; /* Alineación vertical */
+    }
+    .d-pad {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        grid-template-rows: repeat(3, auto);
+        gap: 15px;
+        padding: 20px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .button, .center-label {
+        width: 90px;
+        height: 90px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        background: linear-gradient(145deg, #bdbdbd, #a9a9a9); /* Grises claros */
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2),
+                    -5px -5px 10px rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .button:hover, .center-label:hover {
+        background: linear-gradient(145deg, #a9a9a9, #bdbdbd); /* Invertir tonos para efecto hover */
+        transform: translateY(-2px);
+        box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
+                    -6px -6px 12px rgba(255, 255, 255, 0.1);
+    }
+
+    .button:active, .center-label:active {
+        transform: translateY(1px);
+        box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3),
+                    inset -2px -2px 5px rgba(255, 255, 255, 0.1);
+    }
+
+    .spacer {
+        width: 90px;
+        height: 90px;
+    }
+
+    .team-green {
+        background: linear-gradient(145deg, #a6c9a4, #8caf90); /* Gris verdoso */
+        color: #ffffff; /* Texto blanco */
+    }
+
+    .team-red {
+        background: linear-gradient(145deg, #c9a4a4, #af8f8f); /* Gris rojizo */
+        color: #ffffff; /* Texto blanco */
+    }
+</style>
 </html>
