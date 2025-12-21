@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import socket
 import os
+import platform
+import subprocess
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,10 +29,57 @@ SECRET_KEY = 'django-insecure-56@q90v8f-=ua&p)awa0bk9lepb8jte5)$8r0x6^+g)r76u17l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# Automatically get the IP address of the machine
-hostname = socket.gethostname()
-ip_address = socket.gethostbyname(hostname)
-ALLOWED_HOSTS = [ip_address, '127.0.0.1', '192.168.1.47', '192.168.1.131']
+# Determine local IP, preferring Wi‑Fi on Windows
+def _get_wifi_ip_windows(timeout_seconds=2):
+    """Try to get the IPv4 address of an active Wi‑Fi/WLAN adapter using PowerShell."""
+    try:
+        cmd = (
+            "$adpt = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and "
+            "($_.Name -match 'Wi|Wireless|WLAN' -or $_.InterfaceDescription -match 'Wi|Wireless|WLAN') } | Select-Object -First 1; "
+            "if ($adpt) { (Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $adpt.ifIndex | "
+            "Where-Object { $_.IPAddress -notmatch '^(169|127)' } | Select-Object -First 1 -ExpandProperty IPAddress) }"
+        )
+        proc = subprocess.run(["powershell", "-NoProfile", "-Command", cmd], capture_output=True, text=True, timeout=timeout_seconds)
+        ip = proc.stdout.strip()
+        if ip:
+            return ip
+    except Exception:
+        pass
+    return None
+
+
+def _get_primary_ip():
+    """Generic method: determine the IP used to reach the internet (no traffic sent)."""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]
+    except Exception:
+        ip = '127.0.0.1'
+    finally:
+        try:
+            s.close()
+        except Exception:
+            pass
+    return ip
+
+
+def get_local_ip(prefer_wifi=True):
+    ip = None
+    if prefer_wifi and platform.system().lower().startswith('win'):
+        ip = _get_wifi_ip_windows()
+    if not ip:
+        ip = _get_primary_ip()
+    return ip
+
+LOCAL_IP = get_local_ip(prefer_wifi=True)
+
+# Allow hosts: prefer DJANGO_ALLOWED_HOSTS env var, otherwise use detected IP + loopback
+env_allowed = os.environ.get('DJANGO_ALLOWED_HOSTS')
+if env_allowed:
+    ALLOWED_HOSTS = [h.strip() for h in env_allowed.split(',') if h.strip()]
+else:
+    ALLOWED_HOSTS = [LOCAL_IP, '127.0.0.1', 'localhost']
 
 # Application definition
 
