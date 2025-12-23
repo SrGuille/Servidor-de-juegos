@@ -2,10 +2,12 @@ import random
 from servidor.classes import Actor
 from typing import List
 from openai import OpenAI
-from . import secret
-client = OpenAI(
-    api_key = secret.api_key
-)
+# from . import secret
+# client = OpenAI(
+#     api_key = secret.api_key
+# )
+
+client = ''
 
 SYSTEM_PROMPT = """Quiero que me ayudes a generar una frase absurda y graciosa de entre 7 y 9 palabras. 
 Te diré requisitos específicos, por ejemplo que aparezcan unos protagonistas, a veces con 
