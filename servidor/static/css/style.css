@@ -207,63 +207,188 @@ body{
 }
 
 /* CSS variable for rotation degrees*/
-/* --- Login --- */
-.fondo{
-    background-image: url('../img/portada.jpg');
-    width: 100%;
-    height: 100vh;
-    position: fixed;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
- }
-.row-login{
-    margin-top: 25vh !important;
+
+/* --- Login (NEW HTML) --- */
+
+.page-login{
+  height: 100svh;
+  overflow: hidden;
+  margin: 0;
+
+  /* SIN negro: tinte navideño suave (rojo/verde) + fondo */
+  background-image:
+    radial-gradient(900px 520px at 50% 18%, rgba(176,229,255,.22), transparent 60%), /* glow hielo */
+    radial-gradient(800px 520px at 18% 78%, rgba(0,153,89,.18), transparent 62%),   /* verde */
+    radial-gradient(820px 560px at 82% 76%, rgba(153,29,50,.18), transparent 62%),  /* rojo */
+    url("../img/portada.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
-.form-dos-columnas {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 24px;
-    flex-direction: column;
-    align-items: center;
-}
-.form-select, .form-control {
-    display: block;
-    width: 100%;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border-radius: .25rem;
-    transition: border-color .15s 
-ease-in-out, box-shadow .15s 
-ease-in-out;
+.login{
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  position: relative;
+  z-index: 2;
 }
 
-.columna {
-    flex: 0 0 42%; /* Ajusta este valor para cambiar el ancho inicial de las columnas */
-    max-width: 42%; /* Asegura que las columnas no excedan este ancho */
-    /* Añade margen y relleno según lo necesites */
+/* Card con borde nevado + 1 shadow */
+.login-card{
+  width: min(520px, 100%);
+  padding: 16px;
+  border-radius: 16px;
+
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(176,229,255,.40);
+  box-shadow: 0 14px 34px rgba(0,0,0,.18);
 }
 
-.columna-boton {
-    width: 100%; /* Hace que el contenedor del botón ocupe el ancho completo */
-    display: flex;
-    justify-content: center; /* Centra el botón horizontalmente */
-    margin-top: 20px; /* Añade espacio arriba del botón, ajusta según sea necesario */
+/* Header compacto */
+.login-header{ text-align: center; margin-bottom: 10px; }
+
+.login-title{
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(34px, 8vw, 64px);
+  line-height: 1;
+  margin: 0 0 6px;
+  color: var(--primary-500, #991D32);
 }
 
- 
+.login-subtitle{
+  margin: 0;
+  font-family: "Advent Pro", system-ui;
+  font-size: .98rem;
+  color: var(--neutral-700, #3b3f45);
+}
+
+/* Form: COLUMNA siempre */
+.login-form{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.field{ display: grid; gap: 6px; }
+
+.field-label{
+  font-family: "Advent Pro", system-ui;
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--neutral-700, #3b3f45);
+}
+
+/* Controles compactos */
+.form-control-sukki,
+.form-select-sukki{
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 14px;
+
+  font-family: "Advent Pro", system-ui;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.1;
+
+  color: var(--text, #121417);
+  background: #fff;
+  border: 1px solid var(--neutral-300, #d4d7db);
+  border-radius: 12px;
+
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.form-control-sukki:hover,
+.form-select-sukki:hover{ border-color: var(--neutral-400, #b6bbc2); }
+
+.form-control-sukki:focus,
+.form-select-sukki:focus{
+  border-color: var(--primary-600, #871A2C);
+  box-shadow: 0 0 0 4px rgba(176,229,255,.32); /* glow hielo */
+}
+
+/* Select flecha */
+.form-select-sukki{
+  padding-right: 46px;
+  cursor: pointer;
+  background: #fff url("../img/select.svg") no-repeat right 14px center;
+  background-size: 16px 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* CTA (más pequeño + Great Vibes) */
+.actions{ display: flex; justify-content: center; margin-top: 6px; }
+
+.page-login .button-juego{
+  width: fit-content;          /* ✅ ya no es gigante */
+  min-width: 200px;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 10px 18px;
+
+  font-family: "Great Vibes", cursive; /* ✅ display */
+  font-size: 2.2rem;
+  font-weight: 400;
+  letter-spacing: .2px;
+
+  color: #fff;
+  border-radius: 14px;
+  cursor: pointer;
+
+  background: var(--primary-500, #991D32); /* ✅ sin negro */
+  border: 1px solid rgba(176,229,255,.35); /* nevado */
+  box-shadow: 0 12px 22px rgba(153,29,50,.26); /* 1 shadow */
+
+  transition: transform .10s ease, filter .15s ease, box-shadow .15s ease;
+}
+
+.page-login .button-juego:hover{
+  filter: brightness(1.06);
+  box-shadow: 0 14px 26px rgba(153,29,50,.30);
+}
+
+.page-login .button-juego:active{ transform: translateY(1px); }
+
+/* Móvil horizontal: display row (2 columnas) */
+@media (orientation: landscape) and (max-height: 520px){
+  .login-card{ width: min(760px, 100%); padding: 14px; }
+  .login-subtitle{ display: none; } /* evita scroll en landscape bajito */
+
+  .login-form{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 14px;
+    align-items: end;
+  }
+
+  .actions{
+    grid-column: 1 / -1;
+    margin-top: 2px;
+  }
+
+  .page-login .button-juego{
+    min-width: 180px;
+    font-size: 2rem;
+  }
+}
+
+/* Snow no debe crear scroll */
+.tpl-snow{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+
+
 
 /* --- Game selector --- */
 .row-gselector{

@@ -1,142 +1,124 @@
 <!DOCTYPE html>
 {% load static %}
-<html>
+<html lang="es">
 <head>
-    <title>Servidor de juegos</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <!--Bootstrap 5.1.3-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-    <!--Libreria animaciones-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Secret Santa Party</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
-<body class="fondo">
-    <div class="container">
-        <div class="row justify-content-center row-login" id="register_form">
-            <div class="col-md-8 col-xs-12 text-center animate__animated animate__fadeIn animate__slow caja-login">
-                <form action="./login_player/" method="GET" class="form-dos-columnas">
-                    <div class="columna">
-                        <label class="form-label fs-2 fw-bold nombre" for="name">Nombre</label>
-                        <select class="form-select" id="select_players" name="name"></select>
-                    </div>
-                    <div class="columna">
-                        <label class="form-label fs-2 fw-bold nombre" for="nick">Nombre artístico</label>
-                        <input class="form-control" type="text" id="nick" name="nick" maxlength="20">
-                    </div>
-                    <div class="columna-boton">
-                        <input class="button-juego" onclick="register_name()" type="submit" value="Jugar">
-                    </div>
-                </form>
-            </div>
+
+<body class="page-login">
+  <main class="login">
+    <section class="login-card" aria-label="Acceso al servidor">
+      <header class="login-header">
+        <h1 class="login-title">Secret Santa Party</h1>
+        <p class="login-subtitle">Elige tu nombre y tu nick para entrar a jugar.</p>
+      </header>
+
+      <form action="./login_player/" method="GET" class="login-form" onsubmit="register_name()">
+        <div class="field">
+          <label class="field-label" for="select_players">Nombre</label>
+          <select class="form-select-sukki" id="select_players" name="name"></select>
         </div>
-    </div>
-    <!-- Snow animation-->
-    <div class="tpl-snow">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-    <!-- End Snow animation-->
-</body>
-<script>
-    $(document).ready(function() 
-    {
-        get_players_names(); 
+
+        <div class="field">
+          <label class="field-label" for="nick">Nombre artístico</label>
+          <input class="form-control-sukki" type="text" id="nick" name="nick" maxlength="20" autocomplete="nickname" />
+        </div>
+
+        <div class="actions">
+          <input class="button-juego" type="submit" value="Jugar" />
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Snow animation -->
+  <div class="tpl-snow" aria-hidden="true">
+    <!-- puedes dejar 48 divs como tienes; funciona igual. Con 24 también vale -->
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+  </div>
+  <!-- End Snow animation -->
+
+  <script>
+    $(document).ready(function () {
+      get_players_names();
+      initSnow();
     });
 
     // Get all players names and add them to the select
-    function get_players_names()
-    {
-        $.ajax({
-            url: 'get_players_names/',
-            type: 'GET',
-            data: {},
-            contentType: 'application/json;charset=UTF-8',
-            success: function(response) 
-            {
-                add_names_to_select(response.names);
-            }
-        });
+    function get_players_names() {
+      $.ajax({
+        url: 'get_players_names/',
+        type: 'GET',
+        data: {},
+        contentType: 'application/json;charset=UTF-8',
+        success: function (response) {
+          add_names_to_select(response.names);
+        }
+      });
     }
 
     // Adds server names to the select
-    function add_names_to_select(names)
-    {
-        let player_name = sessionStorage.getItem("player_name");
-        console.log(player_name);
-        var select = document.getElementById("select_players");
-        for (var i = 0; i < names.length; i++) 
-        {
-            var option = document.createElement("option");
-            option.text = names[i];
-            select.add(option);
-            if (player_name == null && i === 0) { // If the player name is unknown, select the first option
-                option.selected = true;
-            }
-            else if (player_name == names[i]) { // If the player name is known, select it
-                option.selected = true;
-            }
-        }
+    function add_names_to_select(names) {
+      let player_name = sessionStorage.getItem("player_name");
+      var select = document.getElementById("select_players");
+
+      // Limpia por si recargas o vuelves a entrar
+      select.innerHTML = "";
+
+      for (var i = 0; i < names.length; i++) {
+        var option = document.createElement("option");
+        option.text = names[i];
+        option.value = names[i];
+        select.add(option);
+
+        if (player_name == null && i === 0) option.selected = true;
+        else if (player_name == names[i]) option.selected = true;
+      }
     }
 
-    // Its called when the user clicks the button to register
-    function register_name() 
-    {
-        // Save the selected name (not the index) and nick in the session storage
-        let name = document.getElementById("select_players").value;
-        let nick = document.getElementById("nick").value; 
-        sessionStorage.setItem("player_name", name);
-        sessionStorage.setItem("player_nick", nick); 
-        sessionStorage.setItem("played", false);
+    // Called on submit
+    function register_name() {
+      let name = document.getElementById("select_players").value;
+      let nick = document.getElementById("nick").value;
+      sessionStorage.setItem("player_name", name);
+      sessionStorage.setItem("player_nick", nick);
+      sessionStorage.setItem("played", false);
     }
 
-</script>
+    // Snow (sin 48 reglas nth-child, robusto)
+    function initSnow() {
+      const flakes = document.querySelectorAll(".tpl-snow > div");
+      flakes.forEach((f) => {
+        const x = Math.random() * 100;              // vw
+        const size = 2 + Math.random() * 6;         // px
+        const duration = 7 + Math.random() * 10;    // s
+        const delay = -Math.random() * duration;    // s (empieza “ya”)
+        const opacity = 0.25 + Math.random() * 0.55;
+        const drift = (Math.random() * 40 - 20);    // px
+
+        f.style.setProperty("--x", x + "vw");
+        f.style.setProperty("--s", size + "px");
+        f.style.setProperty("--d", duration + "s");
+        f.style.setProperty("--delay", delay + "s");
+        f.style.setProperty("--o", opacity);
+        f.style.setProperty("--drift", drift + "px");
+      });
+    }
+  </script>
+</body>
 </html>
