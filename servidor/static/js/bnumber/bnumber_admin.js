@@ -2,8 +2,6 @@ let classes = ['team-green', 'team-red']
 
 let GAME_SECONDS = 90; // Total seconds of the game
 
-let NUMBER_RANGE = 99; // 0 to 99
-
 let team_green_screen;
 let team_red_screen;
 
@@ -55,6 +53,8 @@ async function main_loop()
         {
             await new Promise(r => setTimeout(r, 100)); //Wait 0.1 seconds
             team_has_won = await get_bnumber_data();
+            if(team_has_won) break;  // Salir del for del segundo
+
         }
         console.log(seconds);
     }
@@ -78,9 +78,8 @@ async function create_teams()
     });
 }
 
-// Get democratic move, move the character and log the color
+// Get updated data from the server
 async function get_bnumber_data() {
-    let team_has_won = false;
     return new Promise((resolve, reject) => {
         $.ajax({
             url: "../get_bnumber_data",
@@ -93,15 +92,17 @@ async function get_bnumber_data() {
                 team_red_positions = teams_positions['Rojo'];
                 team_green_new_number = teams_new_number['Verde'];
                 team_red_new_number = teams_new_number['Rojo'];
+                
+                team_has_won = false;
+     
+                display_team(team_green_screen, team_green_positions, team_green_new_number);
+                display_team(team_red_screen, team_red_positions, team_red_new_number);
 
                 if(team_green_new_number == -100 || team_red_new_number == -100) 
                 {
                     team_has_won = true;
-                } 
-                else
-                {
-                    display_team(team_green_screen, team_green_positions, team_green_new_number);
-                    display_team(team_red_screen, team_red_positions, team_red_new_number);
+                    team_green_screen.querySelector(".new-number").innerHTML = "Fin";
+                    team_red_screen.querySelector(".new-number").innerHTML = "Fin";
                 }
 
                 resolve(team_has_won);
