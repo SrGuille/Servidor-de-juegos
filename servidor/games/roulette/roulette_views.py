@@ -16,7 +16,7 @@ def roulette_player_render(request):
     return render(request, 'roulette/roulette_player.html')
 
 def send_roulette_result(request):
-    result = request.GET.get('result')
+    result = int(request.GET.get('result')) #Get result from request
     print(result)
     roulette_game.assign_prizes(result)
     return JsonResponse({'status': 'ok'}, safe=False)

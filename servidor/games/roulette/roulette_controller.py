@@ -26,8 +26,8 @@ class RouletteGame:
                     player_bets.append(bet) #Add bet to player
                     q.add_coins_to_player(name, -bet.amount) #Substract coins
             else: # If the bet is empty, add a null bet
-                bets = classes.Bet('Null', 0)
-                player_bets.append(bets)
+                bet = classes.Bet('Null', 0)
+                player_bets.append(bet)
 
             self.players_bets[name] = player_bets # Add player bets to memory
             self.players_lock.release()
@@ -55,7 +55,7 @@ class RouletteGame:
                 
             if (result <= 12):
                 winner_bets.append('1T')
-            elif (result <=24):
+            elif (result <= 24):
                 winner_bets.append('2T')
             else:
                 winner_bets.append('3T')
@@ -72,6 +72,7 @@ class RouletteGame:
     def assign_prizes(self, result):
 
         winner_bets = self.compute_winner_bets(result)
+        print("Winner bets: ", winner_bets)
 
         self.players_lock.acquire()
         for player_name in self.players_bets.keys():
@@ -86,8 +87,13 @@ class RouletteGame:
                     elif (bet.type in self.x3_bets):
                         q.add_coins_to_player(player_name, bet.amount * 3)
 
-                if (bet.type == result): # If bet is winner, add prize
-                    q.add_coins_to_player(player_name, bet.amount * 36)
+                # Check if bet is a straight number (try to cast to int)
+                try:
+                    if int(bet.type) == result:
+                        q.add_coins_to_player(player_name, bet.amount * 36)
+                except (ValueError, TypeError):
+                    # bet.type cannot be cast to int, so it's not a straight number
+                    pass
                         
         self.players_bets = {} # Reset the bets (as the init method won't be called again)
         self.players_lock.release()        

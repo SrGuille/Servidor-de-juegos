@@ -211,13 +211,19 @@ def decrement_prize_amount(prize):
     prize.amount -= 1
     prize.save()
 
-def insert_coins_evolution(player, game_number): #TODO implement game number
+def insert_coins_evolution(player, game_number):
     """
-        Insert a new coins_evolution object in DB 
+        Insert a new coins_evolution object in DB-
+        Auto-conflict resolution for game_number: if there is already an object for that game_number,
+        increment game_number until finding a free one
     """
-    # Delete any existing coins_evolution for the given player and game_number
-    Coins_evolution.objects.filter(player=player, game_number=game_number).delete()
-
+    # Check if there is already an object for that game_number (player-independent)
+    existing_coins_evolution = Coins_evolution.objects.filter(game_number=game_number)
+    while existing_coins_evolution.exists():
+        game_number += 1
+        existing_coins_evolution = Coins_evolution.objects.filter(game_number=game_number)
+    
+    # Insert the non-existing object
     coins_evolution = Coins_evolution(player=player, coins=player.coins, game_number=game_number)
     coins_evolution.save()
 
@@ -231,7 +237,6 @@ def get_stored_game_number():
     """
         The current game number is queried by getting the highest value of current's date game number
     """
-    #today = 0 # TODO manage dates
     stored_game_number = (Prizes_evolution.objects
         .order_by('-game_number')
         .first()
@@ -260,8 +265,17 @@ def get_player_coins_at_game_number(player, game_number):
 
 def insert_prize_evolution(player_name, prize_type, game_number):
     """
-        Insert a new prizes_evolution object in DB
+        Insert a new prizes_evolution object in DB.
+        Auto-conflict resolution for game_number: if there is already an object for that game_number,
+        increment game_number until finding a free one
     """
+    # Check if there is already an object for that game_number (player-independent)
+    existing_prize_evolution = Prizes_evolution.objects.filter(game_number=game_number)
+    while existing_prize_evolution.exists():
+        game_number += 1
+        existing_prize_evolution = Prizes_evolution.objects.filter(game_number=game_number)
+
+    # Insert the non-existing object
     player = Player.objects.get(name=player_name)
     prize = Prize.objects.get(type=prize_type)
     prize_evolution = Prizes_evolution(player=player, prize=prize, game_number=game_number)

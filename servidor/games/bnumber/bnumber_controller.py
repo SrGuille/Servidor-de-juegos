@@ -9,8 +9,8 @@ class BNumberGame:
 
     def __init__(self):
 
-        self.LIST_SIZE = 9
-        self.NUMBER_RANGE = 89 # 0 to 89
+        self.LIST_SIZE = 6
+        self.NUMBER_RANGE = 59 # 0 to 59
         self.REWARD_PER_ADVANTAGE = 5
 
         self.teams_with_names = {'Verde': [], 'Rojo': []}  # Dict with the players of each team
@@ -49,6 +49,7 @@ class BNumberGame:
             
             if self.get_number_of_non_empty_positions(player_team) == self.LIST_SIZE: # The team has filled the list
                 new_number = -100 # The team has won
+                self.teams_new_number[player_team] = new_number
             else:
                 new_number = self.generate_new_number(player_team)
                 self.teams_new_number[player_team] = new_number
@@ -82,22 +83,16 @@ class BNumberGame:
         is_impossible = False
         team_positions = self.teams_positions[team]
 
-        for i in range(len(team_positions)):
-            if team_positions[i] != -1: # The position is not empty
-                if i == 0: 
-                    if number < team_positions[i]: # If smaller than the first number
-                        is_impossible = True
-                        break
-                elif i == len(team_positions) - 1: # If bigger than the last number
-                    if number > team_positions[i]:
-                        is_impossible = True
-                        break
-                else:
-                    if team_positions[i - 1] != -1: # Previous position is not empty
-                        # If the number fits in the interval of 2 consecutive numbers
-                        if number < team_positions[i] and number > team_positions[i - 1]:
-                            is_impossible = True
-                            break
+        if team_positions[0] != -1 and number < team_positions[0]: # If smaller than the first pos (which is not empty)
+            return True
+        elif team_positions[-1] != -1 and number > team_positions[-1]: # If bigger than the last pos (which is not empty)
+            return True
+
+        for i in range(1, len(team_positions)):
+            if team_positions[i] != -1 and team_positions[i - 1] != -1: # The current and the prev position are not empty
+                if number < team_positions[i] and number > team_positions[i - 1]: # If in the interval of 2 consecutive numbers
+                    is_impossible = True
+                    break
 
         return is_impossible
     
@@ -130,6 +125,7 @@ class BNumberGame:
                 other_team_name = self.team_names[other_team_number]
                 self.teams_with_names[other_team_name].append(list_players[i+1])
         
+        self.teams_positions = {'Verde': self.get_empty_list(), 'Rojo': self.get_empty_list()} # Dict with the positions of each team
         print(self.teams_with_names)
         new_number_green = self.generate_new_number('Verde')
         self.teams_new_number['Verde'] = new_number_green

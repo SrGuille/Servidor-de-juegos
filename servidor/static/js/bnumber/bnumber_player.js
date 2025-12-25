@@ -5,15 +5,15 @@ if(player_name == null) //If the player is not logged in, redirect to the login 
     window.location.href = "../";
 }
 
-number_positions = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
-LIST_SIZE = 9;
+number_positions = [];
+LIST_SIZE = 6;
 current_number = -1;
 
 go_to_wait_screen_after_game();
 
 async function get_my_team()
 {
-    number_positions = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
+    number_positions = Array(LIST_SIZE).fill(-1);
     await new Promise(r => setTimeout(r, 2000));
     $.ajax({
         url: "../get_my_team_bnumber",
@@ -85,28 +85,18 @@ function lock_impossible_buttons(new_number)
         console.log("Unlocked button " + i);
     }
 
-    if(closest_smaller_index != -1)
+    if(closest_smaller_index != -1) // If there is a smaller number, lock every smaller position (including it) from the start
     {
-        for(let i = 0; i < closest_smaller_index; i++)
+        for(let i = 0; i <= closest_smaller_index; i++)
         {
             lock_button(i);
             console.log("Locked button " + i);
         }
     }
 
-    if(closest_bigger_index != -1)
+    if(closest_bigger_index != -1) // If there is a bigger number, lock every bigger position (including it) up to the end
     {
         for(let i = closest_bigger_index; i < LIST_SIZE; i++)
-        {
-            lock_button(i);
-            console.log("Locked button " + i);
-        }
-    }
-
-    for(let i = 0; i < LIST_SIZE; i++)
-    {
-        // Will lock every possible bigger positions that are occupied
-        if(number_positions[i] != -1)
         {
             lock_button(i);
             console.log("Locked button " + i);
@@ -116,6 +106,7 @@ function lock_impossible_buttons(new_number)
 
 function get_closest_smaller_index(number)
 {
+    // Returns the index of the closest smaller number in the list
     closest_smaller_index = -1;
     for(let i = 0; i < LIST_SIZE; i++)
     {
