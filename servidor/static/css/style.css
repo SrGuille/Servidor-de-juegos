@@ -388,6 +388,175 @@ body{
 }
 
 
+/* =========================
+   WAIT ROOM — Mobile-first (Hamster in wheel)
+   Body: class="page-login page-wait"
+   ========================= */
+
+.page-login.page-wait{
+  height: 100svh;
+  overflow: hidden;
+  margin: 0;
+
+  background-image:
+    radial-gradient(900px 520px at 50% 18%, rgba(176,229,255,.22), transparent 60%),
+    radial-gradient(800px 520px at 18% 78%, rgba(0,153,89,.18), transparent 62%),
+    radial-gradient(820px 560px at 82% 76%, rgba(153,29,50,.18), transparent 62%),
+    url("../img/portada.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.page-wait .login{
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Util buttons centrados arriba */
+.page-wait .util-bar{
+  position: fixed;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-wait .util-btn{
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 12px;
+
+  font-family: "Advent Pro", system-ui;
+  font-weight: 700;
+  font-size: 1.05rem;
+
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(176,229,255,.45);
+  box-shadow: 0 10px 20px rgba(0,0,0,.14);
+  cursor: pointer;
+
+  transition: transform .10s ease, filter .15s ease;
+}
+
+.page-wait .util-btn:hover{ filter: brightness(1.03); }
+.page-wait .util-btn:active{ transform: translateY(1px); }
+
+.page-wait .util-btn--danger{
+  border-color: rgba(153,29,50,.28);
+  color: #871A2C;
+}
+
+/* Card */
+.page-wait .login-card.wait-card{
+  width: min(520px, 100%);
+  padding: 16px;
+  border-radius: 16px;
+
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(176,229,255,.40);
+  box-shadow: 0 14px 34px rgba(0,0,0,.18);
+  text-align: center;
+}
+
+/* Title */
+.page-wait #wait{
+  margin: 0 0 10px;
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(28px, 7.2vw, 50px);
+  line-height: 1;
+  color: #991D32;
+  text-shadow: 0 0 18px rgba(176,229,255,.25);
+}
+
+/* =========================
+   Loader: rueda roja + hamster dentro
+   ========================= */
+
+.page-wait .wait-loader{
+  --wheel: 92px;
+  --hamster: 129px;
+
+  width: var(--wheel);
+  height: var(--wheel);
+  margin: 6px auto 0;
+  position: relative;
+}
+
+/* Rueda roja (gira) */
+.page-wait .wait-loader::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  border-radius: 999px;
+
+  /* rueda “hamster” roja */
+  border: 7px solid rgba(153,29,50,.45);
+  border-top-color: rgba(153,29,50,.9);
+  border-right-color: rgba(153,29,50,.65);
+
+  background:rgba(153,29,50,.25);
+  animation: wheel-spin .95s linear infinite;
+}
+
+/* Hamster (centrado dentro, NO gira) */
+.page-wait .wait-loader::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 80%;
+  width: var(--hamster);
+  height: var(--hamster);
+  transform: translate(-50%, -50%);
+
+  background: url("../img/hat-loader.gif") center / contain no-repeat;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.18));
+}
+
+@keyframes wheel-spin{
+  to{ transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .page-wait .wait-loader::before{ animation: none; }
+}
+
+/* Snow */
+.page-wait .tpl-snow{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Desktop: no se rompe */
+@media (min-width: 900px){
+  .page-wait .login{ padding: 24px; }
+  .page-wait .login-card.wait-card{ width: min(620px, 100%); padding: 20px; }
+}
+
+/* Landscape bajito: compact */
+@media (orientation: landscape) and (max-height: 520px){
+  .page-wait #wait{
+    font-size: clamp(24px, 6.2vw, 42px);
+  }
+  .page-wait .wait-loader{
+    --wheel: 76px;
+    --hamster: 96px;
+  }
+}
+
 
 
 /* --- Game selector --- */
@@ -485,7 +654,7 @@ font-size: 26px;
     
   }
   .button-juego:hover {
-    background: var(--warning);
+    background: var(--primary-700);
     text-shadow: 0 1px 2px rgba(0,0,0,0.75), 0 0 40px var(--text-inverse);
     box-shadow:
       inset 1px 1px 0px rgba(255,255,255,0.25), /* highlight */
