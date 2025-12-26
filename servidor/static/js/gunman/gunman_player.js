@@ -51,15 +51,15 @@ async function send_player_action_notify(guess)
 {
     response = await send_player_action(guess);
     if (response.allowed == true)
-        {
-            await notify_player_has_interacted();
-            sessionStorage.setItem("played", true) //Set the played flag to true
-            window.location.href = "../wait_room/";
-        }
-        else
-        {
-            alert("No puedes interactuar en este momento");
-        }
+    {
+        await notify_player_has_interacted();
+        sessionStorage.setItem("played", true) //Set the played flag to true
+        window.location.href = "../wait_room/";
+    }
+    else
+    {
+        alert("No puedes interactuar en este momento");
+    }
 }
 
 function update_buttons(bullets, shields)

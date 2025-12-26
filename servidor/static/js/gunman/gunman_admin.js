@@ -60,8 +60,12 @@ async function play_rey_de_la_pista()
         end_game = handle_duel_after_result(result);
 
         if (result.loser != null) {
-            display_message_box_result(result);
             players_changed = true;
+        }
+
+        if (end_game) {
+            display_players_duel(duel_players, true, result); 
+            display_message_box_result(result);
         }
     }
     // Return to normal state for prizes
@@ -74,35 +78,48 @@ function handle_duel_after_result(result)
 {
     end_game = false;
     if (result.loser != null) // There is a loser
+    {
+        if (next_duel_new_players_names.length > 0) // There are more players to add
         {
-            if (next_duel_new_players_names.length > 0) // There are more players to add
+            if (result.winner == null) // Both players died, replace both (the order doesn't matter)
             {
-                if (result.winner == null) // Both players died, replace both (the order doesn't matter)
-                {
-                    // Remove both players
-                    delete duel_players[duel_players_names[0]];
-                    delete duel_players[duel_players_names[1]];
-                    // Add the new players
-                    duel_players[next_duel_new_players_names[0]] = next_duel_new_players[next_duel_new_players_names[0]];
-                    duel_players[next_duel_new_players_names[1]] = next_duel_new_players[next_duel_new_players_names[1]];
-                }
-                else if (result.winner == duel_players_names[0]) // Replace the loser with the new player (the only one at the next_duel_new_players)
-                {
-                    delete duel_players[duel_players_names[1]];
-                    duel_players[next_duel_new_players_names[0]] = next_duel_new_players[next_duel_new_players_names[0]];
-                }
-                else // Number 1 has won, replace the loser with the new player (the only one at the next_duel_new_players)
-                {   
-                    delete duel_players[duel_players_names[0]];
-                    duel_players[next_duel_new_players_names[0]] = next_duel_new_players[next_duel_new_players_names[0]];
-                }
-                duel_players_names = Object.keys(duel_players); // Update the names
+                // Remove both players
+                delete duel_players[duel_players_names[0]];
+                delete duel_players[duel_players_names[1]];
+                // Add the new players
+                duel_players[next_duel_new_players_names[0]] = next_duel_new_players[next_duel_new_players_names[0]];
+                duel_players[next_duel_new_players_names[1]] = next_duel_new_players[next_duel_new_players_names[1]];
             }
-            else // End of the "rey de la pista", no more players
+            else if (result.winner == duel_players_names[0]) // Replace the loser with the new player (the only one at the next_duel_new_players)
             {
-                end_game = true;
+                delete duel_players[duel_players_names[1]];
+                duel_players[next_duel_new_players_names[0]] = next_duel_new_players[next_duel_new_players_names[0]];
             }
+            else // Number 1 has won, replace the loser with the new player (the only one at the next_duel_new_players)
+            {   
+                delete duel_players[duel_players_names[0]];
+                duel_players[next_duel_new_players_names[0]] = next_duel_new_players[next_duel_new_players_names[0]];
+            }
+            duel_players_names = Object.keys(duel_players); // Update the names
         }
+        else // End of the "rey de la pista", no more players
+        {
+            end_game = true;
+
+            /*
+            if (result.loser != null) {
+                // Fix server behavior: hide the loser's streak length
+                for (let loser_name of result.loser) {
+                    duel_players[loser_name].streak_length = 0;
+                }
+            }
+
+            if (result.winner != null) { // Fix server behavior: deduct one the used bullet of the shooter TODO do in every round, not only endgame
+                duel_players[result.winner].bullets -= 1; 
+            }*/
+        }
+    }
+    
     return end_game;
 }
 
@@ -116,7 +133,7 @@ async function play_special_duel(player1, player2)
     await new Promise(r => setTimeout(r, 5000)); // Prepare for the duel
 
     // Show the lives of the players
-    document.getElementById("lives").style.display = "block";
+    document.getElementById("lives").style.display = "flex";
 
     while (!end_game)
     {
@@ -146,6 +163,7 @@ async function play_special_duel(player1, player2)
             display_message_box_result(special_duel_result);
         }
     }
+
     await set_can_players_join(false); 
     await new Promise(r => setTimeout(r, 5000)); // Wait 5 seconds 
     sessionStorage.setItem('special_duel_winner', special_duel_result.winner);
@@ -208,12 +226,12 @@ function check_duel_result(duel_players) {
     else if (action1 === "shoot" && action2 === "reload") 
     {
         result.winner = duel_players_names[0];
-        result.loser = duel_players_names[1];
+        result.loser = [duel_players_names[1]];
         play_two_sounds(reload_sound_1, shoot_sound_1); // Reload first, then shoot
     } 
     else if (action1 === "reload" && action2 === "shoot") {
         result.winner = duel_players_names[1];
-        result.loser = duel_players_names[0];
+        result.loser = [duel_players_names[0]];
         play_two_sounds(reload_sound_1, shoot_sound_1); // Reload first, then shoot
     }
     else if (action1 === "reload" && action2 === "reload") 
@@ -270,12 +288,12 @@ function check_special_duel_result(duel_players)
     else if (lives1 == 0)
     {
         result.winner = duel_players_names[1];
-        result.loser = duel_players_names[0];
+        result.loser = [duel_players_names[0]];
     }
     else if (lives2 == 0)
     {
         result.winner = duel_players_names[0];
-        result.loser = duel_players_names[1];
+        result.loser = [duel_players_names[1]];
     }
     return result;
 }
@@ -288,7 +306,8 @@ function display_players_duel(duel_players, after_duel, result)
         let bullets = data.bullets;
         let shields = data.shields;
         let action = data.action;
-        display_player_duel(player_id, name, bullets, shields, action, result, after_duel);
+        let streak_length = data.streak_length;
+        display_player_duel(player_id, name, bullets, shields, action, streak_length, result, after_duel);
         player_id++;
     }
 }
@@ -306,8 +325,8 @@ function display_players_special_duel(duel_players, after_duel, result_special_d
     }
 }
 
-function display_player_duel(player_id, name, bullets, shields, action, result, after_duel) {
-    console.log(player_id, name, bullets, shields, action, result, after_duel);
+function display_player_duel(player_id, name, bullets, shields, action, streak_length, result, after_duel) {
+    console.log(player_id, name, bullets, shields, action, streak_length, result, after_duel);
     let player_div = document.getElementById("player" + player_id);
     
     let name_div = player_div.querySelector(".name");
@@ -322,6 +341,18 @@ function display_player_duel(player_id, name, bullets, shields, action, result, 
     let action_div = player_div.querySelector(".action");
     let action_image = action_div.querySelector("#action_image");
 
+    if (streak_length > 0) // Visible streak length
+    {
+        let streak_length_div = player_div.querySelector("#streak-length-count");
+        streak_length_div.innerHTML = streak_length;
+        streak_length_div.parentElement.style.display = "flex";
+    }
+    else
+    {
+        let streak_length_div = player_div.querySelector("#streak-length-count");
+        streak_length_div.parentElement.style.display = "none";
+    }
+
     if (!after_duel)
     {
         action_image.style.display = "none";
@@ -329,7 +360,7 @@ function display_player_duel(player_id, name, bullets, shields, action, result, 
     else
     {
         // add the image according to the action
-        action_image.style.display = "block";
+        action_image.style.display = "flex";
         action_image.src = image_path + action + ".png";
     }
 }
@@ -375,7 +406,7 @@ function display_player_special_duel(player_id, name, bullets, shields, lives, a
     }
     else
     {
-        action_div.style.display = "block";
+        action_div.style.display = "flex";
         action_image.src = image_path + action + ".png";
     }
 }

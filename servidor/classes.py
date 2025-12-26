@@ -34,13 +34,15 @@ class GunmanPlayer():
         self.shields: int = 2
         self.action: str = None
         self.lives: int = 2 # For the special duel
+        self.streak_length: int = 0 # streak length
 
     def to_dict(self): 
         return {
             'action': self.action,
             'bullets': self.bullets,
             'shields': self.shields,
-            'lives': self.lives
+            'lives': self.lives,
+            'streak_length': self.streak_length
         }
     
     def to_string(self):

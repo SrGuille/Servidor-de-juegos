@@ -2,7 +2,7 @@ from servidor import main_views
 import random
 from servidor import queries as q
 from servidor.classes import GunmanPlayer
-from copy import deepcopy  # Add this import at the top
+from copy import deepcopy
 import threading
 
 class GunmanGame:
@@ -10,7 +10,8 @@ class GunmanGame:
         self.remaining_players = [] # List of players that have not participated in any duel
         self.duel_players = {}
         self.players_lock = threading.Lock()
-        self.COINS_TO_STEAL = 10
+        self.COINS_TO_STEAL_BASELINE = 10
+        self.COINS_TO_STEAL_streak = 5
         self.is_special_duel = False
 
     def create_initial_duel(self):
@@ -59,25 +60,35 @@ class GunmanGame:
         return new_player
 
     def register_player_action(self, name, action):
+        """
+        Registers the action of a player if allowed (enough resources and can interact)
+        """
         allowed = main_views.main_controller_.get_can_players_interact()
         if allowed and name in self.duel_players.keys():
             self.players_lock.acquire()
-            self.duel_players[name].action = action
-            self.update_bullets(self.duel_players[name])
+            allowed = self.validate_and_update_resources(self.duel_players[name], action)
+            if allowed:
+                self.duel_players[name].action = action
             self.players_lock.release()
         return allowed
 
-    def update_bullets(self, player):
+    def validate_and_update_resources(self, player, action) -> bool:
         """
-        Manages the bullets of a player when he takes an action
+        Validates if the player's action is valid and updates his resources
         """
-        if player.action == "shoot":
+        is_valid = False
+        if action == "shoot" and player.bullets > 0:
             player.bullets -= 1
-        elif player.action == "shield":
+            is_valid = True
+        elif action == "shield" and player.shields > 0:
             player.shields -= 1
-        elif player.action == "reload":
+            is_valid = True
+        elif action == "reload": # Always valid
             player.bullets += 1
             player.shields += 1
+            is_valid = True
+
+        return is_valid
 
     def get_duel_data(self, name):
         """
@@ -136,8 +147,9 @@ class GunmanGame:
                 if new_player2 is not None:
                     new_players[new_player2] = self.duel_players[new_player2]
 
-            else: # Kick 1 loser, steal coins and add 1 new player
+            else: # Kick 1 loser, update, winner item, steal coins and add 1 new player
                 print(f"Loser: {loser[0]}")
+                self.update_winner_resources(winner, duel_players_copy)
                 self.steal_coins(winner, loser[0])
                 self.duel_players.pop(loser[0])
                 new_player = self.add_new_player_to_duel()
@@ -145,7 +157,6 @@ class GunmanGame:
                     self.duel_players.pop(winner)
                 else:
                     new_players[new_player] = self.duel_players[new_player]
-                    self.update_winner_items(winner, duel_players_copy)
 
         # Reset the actions of the players
         for player in self.duel_players.values(): 
@@ -165,11 +176,12 @@ class GunmanGame:
         
         return current_duel_players, next_duel_new_players
     
-    def update_winner_items(self, winner, duel_players_copy):
+    def update_winner_resources(self, winner, duel_players_copy):
         """
         In case of having 0 bullets, the winner will have 1 bullet
         In case of having less than 2 shields, the winner will have 2 shields
-        It also updates the duel players copy to send it to the admin
+        It also updates the duel players copy to send it to the admin.
+        Sum 1 to the winner's streak length.
         """
         winner_bullets = self.duel_players[winner].bullets
         if winner_bullets == 0:
@@ -180,6 +192,9 @@ class GunmanGame:
         if winner_shields < 2:
             self.duel_players[winner].shields = 2
             duel_players_copy[winner].shields = 2
+
+        self.duel_players[winner].streak_length += 1
+        duel_players_copy[winner].streak_length = self.duel_players[winner].streak_length
 
     def resolve_duel(self) -> tuple[str, list[str]]:
         """
@@ -205,8 +220,13 @@ class GunmanGame:
         return winner, loser
 
     def steal_coins(self, winner, loser):
-        q.add_coins_to_player(winner, self.COINS_TO_STEAL)
-        q.add_coins_to_player(loser, -self.COINS_TO_STEAL)
+        """
+            Steals coins from the loser and gives them to the winner according to the streak length"""
+        winner_streak_length = self.duel_players[winner].streak_length
+        coins_to_steal = self.COINS_TO_STEAL_BASELINE + (winner_streak_length - 1) * self.COINS_TO_STEAL_streak
+
+        q.add_coins_to_player(winner, coins_to_steal)
+        q.add_coins_to_player(loser, -coins_to_steal)
 
     def special_duel_step(self):
         """
