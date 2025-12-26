@@ -1223,3 +1223,137 @@ font-size: 20px;
   outline: none;
   box-shadow: 0 0 0 3px rgba(176,229,255,.85);
 }
+
+/* =========================
+   PREMIOS — estilo login/wait
+   PÉGALO AL FINAL de style.css
+   ========================= */
+
+.page-prizes{
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden; /* evita scroll lateral por sombras */
+
+  background-image:
+    radial-gradient(900px 520px at 50% 18%, rgba(176,229,255,.22), transparent 60%),
+    radial-gradient(800px 520px at 18% 78%, rgba(0,153,89,.18), transparent 62%),
+    radial-gradient(820px 560px at 82% 76%, rgba(153,29,50,.18), transparent 62%),
+    url("../img/portada.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.page-prizes .prizes{
+  min-height: 100vh;
+  padding: clamp(16px, 2vw, 28px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 2; /* nieve detrás */
+}
+
+.page-prizes .prizes-header{
+  width: min(1200px, 100%);
+  text-align: center;
+}
+
+/* Card principal */
+.page-prizes .prizes-card{
+  width: min(1200px, 100%);
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(176,229,255,.40);
+  border-radius: 16px;
+  box-shadow: 0 14px 34px rgba(0,0,0,.18);
+  padding: clamp(12px, 1.8vw, 18px);
+}
+
+/* Grid de ruletas */
+.page-prizes .roulette-grid{
+  display: grid;
+  grid-template-columns: 1fr; /* mobile/estrecho */
+  gap: 18px;
+  justify-items: center;
+  align-items: start;
+}
+
+@media (min-width: 900px){
+  .page-prizes .roulette-grid{
+    grid-template-columns: 1fr 1fr; /* web/tv */
+    gap: 22px;
+  }
+}
+
+/* Cada ruleta */
+.page-prizes .roulette-slot{
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  align-items: start;
+  gap: 10px;
+  position: relative;
+  padding-top: 6px;
+}
+
+/* Indicador centrado y “pegado” a la ruleta (adiós pins sueltos) */
+.page-prizes .roulette-indicator{
+  width: 78px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,.18));
+}
+
+/* Stage donde el JS inyecta canvas/svg */
+.page-prizes .roulette-stage{
+  width: min(420px, 100%);
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+}
+
+/* Si la librería pinta canvas/svg, lo hacemos responsive */
+.page-prizes .roulette-stage canvas,
+.page-prizes .roulette-stage svg{
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Resultado (evita el “pill blanco gigante” cuando está vacío) */
+.page-prizes .result-wrap{
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.page-prizes .result-pill{
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--neutral-700, #3b3f45);
+
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(176,229,255,.40);
+  border-radius: 999px;
+  padding: 10px 14px;
+  box-shadow: 0 12px 24px rgba(0,0,0,.12);
+
+  max-width: min(900px, 100%);
+  text-align: center;
+}
+
+/* 👇 clave: si no hay texto, no se ve nada (adiós barra blanca rara) */
+.page-prizes .result-pill:empty{
+  display: none;
+}
+
+/* Nieve detrás */
+.page-prizes .tpl-snow{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
