@@ -25,6 +25,7 @@
                 <table class="table table-striped animate__animated animate__fadeIn animate__slow" id="ranking-left">
                     <thead>
                         <tr>
+                            <th scope="col" class="position-header"></th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Monedas</th>
                         </tr>
@@ -35,6 +36,7 @@
                 <table class="table table-striped animate__animated animate__fadeIn animate__slow" id="ranking-right">
                     <thead>
                         <tr>
+                            <th scope="col" class="position-header"></th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Monedas</th>
                         </tr>
@@ -47,13 +49,13 @@
     </div>
 
     <div class="row box-roulette" id="roulettes_container" style="margin-left: auto; margin-right: auto;">
-        <div class="col-5 align-content-center">
-            <img id="indicador1" style="display: flex;" class="indicador1" src="{% static 'img/indicator.png' %}" alt="">
-            <div id="players_roulette_div"></div>
+        <div class="col-5 roulette-column">
+            <img id="indicador1" class="indicador-roulette" src="{% static 'img/indicator.png' %}" alt="">
+            <div id="players_roulette_div" class="roulette-wrapper"></div>
         </div>
-        <div class="col-5 justify-content-center">
-            <img id="indicador2" style="display: flex;" class="indicador2" src="{% static 'img/indicator.png' %}" alt="">
-            <div id="prizes_roulette_div"></div>
+        <div class="col-5 roulette-column">
+            <img id="indicador2" class="indicador-roulette" src="{% static 'img/indicator.png' %}" alt="">
+            <div id="prizes_roulette_div" class="roulette-wrapper"></div>
         </div>
     </div>
     <div class="animate__animated animate__fadeIn animate__slow" id="result"></div>
@@ -148,6 +150,35 @@
         width: 1500px;
     }
     
+    .roulette-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    
+    .indicador-roulette {
+        width: 80px;
+        height: auto;
+        z-index: 2;
+        position: relative;
+        top: 75px;
+        display: block;
+    }
+    
+    .roulette-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .roulette-wrapper img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Legacy indicator styles - keeping for compatibility */
     .indicador1,
     .indicador2 {
         width: 80px;

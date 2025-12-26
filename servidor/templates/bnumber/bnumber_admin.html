@@ -12,9 +12,10 @@
 </head>
 <body class="fondo" style="top: 100px;">
     <div id="seconds_left"></div>
-    <div id="bnumber-result"></div>
-    <!-- Lado izquierdo (Verde) -->
-    <div id="team-green" class="game-half left-side">
+    <!-- Eliminado: ahora usamos modal -->
+    
+    <!-- Equipo Verde -->
+    <div id="team-Verde" class="game-half team-column verde-side" style="display: none;">
         <div class="number-list">
             <button class="number-button empty-number" id="0">0</button>
             <button class="number-button empty-number" id="1">1</button>
@@ -22,33 +23,88 @@
             <button class="number-button empty-number" id="3">3</button>
             <button class="number-button empty-number" id="4">4</button>
             <button class="number-button empty-number" id="5">5</button>
+            <button class="number-button empty-number" id="6">6</button>
+            <button class="number-button empty-number" id="7">7</button>
         </div>
         <div class="new-number-container">
             <span class="new-number-label">Siguiente:</span>
-            <span id="new-number" class="new-number">5</span>
+            <span class="new-number">-</span>
         </div>
     </div>
     
-    <!-- Línea divisoria central -->
-    <div class="divider"></div>
+    <!-- Divisor 1 -->
+    <div class="divider" id="divider-1" style="display: none;"></div>
     
-    <!-- Lado derecho (Rojo) -->
-    <div id="team-red" class="game-half right-side">
+    <!-- Equipo Rojo -->
+    <div id="team-Rojo" class="game-half team-column rojo-side" style="display: none;">
         <div class="number-list">
-            <button id="0" class="number-button empty-number">0</button>
-            <button id="1" class="number-button empty-number">1</button>
-            <button id="2" class="number-button empty-number">2</button>
-            <button id="3" class="number-button empty-number">3</button>
-            <button id="4" class="number-button empty-number">4</button>
-            <button id="5" class="number-button empty-number">5</button>
+            <button class="number-button empty-number" id="0">0</button>
+            <button class="number-button empty-number" id="1">1</button>
+            <button class="number-button empty-number" id="2">2</button>
+            <button class="number-button empty-number" id="3">3</button>
+            <button class="number-button empty-number" id="4">4</button>
+            <button class="number-button empty-number" id="5">5</button>
+            <button class="number-button empty-number" id="6">6</button>
+            <button class="number-button empty-number" id="7">7</button>
         </div>
         <div class="new-number-container">
             <span class="new-number-label">Siguiente:</span>
-            <span class="new-number">5</span>
+            <span class="new-number">-</span>
         </div>
     </div>
+    
+    <!-- Divisor 2 -->
+    <div class="divider" id="divider-2" style="display: none;"></div>
+    
+    <!-- Equipo Azul -->
+    <div id="team-Azul" class="game-half team-column azul-side" style="display: none;">
+        <div class="number-list">
+            <button class="number-button empty-number" id="0">0</button>
+            <button class="number-button empty-number" id="1">1</button>
+            <button class="number-button empty-number" id="2">2</button>
+            <button class="number-button empty-number" id="3">3</button>
+            <button class="number-button empty-number" id="4">4</button>
+            <button class="number-button empty-number" id="5">5</button>
+            <button class="number-button empty-number" id="6">6</button>
+            <button class="number-button empty-number" id="7">7</button>
+        </div>
+        <div class="new-number-container">
+            <span class="new-number-label">Siguiente:</span>
+            <span class="new-number">-</span>
+        </div>
+    </div>
+    
+    <!-- Divisor 3 -->
+    <div class="divider" id="divider-3" style="display: none;"></div>
+    
+    <!-- Equipo Amarillo -->
+    <div id="team-Amarillo" class="game-half team-column amarillo-side" style="display: none;">
+        <div class="number-list">
+            <button class="number-button empty-number" id="0">0</button>
+            <button class="number-button empty-number" id="1">1</button>
+            <button class="number-button empty-number" id="2">2</button>
+            <button class="number-button empty-number" id="3">3</button>
+            <button class="number-button empty-number" id="4">4</button>
+            <button class="number-button empty-number" id="5">5</button>
+            <button class="number-button empty-number" id="6">6</button>
+            <button class="number-button empty-number" id="7">7</button>
+        </div>
+        <div class="new-number-container">
+            <span class="new-number-label">Siguiente:</span>
+            <span class="new-number">-</span>
+        </div>
+    </div>
+    
     <div id="countdown"></div>
     <button id="enable_sounds" style="display: none;"></button>
+    
+    <!-- Modal de Victoria -->
+    <div id="victory-modal-overlay" class="victory-modal-overlay">
+        <div class="victory-modal">
+            <div class="victory-modal-title">¡Resultado!</div>
+            <div id="victory-modal-content" class="victory-modal-content"></div>
+        </div>
+    </div>
 </body>
 
 
@@ -76,12 +132,20 @@
         padding: 20px;
     }
     
-    .left-side {
+    .verde-side {
         background-color: #4CAF50;  /* Verde */
     }
     
-    .right-side {
+    .rojo-side {
         background-color: #f44336;  /* Rojo */
+    }
+    
+    .azul-side {
+        background-color: #2196F3;  /* Azul */
+    }
+    
+    .amarillo-side {
+        background-color: #FFEB3B;  /* Amarillo */
     }
     
     .divider {

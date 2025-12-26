@@ -15,8 +15,8 @@ def bnumber_player_render(request):
     return render(request, 'bnumber/bnumber_player.html')
 
 def create_teams_bnumber(request):
-    new_number_green, new_number_red = bnumber_game.create_teams()
-    return JsonResponse({'new_number_green': new_number_green, 'new_number_red': new_number_red}, safe=False)
+    teams_new_number = bnumber_game.create_teams()
+    return JsonResponse({'teams_new_number': teams_new_number}, safe=False)
 
 def get_my_team_bnumber(request):
     player_name = request.GET.get('player_name')
@@ -37,3 +37,7 @@ def get_bnumber_data(request):
 def finish_bnumber(request):
     winner_msj = bnumber_game.finish_bnumber()
     return JsonResponse({'winner_msj': winner_msj}, safe=False)
+
+def has_finished_bnumber(request):
+    has_finished = bnumber_game.has_finished()
+    return JsonResponse({'has_finished': has_finished}, safe=False)

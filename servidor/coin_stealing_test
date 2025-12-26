@@ -1,0 +1,86 @@
+import math
+import coin_stealing as cs
+
+REWARD_PER_ADVANTAGE = 5
+# Generate test cases
+
+"""
+winner_team = ['player1', 'player2']
+loser_team = ['player4', 'player5']
+winner_advantage = 2
+coins_to_steal = winner_advantage * REWARD_PER_ADVANTAGE
+cs.steal_coins(len(winner_team), len(loser_team), coins_to_steal)
+print('\n') # 100
+
+
+winner_team = ['player1', 'player2', 'player3']
+loser_team = ['player4', 'player5']
+winner_advantage = 2
+coins_to_steal = winner_advantage * REWARD_PER_ADVANTAGE
+cs.steal_coins(len(winner_team), len(loser_team), coins_to_steal)
+print('\n')
+
+
+winner_team = ['player1', 'player2']
+loser_team = ['player4', 'player5', 'player6']
+winner_advantage = 2
+coins_to_steal = winner_advantage * REWARD_PER_ADVANTAGE
+cs.steal_coins(len(winner_team), len(loser_team), coins_to_steal)
+print('\n') # 100
+
+
+winner_team = ['player1', 'player2']
+loser_team = ['player4', 'player5']
+winner_advantage = 1
+coins_to_steal = winner_advantage * REWARD_PER_ADVANTAGE
+cs.steal_coins(len(winner_team), len(loser_team), coins_to_steal)
+print('\n') # 100
+
+
+winner_team = ['player1', 'player2', 'player3']
+loser_team = ['player4', 'player5']
+winner_advantage = 1
+coins_to_steal = winner_advantage * REWARD_PER_ADVANTAGE
+cs.steal_coins(len(winner_team), len(loser_team), coins_to_steal)
+print('\n')
+
+winner_team = ['player1', 'player2']
+loser_team = ['player4', 'player5', 'player6']
+winner_advantage = 1
+coins_to_steal = winner_advantage * REWARD_PER_ADVANTAGE
+cs.steal_coins(len(winner_team), len(loser_team), coins_to_steal)
+print('\n') # 100
+
+"""
+
+winner_teams = {'team_0' : ['player1', 'player2', 'player3'], 'team_1': ['player4']}
+loser_teams = {'team_2': ['player5', 'player6'], 'team_3': ['player7', 'player8', 'player9']}
+winner_advantages = {'team_2': 3, 'team_3': 4}
+coins_to_steal = {}
+for loser_team in loser_teams:
+    coins_to_steal[loser_team] = math.ceil((winner_advantages[loser_team] * REWARD_PER_ADVANTAGE) / len(winner_teams))
+
+for winner_team in winner_teams:
+    for loser_team in loser_teams:
+        print(f'Winner team: {winner_team} vs Loser team: {loser_team} with coins to steal: {coins_to_steal[loser_team]}')
+        cs.steal_coins_total(len(winner_teams[winner_team]), len(loser_teams[loser_team]), coins_to_steal[loser_team])
+        print('\n')
+    print('---\n')
+
+"""
+
+winner_teams = {'team_0' : ['player1', 'player2'], 'team_1': ['player3']}
+loser_teams = {'team_2': ['player4'], 'team_3': ['player5']}
+winner_advantages = {'team_2': 6, 'team_3': 6}
+coins_to_steal = {}
+for loser_team in loser_teams:
+    coins_to_steal[loser_team] = math.ceil((winner_advantages[loser_team] * REWARD_PER_ADVANTAGE) / len(winner_teams))
+
+for winner_team in winner_teams:
+    for loser_team in loser_teams:
+        print(f'Winner team: {winner_team} vs Loser team: {loser_team} with coins to steal: {coins_to_steal[loser_team]}')
+        cs.steal_coins_total(len(winner_teams[winner_team]), len(loser_teams[loser_team]), coins_to_steal[loser_team])
+        print('\n')
+    print('---\n')
+
+"""

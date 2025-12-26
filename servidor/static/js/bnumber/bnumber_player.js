@@ -6,7 +6,7 @@ if(player_name == null) //If the player is not logged in, redirect to the login 
 }
 
 number_positions = [];
-LIST_SIZE = 6;
+LIST_SIZE = 8;
 current_number = -1;
 
 go_to_wait_screen_after_game();
@@ -14,7 +14,8 @@ go_to_wait_screen_after_game();
 async function get_my_team()
 {
     number_positions = Array(LIST_SIZE).fill(-1);
-    await new Promise(r => setTimeout(r, 2000));
+    player_name = sessionStorage.getItem("player_name");
+    await new Promise(r => setTimeout(r, 1000));
     $.ajax({
         url: "../get_my_team_bnumber",
         type: "GET",
@@ -24,8 +25,6 @@ async function get_my_team()
             team = response.team;
             leader = response.leader;
             current_number = response.first_number;
-            player_name = sessionStorage.getItem("player_name");
-            
             paint_team(team); // Paint the team color
             if(leader == player_name)
             {
@@ -39,16 +38,29 @@ async function get_my_team()
     });
 }
 
+async function check_game_has_finished()
+{
+    has_finished = false;
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "../has_finished_bnumber",
+            type: "GET",
+            success: function(response) {
+                console.log(response)
+                has_finished = response.has_finished;
+                resolve(has_finished);
+            },
+            error: function(xhr, status, error) {
+                reject(error);
+            }
+        });
+    });
+}
+
 // Paints the buttons with the team color
 function paint_team(team)
 {
-    if(team == "Verde")
-        team_color = "team-green";
-    else if(team == "Rojo")
-        team_color = "team-red";
-    else
-        return;
-
+    let team_color = "team-" + team;
     background = document.getElementById("container");
     background.classList.add(team_color);
 }
@@ -158,7 +170,18 @@ function unlock_button(position)
 
 async function go_to_wait_screen_after_game()
 {
-    await new Promise(r => setTimeout(r, 130000));
+    await new Promise(r => setTimeout(r, 50000)); //Wait 50 seconds
+    for (let i = 0; i < 8; i++)
+    {
+        has_finished = await check_game_has_finished();
+        if (has_finished)
+        {
+            console.log("Game has finished, going to wait screen...");
+            break;
+        }
+        console.log("Game not finished yet, checking again in 10 seconds...");
+        await new Promise(r => setTimeout(r, 10000)); //Wait 10 seconds
+    }
     sessionStorage.setItem("played", true) //Set the played flag to true
     window.location.href = "../wait_room/";
 }

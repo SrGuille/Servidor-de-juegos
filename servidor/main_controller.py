@@ -39,10 +39,6 @@ class MainController:
         """ 
         self.can_players_join = False
         self.can_players_interact = False
-        
-        # Constants
-        self.GAME_NAMES = c.GAME_NAMES
-        self.INITIAL_COINS = c.INITIAL_COINS
 
     def set_game(self, game_id, rounds):
         """
@@ -141,6 +137,18 @@ class MainController:
         for player in logged_players:
             players_scores.append({'name': player.name, 'nick': player.nick, 'coins': player.coins})
         return players_scores
+    
+    def get_players_previous_scores(self):
+        """
+            Returns the players and their coins before the current game
+        """
+        players_previous_scores = []
+
+        logged_players = q.get_logged_players()
+        for player in logged_players:
+            previous_coins = q.get_player_coins_at_game_number(player.name, self.game_number - 1)
+            players_previous_scores.append({'name': player.name, 'nick': player.nick, 'previous_coins': previous_coins})
+        return players_previous_scores
 
     def get_available_prizes(self):
         """
