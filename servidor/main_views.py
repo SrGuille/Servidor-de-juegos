@@ -88,6 +88,10 @@ def get_players_scores(request):
     ranking = main_controller_.get_players_scores()
     return JsonResponse(ranking, safe=False)
 
+def get_players_previous_scores(request):
+    ranking = main_controller_.get_players_previous_scores()
+    return JsonResponse(ranking, safe=False)
+
 def get_available_prizes(request):
     prizes = main_controller_.get_available_prizes()
     return JsonResponse(prizes, safe=False)

@@ -2,25 +2,100 @@ from servidor import main_views
 import random
 from typing import List, Tuple, Dict
 from servidor import queries as q
-import math
 import threading
+import servidor.coin_stealing as cs
+import math
 
 class BNumberGame:
 
     def __init__(self):
 
         self.LIST_SIZE = 6
-        self.NUMBER_RANGE = 59 # 0 to 59
+        self.NUMBER_RANGE = (10 * self.LIST_SIZE) - 1
         self.REWARD_PER_ADVANTAGE = 5
+        self.TEAM_NAMES = ('Verde', 'Rojo', 'Azul', 'Amarillo')  # Possible team names
+        self.num_teams = 4  # Number of teams in the game
 
-        self.teams_with_names = {'Verde': [], 'Rojo': []}  # Dict with the players of each team
-        self.team_names = ['Verde', 'Rojo']
-        self.teams_positions = {'Verde': self.get_empty_list(), 'Rojo': self.get_empty_list()} # Dict with the positions of each team
-        self.teams_new_number = {'Verde': -1, 'Rojo': -1} # Dict with the new number of each team
+        # Dicts with: the players of each team, the positions of each team and the new number of each team
+        self.teams_with_names = {}  
+        self.teams_positions = {}
+        self.teams_new_number = {}
         self.players_lock = threading.Lock()
 
     def get_empty_list(self) -> List[int]:
         return [-1] * self.LIST_SIZE
+    
+    def generate_new_number(self, team: str) -> int:
+        """
+            Generates a new number for the team (can't be repeated)
+        """
+        team_positions = self.teams_positions[team]
+        new_number = random.randint(0, self.NUMBER_RANGE)
+        while new_number in team_positions:
+            new_number = random.randint(0, self.NUMBER_RANGE)
+        return new_number
+    
+    def create_teams(self) -> dict:
+        """
+            Assign players to teams randomly.
+            The method returns the initial number of each team to display in the admin screen
+        """
+        list_players = q.get_logged_players_names()
+        random.shuffle(list_players) # Shuffle the list to avoid deterministic teams
+
+        self.num_teams = min(self.num_teams, len(list_players)) # Adjust the number of teams if there are few players
+        
+        # Initialize the dicts
+        self.teams_with_names = {team_name: [] for team_name in self.TEAM_NAMES[:self.num_teams]}
+        self.teams_positions = {team_name: self.get_empty_list() for team_name in self.TEAM_NAMES[:self.num_teams]}
+
+        # Assign players to teams in round-robin way (groups of num_teams)
+        for i in range(0, len(list_players), self.num_teams):
+            for team_number in range(self.num_teams):
+                player_index = i + team_number
+                if player_index < len(list_players): # There is a player for this team
+                    team_name = self.TEAM_NAMES[team_number]
+                    self.teams_with_names[team_name].append(list_players[player_index])
+                    print(f'Player {list_players[player_index]} assigned to team {team_name}')
+        
+        print(self.teams_with_names)
+        # Generate the initial number for each team
+        for team_name in self.TEAM_NAMES[:self.num_teams]:
+            self.teams_new_number[team_name] = random.randint(0, self.NUMBER_RANGE)
+        
+        return self.teams_new_number
+
+    def get_my_team(self, player_name: str) -> Tuple[str, str, int]:
+        """
+            Returns the team name of a player 
+            and the name of the leader of the team (first position of the team)
+            and the first number of the team
+        """
+        player_team = None
+        leader = None
+        first_number = -1
+        print(player_name)
+        for team_name, team_players in self.teams_with_names.items():
+            print(team_name, team_players)
+            if(player_name in team_players):
+                player_team = team_name
+                leader = team_players[0]
+                first_number = self.teams_new_number[team_name]
+                break
+        return player_team, leader, first_number
+    
+    def has_finished(self) -> bool:
+        """
+            Returns true if any team has completed the list
+        """
+        self.players_lock.acquire()
+        has_finished = False
+        for team_name in self.TEAM_NAMES[:self.num_teams]:
+            if self.get_number_of_non_empty_positions(team_name) == self.LIST_SIZE:
+                has_finished = True
+                break
+        self.players_lock.release()
+        return has_finished
 
     def register_position(self, name: str, position: int) -> Tuple[int, bool]:
         """
@@ -61,17 +136,6 @@ class BNumberGame:
             self.players_lock.release()
 
         return new_number, is_impossible
-
-
-    def generate_new_number(self, team: str) -> int:
-        """
-            Generates a new number for the team (can't be repeated)
-        """
-        team_positions = self.teams_positions[team]
-        new_number = random.randint(0, self.NUMBER_RANGE)
-        while new_number in team_positions:
-            new_number = random.randint(0, self.NUMBER_RANGE)
-        return new_number
     
     def is_impossible_insert(self, team: str, number: int) -> bool:
         """
@@ -102,54 +166,6 @@ class BNumberGame:
         """
         non_empty_positions = [i for i, number in enumerate(self.teams_positions[team]) if number != -1]
         return len(non_empty_positions)
-
-    def create_teams(self) -> None:
-        """
-            Assign players to 2 teams randomly (choose a player and add it 
-            to a team, then choose another player and add it to the other team)
-            In case there is an odd number of players, one team will have 1 more player
-            
-            The method returns the initial number of players to display in the admin screen
-        """
-        list_players = q.get_logged_players_names()
-        random.shuffle(list_players) # Shuffle the list to avoid deterministic teams
-        
-        for i in range(0, len(list_players), 2):
-            team_number = random.randint(0, 1)
-            team_name = self.team_names[team_number]
-            # Add first player to the random team
-            self.teams_with_names[team_name].append(list_players[i])
-            if(len(list_players) > i + 1): # There is a player for the other team
-                # Add second player to the other team
-                other_team_number = (team_number + 1) % 2
-                other_team_name = self.team_names[other_team_number]
-                self.teams_with_names[other_team_name].append(list_players[i+1])
-        
-        self.teams_positions = {'Verde': self.get_empty_list(), 'Rojo': self.get_empty_list()} # Dict with the positions of each team
-        print(self.teams_with_names)
-        new_number_green = self.generate_new_number('Verde')
-        self.teams_new_number['Verde'] = new_number_green
-        new_number_red = self.generate_new_number('Rojo')
-        self.teams_new_number['Rojo'] = new_number_red
-        return new_number_green, new_number_red
-
-    def get_my_team(self, player_name: str) -> Tuple[str, str]:
-        """
-            Returns the team name of a player 
-            and the name of the leader of the team (first position of the team)
-        """
-        player_team = None
-        leader = None
-        first_number = -1
-        print(player_name)
-        for team_name, team_players in self.teams_with_names.items():
-            print(team_name, team_players)
-            if(player_name in team_players):
-                player_team = team_name
-                leader = team_players[0]
-                first_number = self.teams_new_number[team_name]
-                break
-        return player_team, leader, first_number
     
     def get_bnumber_data(self) -> Dict[str, List[int]]:
         """
@@ -168,73 +184,78 @@ class BNumberGame:
 
     def finish_bnumber(self) -> str:
         """
-            Decides the winner team and gives prizes to the players of the winner team
+            Decides the winner team and gives prizes to the players of the winner team/s
+            If there there is a team (can be many if they are simoultaneous) that has compleated the list, each player of that team wins REWARD_PER_FULL_LIST coins from the rest of teams
+            Else, the team/s with more numbers filled wins, and each player of the winner team/s wins REWARD_PER_ADVANTAGE coins per advantage number from the rest of teams
         """
-        # Number of seconds per team
-        numbers_team_1 = self.get_number_of_non_empty_positions('Verde')
-        numbers_team_2 = self.get_number_of_non_empty_positions('Rojo')
+        # Numbers filled per team
+        numbers_filled_per_team = {}
+        for team_name in self.TEAM_NAMES[:self.num_teams]:
+            numbers_filled_per_team[team_name] = self.get_number_of_non_empty_positions(team_name)
 
-        winner_msj = "¡Ha habido un empate!"
+        # The number of filled positions of the best team/s
+        max_filled = max(numbers_filled_per_team.values())
+        is_full_filled = max_filled == self.LIST_SIZE  # There is at least one team that has completed the list
+        
+        # Determine the winner team/s
+        winner_teams = [team for team, num_filled in numbers_filled_per_team.items() if num_filled == max_filled]
+        print(f"Winner teams: {winner_teams}, with {max_filled} numbers filled.")
+        loser_teams = [team for team in self.TEAM_NAMES[:self.num_teams] if team not in winner_teams]
+        print(f"Loser teams: {loser_teams}, with respective filled numbers: {[numbers_filled_per_team[team] for team in loser_teams]}.")
 
-        winner_advantage = abs(numbers_team_1 - numbers_team_2)
+        if loser_teams == []: # There is a tie
+            winner_msj = "¡Ha habido un empate entre todos!"
+            return winner_msj
 
-        if(winner_advantage > 0): # There is a winner
-            if(numbers_team_1 > numbers_team_2):
-                winner_team_name = 'Verde'
-                loser_team_name = 'Rojo'
-            else:
-                winner_team_name = 'Rojo'
-                loser_team_name = 'Verde'
+        winner_advantages = {} # Dict with the advantage of the winner teams over each loser team
+        coins_to_steal = {} # Dict with the coins to steal from the winner teams to each loser team
 
-            winner_msj = f"¡Ha ganado el equipo {winner_team_name} con una ventaja de {str(winner_advantage)} números!"
-            winner_team = self.teams_with_names[winner_team_name]
-            loser_team = self.teams_with_names[loser_team_name]
-            self.give_prizes(winner_team, loser_team, winner_advantage)
+        for loser_team in loser_teams: # Loser teams own the coins to the winner players
+            advantage = max_filled - numbers_filled_per_team[loser_team]
+            winner_advantages[loser_team] = advantage
+            coins_to_steal[loser_team] = math.ceil((advantage * self.REWARD_PER_ADVANTAGE) / len(winner_teams)) # Take into account the number of winner teams
+
+        if is_full_filled: # There is at least one team that has completed the list
+            win_type_str = "haber completado la lista"
+        else:
+            win_type_str = "haber llenado más números"
+        
+        winner_msj = ""
+        if len(winner_teams) > 1:
+            winner_teams_str = ", ".join(winner_teams[:-1]) + " y " + winner_teams[-1] 
+            winner_msj += f"¡Han ganado los equipos {winner_teams_str}"
+        else:
+            winner_msj += f"¡Ha ganado el equipo {winner_teams[0]}"
+        
+        winner_msj += f" por {win_type_str}!<br>"
+
+        for loser_team in loser_teams:
+            winner_msj += f"<br>Ventaja sobre el equipo {loser_team}: {winner_advantages[loser_team]} números."
+
+        # Give prizes to the winner team/s
+        self.give_prizes(winner_teams, loser_teams, coins_to_steal)
 
         return winner_msj
         
-    def give_prizes(self, winner_team: List[str], loser_team: List[str], winner_advantage: int) -> None:
+    def give_prizes(self, winner_teams: List[str], loser_teams: List[str], coins_to_steal: Dict[str, int]) -> None:
         """
             Steal coins from the loser team:
             - If the number of players of each team is the same, the coins are stolen from each loser to each winner
             - Else: it may happen that coins are decimal, in that case, some inflation is generated
-                (always print coins instead of stealing them and generate deflation coins)
+              (always print coins instead of stealing them and generate deflation coins)
 
         """
         self.players_lock.acquire()
-        if len(winner_team) == len(loser_team): # Easy case, the coins flow from each loser to each winner
-            coins_to_steal_to_each_loser = winner_advantage * self.REWARD_PER_ADVANTAGE
-            total_coins_to_steal = len(loser_team) * coins_to_steal_to_each_loser
-            coins_to_give_to_each_winner = coins_to_steal_to_each_loser
-            total_coins_to_give = len(winner_team) * coins_to_give_to_each_winner
-            extra_coins = total_coins_to_give - total_coins_to_steal # Always 0
 
-        elif len(winner_team) > len(loser_team): # There is an extra player in the winner team
-            # The coins are distributed evenly between the winner team (rounded up)
-            coins_to_steal_to_each_loser = winner_advantage * self.REWARD_PER_ADVANTAGE
-            total_coins_to_steal = len(loser_team) * coins_to_steal_to_each_loser
-            coins_to_give_to_each_winner = math.ceil(total_coins_to_steal / len(winner_team))
-            total_coins_to_give = coins_to_give_to_each_winner * len(winner_team)
-            extra_coins = total_coins_to_give - total_coins_to_steal # Positive if coins_to_steal_to_each_loser is not multiple of len(winner_team)
-        else: # There is an extra player in the loser team
-            coins_to_give_to_each_winner = winner_advantage * self.REWARD_PER_ADVANTAGE
-            total_coins_to_give = len(winner_team) * coins_to_give_to_each_winner
-            coins_to_steal_to_each_loser = math.floor(total_coins_to_give / len(loser_team))
-            total_coins_to_steal = len(loser_team) * coins_to_steal_to_each_loser
-            extra_coins = total_coins_to_give - total_coins_to_steal # Positive if coins_to_steal_to_each_loser is not multiple of len(winner_team)
+        for winner_team in winner_teams: # Each winner team revieves coins from each loser team
+            for loser_team in loser_teams:
+                coins_to_give_to_each_winner, coins_to_steal_to_each_loser = cs.steal_coins_total(len(self.teams_with_names[winner_team]), len(self.teams_with_names[loser_team]), coins_to_steal[loser_team])
 
-        print(f'Coins to steal for each loser: {coins_to_steal_to_each_loser}')
-        print(f'Total coins to steal: {total_coins_to_steal}')
-        print(f'Coins to give for each winner: {coins_to_give_to_each_winner}')
-        print(f'Total coins to give: {total_coins_to_give}')
-        print(f'Inflation coins: {extra_coins}')
+                for player_name in self.teams_with_names[winner_team]:
+                    q.add_coins_to_player(player_name, coins_to_give_to_each_winner)
 
-        for player_name in winner_team:
-            q.add_coins_to_player(player_name, coins_to_give_to_each_winner)
-
-        for player_name in loser_team:
-            q.add_coins_to_player(player_name, -coins_to_steal_to_each_loser)
+                for player_name in self.teams_with_names[loser_team]:
+                    q.add_coins_to_player(player_name, -coins_to_steal_to_each_loser)
 
         self.players_lock.release()
 
-    

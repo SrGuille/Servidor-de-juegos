@@ -5,6 +5,8 @@ from servidor import queries as q
 import math
 import time
 import threading
+import servidor.coin_stealing as cs
+
 class DemocracyGame:
 
     def __init__(self):
@@ -165,6 +167,7 @@ class DemocracyGame:
                 steps_team_2 += 1
 
         winner_advantage = abs(steps_team_1 - steps_team_2)
+        coins_per_player = winner_advantage * self.REWARD_PER_ADVANTAGE
 
         if(winner_advantage > 0): # There is a winner
             if(steps_team_1 > steps_team_2):
@@ -177,11 +180,12 @@ class DemocracyGame:
             winner_msj = f"¡Ha ganado el equipo {self.TEAM_NAMES[winner_team_num - 1]} con una diferencia de {str(winner_advantage)} casillas!"
             winner_team = self.teams_with_names[winner_team_num - 1] # Get the list of players of the winner team
             loser_team = self.teams_with_names[loser_team_num - 1] # Get the list of players of the loser team
-            self.give_prizes(winner_team, loser_team, winner_advantage)
+            
+            self.give_prizes(winner_team, loser_team, coins_per_player)
 
         return winner_msj
         
-    def give_prizes(self, winner_team: List[str], loser_team: List[str], winner_advantage: int) -> None:
+    def give_prizes(self, winner_team: List[str], loser_team: List[str], coins_per_player: int) -> None:
         """
             Steal coins from the loser team:
             - If the number of players of each team is the same, the coins are stolen from each loser to each winner
@@ -190,32 +194,8 @@ class DemocracyGame:
 
         """
         self.players_lock.acquire()
-        if len(winner_team) == len(loser_team): # Easy case, the coins flow from each loser to each winner
-            coins_to_steal_to_each_loser = winner_advantage * self.REWARD_PER_ADVANTAGE
-            total_coins_to_steal = len(loser_team) * coins_to_steal_to_each_loser
-            coins_to_give_to_each_winner = coins_to_steal_to_each_loser
-            total_coins_to_give = len(winner_team) * coins_to_give_to_each_winner
-            extra_coins = total_coins_to_give - total_coins_to_steal # Always 0
-
-        elif len(winner_team) > len(loser_team): # There is an extra player in the winner team
-            # The coins are distributed evenly between the winner team (rounded up)
-            coins_to_steal_to_each_loser = winner_advantage * self.REWARD_PER_ADVANTAGE
-            total_coins_to_steal = len(loser_team) * coins_to_steal_to_each_loser
-            coins_to_give_to_each_winner = math.ceil(total_coins_to_steal / len(winner_team))
-            total_coins_to_give = coins_to_give_to_each_winner * len(winner_team)
-            extra_coins = total_coins_to_give - total_coins_to_steal # Positive if coins_to_steal_to_each_loser is not multiple of len(winner_team)
-        else: # There is an extra player in the loser team
-            coins_to_give_to_each_winner = winner_advantage * self.REWARD_PER_ADVANTAGE
-            total_coins_to_give = len(winner_team) * coins_to_give_to_each_winner
-            coins_to_steal_to_each_loser = math.floor(total_coins_to_give / len(loser_team))
-            total_coins_to_steal = len(loser_team) * coins_to_steal_to_each_loser
-            extra_coins = total_coins_to_give - total_coins_to_steal # Positive if coins_to_steal_to_each_loser is not multiple of len(winner_team)
-
-        print(f'Coins to steal for each loser: {coins_to_steal_to_each_loser}')
-        print(f'Total coins to steal: {total_coins_to_steal}')
-        print(f'Coins to give for each winner: {coins_to_give_to_each_winner}')
-        print(f'Total coins to give: {total_coins_to_give}')
-        print(f'Inflation coins: {extra_coins}')
+        
+        coins_to_give_to_each_winner, coins_to_steal_to_each_loser = cs.steal_coins_per_player(len(winner_team), len(loser_team), coins_per_player)
 
         for player_name in winner_team:
             q.add_coins_to_player(player_name, coins_to_give_to_each_winner)
@@ -224,17 +204,3 @@ class DemocracyGame:
             q.add_coins_to_player(player_name, -coins_to_steal_to_each_loser)
 
         self.players_lock.release()
-
-"""
-coins_to_steal_to_each_loser = winner_advantage * self.REWARD_PER_ADVANTAGE
-print(f'Coins to steal for each loser: {coins_to_steal_to_each_loser}')
-total_coins_to_steal = len(loser_team) * coins_to_steal_to_each_loser
-print(f'Total coins to steal: {total_coins_to_steal}')
-
-# Ceiling division to avoid fractional coins (some extra non-existent coins can be added)
-coins_to_give_to_each_winner = math.ceil(total_coins_to_steal / len(winner_team)) 
-print(f'Coins to give to each winner: {coins_to_give_to_each_winner}')
-extra_coins = (coins_to_give_to_each_winner * len(winner_team)) - total_coins_to_steal
-print(f'Inflation coins: {extra_coins}')
-"""
-    

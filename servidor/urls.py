@@ -21,6 +21,7 @@ urlpatterns = [
     path('logout/', main_views.logout, name='logout'),
     
     path('get_players_scores/', main_views.get_players_scores, name='get_players_scores'),
+    path('get_players_previous_scores/', main_views.get_players_previous_scores, name='get_players_previous_scores'),
     path('get_available_prizes/', main_views.get_available_prizes, name='get_available_prizes'),
     path('create_roulettes/', main_views.create_roulettes, name='create_roulettes'),
     path('send_prize_to_winner/', main_views.send_prize_to_winner, name='send_prize_to_winner'),
@@ -73,6 +74,7 @@ urlpatterns = [
     path('send_position/', bnumber_views.send_position, name='send_position'),
     path('get_bnumber_data/', bnumber_views.get_bnumber_data, name='get_bnumber_data'),
     path('finish_bnumber/', bnumber_views.finish_bnumber, name='finish_bnumber'),
+    path('has_finished_bnumber/', bnumber_views.has_finished_bnumber, name='has_finished_bnumber'),
 
     # Economic policy views
     path('decide_call_special_duel_or_santa/', main_views.decide_call_special_duel_or_santa, name='decide_call_special_duel_or_santa'),

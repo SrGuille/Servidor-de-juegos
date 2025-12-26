@@ -113,46 +113,64 @@ body {
 }
 
 /* --- Democracy game --- */
+#board {
+    display: grid;
+    gap: 0;
+    margin: 0 auto;
+    margin-top: 100px;
+    position: relative;
+    width: fit-content;
+}
+
 .green-cell{
-    position: absolute;
     background-color: #2c782f;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 .red-cell{
-    position: absolute;
     background-color: #b53a33;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 .neutral-cell{
-    position: absolute;
     background-color: #b5b5b5;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 .character{
     position: absolute;
-    background-color: black;
+    z-index: 10;
+    object-fit: contain;
 }
 
 #countdown{
-    display: block; 
-    margin-right: auto; 
-    margin-left: auto;  
-    margin-top: auto;
-    margin-bottom: auto;
-    text-align: center;
-    height: auto;
-    z-index: 2; 
-    position: relative;
-    font-size: 700px;
+    display: none;
 }
 
 #rounds_left{
-    display: block; 
-    margin-right: auto; 
-    margin-left: auto;  
-    margin-top: 60px;
-    text-align: center;
-    height: auto;
-    position: relative;
-    font-size: 50px;
-    color: black;
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: bold;
+    color: white;
+    background: #ff8c00;
+    padding: 0 30px;
+    min-width: 200px;
+    height: 60px;
+    border-radius: 35px;
+    box-shadow: 0 4px 16px rgba(255, 140, 0, 0.4);
+    z-index: 200;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: 1px;
+    white-space: nowrap;
 }
 
 #result_democracy{
@@ -699,6 +717,285 @@ body {
   @media(max-width:800px){
       .tpl-snow > div:nth-of-type(36) ~ *{display:none;}
   }
+  
+/* --- Victory Modal --- */
+.victory-modal-overlay {
+    display: none !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+    /* Aislar del contexto flex del padre */
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.victory-modal-overlay.show {
+    display: flex !important;
+}
+
+.victory-modal {
+    position: relative;
+    background: linear-gradient(180deg, #1a472a 0%, #0d2818 50%, #1a472a 100%);
+    border-radius: 25px;
+    padding: 80px 120px;
+    min-width: 600px;
+    max-width: 85vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 0 50px rgba(196, 30, 58, 0.5), 
+                0 0 100px rgba(196, 30, 58, 0.3),
+                inset 0 0 50px rgba(255, 255, 255, 0.05);
+    border: 5px solid #c41e3a;
+    text-align: center;
+    animation: modalAppear 0.5s ease-out;
+}
+
+.victory-modal::before,
+.victory-modal::after {
+    content: '❄';
+    position: absolute;
+    top: 20px;
+    font-size: 2.5em;
+    color: #a8d5e5;
+    animation: snowflakeSpin 4s linear infinite;
+}
+
+.victory-modal::before {
+    left: 30px;
+}
+
+.victory-modal::after {
+    right: 30px;
+    animation-delay: -2s;
+}
+
+@keyframes snowflakeSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.5) translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.victory-modal-title {
+    font-size: 4em;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8),
+                 0 0 20px rgba(255, 215, 0, 0.5),
+                 0 2px 4px rgba(0, 0, 0, 0.8);
+    margin-bottom: 40px;
+    font-weight: bold;
+    font-family: 'Lobster', cursive;
+    animation: christmasGlow 3s ease-in-out infinite;
+}
+
+@keyframes christmasGlow {
+    0%, 100% {
+        color: #ffd700;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.8),
+                     0 0 20px rgba(255, 215, 0, 0.5);
+    }
+    50% {
+        color: #ff6b6b;
+        text-shadow: 0 0 10px rgba(196, 30, 58, 0.8),
+                     0 0 20px rgba(196, 30, 58, 0.5);
+    }
+}
+
+.victory-modal-content {
+    font-size: 2em;
+    color: #ffffff;
+    line-height: 1.8;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.victory-modal-content .advantage-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-size: 0.9em;
+    color: #e0e0e0;
+}
+
+/* Christmas lights decoration */
+.victory-modal-title::before,
+.victory-modal-title::after {
+    content: '★';
+    margin: 0 15px;
+    font-size: 0.6em;
+    vertical-align: middle;
+}
+
+.victory-modal-title::before {
+    color: #c41e3a;
+    animation: twinkle 1s ease-in-out infinite;
+}
+
+.victory-modal-title::after {
+    color: #1a472a;
+    animation: twinkle 1s ease-in-out infinite 0.5s;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ==================== RANKING ANIMATION STYLES ==================== */
+.ranking-row {
+    transition: all 0.5s ease-in-out;
+    position: relative;
+}
+
+.movable-row {
+    --move-x: 0px;
+    --move-y: 0px;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.movable-row.moving {
+    transform: translate(var(--move-x), var(--move-y));
+    z-index: 100;
+}
+
+.ranking-row.fade-out {
+    opacity: 0;
+    z-index: 1;
+}
+
+.ranking-row.fade-in {
+    animation: slideIn 0.6s ease-out forwards;
+    z-index: 10;
+}
+
+/* Content fade during movement */
+.content-fade {
+    animation: contentFadeOut 0.4s ease-out forwards;
+}
+
+.content-appear {
+    animation: contentFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes contentFadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.8); }
+}
+
+@keyframes contentFadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Ensure tbody has proper stacking context */
+#tbody-ranking-left,
+#tbody-ranking-right {
+    position: relative;
+    z-index: 5;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Coin change indicators */
+.coin-gain {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 0.9em;
+    animation: pulseGreen 0.5s ease-in-out;
+}
+
+.coin-loss {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 0.9em;
+    animation: pulseRed 0.5s ease-in-out;
+}
+
+@keyframes pulseGreen {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); color: #20c997; }
+}
+
+@keyframes pulseRed {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); color: #ff6b6b; }
+}
+
+/* Position change indicators */
+.position-change-cell, .position-header {
+    width: 40px;
+    text-align: center;
+    padding: 5px;
+}
+
+.position-up {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.1em;
+    animation: bounceUp 0.6s ease-out;
+}
+
+.position-down {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 1.1em;
+    animation: bounceDown 0.6s ease-out;
+}
+
+.position-same {
+    color: #6c757d;
+    font-size: 1em;
+}
+
+@keyframes bounceUp {
+    0% { transform: translateY(10px); opacity: 0; }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bounceDown {
+    0% { transform: translateY(-10px); opacity: 0; }
+    50% { transform: translateY(5px); }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.coins-cell {
+    white-space: nowrap;
+}
+  
+  
   
   
   

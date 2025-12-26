@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Modal Victoria</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+        }
+
+        /* Test button */
+        .test-button {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 40px;
+            font-size: 1.2em;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            color: #1a1a2e;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .test-button:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        .instructions {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h2>Test del Modal de Victoria</h2>
+        <p>Haz clic en el botón para ver el modal</p>
+    </div>
+
+    <!-- Modal de Victoria -->
+    <div id="victory-modal-overlay" class="victory-modal-overlay">
+        <div class="victory-modal">
+            <div class="victory-modal-title">Resultado</div>
+            <div id="victory-modal-content" class="victory-modal-content">
+                ¡Ha ganado el equipo Verde por haber llenado más números!<br><br>
+                Ventaja sobre el equipo Rojo: 3 números.<br>
+                Ventaja sobre el equipo Azul: 5 números.<br>
+                Ventaja sobre el equipo Amarillo: 2 números.
+            </div>
+        </div>
+    </div>
+
+    <button class="test-button" onclick="toggleModal()">Mostrar Modal</button>
+
+    <script>
+        let modalVisible = false;
+
+        function toggleModal() {
+            const modal = document.getElementById('victory-modal-overlay');
+            const button = document.querySelector('.test-button');
+            
+            if (modalVisible) {
+                modal.classList.remove('show');
+                button.textContent = 'Mostrar Modal';
+            } else {
+                modal.classList.add('show');
+                button.textContent = 'Ocultar Modal';
+            }
+            modalVisible = !modalVisible;
+        }
+
+        // Cerrar modal al hacer clic fuera de él
+        document.getElementById('victory-modal-overlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                toggleModal();
+            }
+        });
+    </script>
+</body>
+</html>

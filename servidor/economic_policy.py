@@ -218,12 +218,12 @@ class EconomicPolicy:
             If the monetary base is greater than the initial one, tax the players
             If the monetary base is less than the initial one, aid the players
         """
-        # Update it
+        free_coins_players = self.free_coins_to_very_poor_players() # Free 5 coins to the poorest players (avoid cliping)
+        
         self.players_sorted_by_richness = self.get_players_sorted_by_richness()
         players = q.get_logged_players()
         constant_monetary_base = len(players) * c.INITIAL_COINS # Fix monetary base
         print(f'Constant monetary base: {constant_monetary_base}')
-        self.free_coins_to_very_poor_players(players) # Free 5 coins to the poorest players
 
         current_monetary_base = self.get_current_monetary_base(players)
         print(f'Current monetary base: {current_monetary_base}')
@@ -239,19 +239,47 @@ class EconomicPolicy:
         else:
             print(f'No inflation or deflation')
 
+        # Merge free_coins_players with regulated_players
+        # A player could have received free coins AND additional aid/tax
+        regulated_players = self.merge_regulated_players(free_coins_players, regulated_players)
+
         # Now we have the definitive coins for each player after this game
         main_views.main_controller_.insert_coins_evolution_for_game()
 
         return regulated_players
 
-    def free_coins_to_very_poor_players(self, players: list[Player]):
+    def merge_regulated_players(self, free_coins_players: list, regulated_players: list):
+        """
+            Merge free_coins_players with regulated_players
+            If a player is in both lists, sum their coin_change
+        """
+        merged = {p['nick']: p['coin_change'] for p in regulated_players}
+        
+        for free_player in free_coins_players:
+            nick = free_player['nick']
+            if nick in merged:
+                # Player received free coins AND additional regulation
+                merged[nick] += free_player['coin_change']
+            else:
+                # Player only received free coins
+                merged[nick] = free_player['coin_change']
+        
+        return [{'nick': nick, 'coin_change': coin_change} for nick, coin_change in merged.items()]
+
+    def free_coins_to_very_poor_players(self):
         """
             Free coins to the poorest players
+            Returns the list of players who received free coins
         """
+        free_coins_players = []
+        players = q.get_logged_players()
         for player in players:
             if player.coins < self.aid_clip_coins:
-                q.add_coins_to_player(player.name, self.aid_clip_coins - player.coins)
-                print(f'Player {player.name} has been aided with {self.aid_clip_coins - player.coins} coins')
+                coins_given = self.aid_clip_coins - player.coins
+                q.add_coins_to_player(player.name, coins_given)
+                print(f'Player {player.name} has been aided with {coins_given} coins')
+                free_coins_players.append(RegulatedPlayer(player.nick, coins_given).serialize())
+        return free_coins_players
 
     def get_current_monetary_base(self, players: list[Player]):
         current_monetary_base = 0

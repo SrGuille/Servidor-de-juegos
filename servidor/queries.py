@@ -70,16 +70,12 @@ def change_player_nick(name, nick):
 def add_new_prizes():
     """
         Add the player's prizes of a reseted player. 
-        It adds 1 prize of each type and 10 candies
+        It adds 1 prize of each type
     """
     # Add 1 prize of each type
     prizes = Prize.objects.all()
     for prize in prizes: # Change each prize amount
-        if prize.type == c.CANDY:
-            prize.amount += 10
-        else:
-            prize.amount += 1
-        
+        prize.amount += 1
         prize.save()
 
 def get_players_names():
@@ -217,11 +213,11 @@ def insert_coins_evolution(player, game_number):
         Auto-conflict resolution for game_number: if there is already an object for that game_number,
         increment game_number until finding a free one
     """
-    # Check if there is already an object for that game_number (player-independent)
-    existing_coins_evolution = Coins_evolution.objects.filter(game_number=game_number)
+    # Check if there is already an object for that player and game_number
+    existing_coins_evolution = Coins_evolution.objects.filter(player=player, game_number=game_number)
     while existing_coins_evolution.exists():
         game_number += 1
-        existing_coins_evolution = Coins_evolution.objects.filter(game_number=game_number)
+        existing_coins_evolution = Coins_evolution.objects.filter(player=player, game_number=game_number)
     
     # Insert the non-existing object
     coins_evolution = Coins_evolution(player=player, coins=player.coins, game_number=game_number)
