@@ -20,17 +20,21 @@
         <div class="column" id="player1">
             <div class="stats-box-container">
                 <div class="stats-box">
-                    <div id="bullets" class="stat">
+                    <div style="display: flex;" id="bullets" class="stat">
                         <span id="bullet-count">0</span>
-                        <img src="{% static 'img/gunman/reload.png' %}" alt="Bullet" class="bullet-image">
+                        <img src="{% static 'img/gunman/reload.png' %}" alt="Balas" class="bullet-image">
                     </div>
-                    <div id="shields" class="stat">
+                    <div style="display: flex;" id="shields" class="stat">
                         <span id="shield-count">0</span>
-                        <img src="{% static 'img/gunman/shield.png' %}" alt="Shield" class="shield-image">
+                        <img src="{% static 'img/gunman/shield.png' %}" alt="Escudos" class="shield-image">
+                    </div>
+                    <div style="display: none;" id="streak_length" class="stat">
+                        <span id="streak-length-count">0</span>
+                        <img src="{% static 'img/gunman/streak.png' %}" alt="Racha" class="streak-length-image">
                     </div>
                     <div style="display: none;" id="lives" class="stat">
                         <span id="lives-count">0</span>
-                        <img src="{% static 'img/gunman/lives.png' %}" alt="Lives" class="lives-image">
+                        <img src="{% static 'img/gunman/lives.png' %}" alt="Vidas" class="lives-image">
                     </div>
                 </div>
             </div>
@@ -44,17 +48,21 @@
         <div class="column" id="player2">
             <div class="stats-box-container">
                 <div class="stats-box">
-                    <div id="bullets" class="stat">
+                    <div style="display: flex;" id="bullets" class="stat">
                         <span id="bullet-count">0</span>
-                        <img src="{% static 'img/gunman/reload.png' %}" alt="Bullet" class="bullet-image">
+                        <img src="{% static 'img/gunman/reload.png' %}" alt="Balas" class="bullet-image">
                     </div>
-                    <div id="shields" class="stat">
+                    <div style="display: flex;" id="shields" class="stat">
                         <span id="shield-count">0</span>
-                        <img src="{% static 'img/gunman/shield.png' %}" alt="Shield" class="shield-image">
+                        <img src="{% static 'img/gunman/shield.png' %}" alt="Escudos" class="shield-image">
+                    </div>
+                    <div style="display: none;" id="streak_length" class="stat">
+                        <span id="streak-length-count">0</span>
+                        <img src="{% static 'img/gunman/streak.png' %}" alt="Racha" class="streak-length-image">
                     </div>
                     <div style="display: none;" id="lives" class="stat">
                         <span id="lives-count">0</span>
-                        <img src="{% static 'img/gunman/lives.png' %}" alt="Lives" class="lives-image">
+                        <img src="{% static 'img/gunman/lives.png' %}" alt="Vidas" class="lives-image">
                     </div>
                 </div>
             </div>
@@ -154,12 +162,6 @@
         gap: 5px;
     }
 
-    .bullet-image {
-        width: 20px;
-        height: auto;
-        object-fit: contain;
-    }
-
     .name {
         font-size: 24px;
         font-weight: bold;
@@ -175,7 +177,13 @@
         align-items: center;
     }
 
-    .bullet-image, .shield-image, .lives-image {
+    .bullet-image {
+        width: 20px; /* Scales the image to fit */
+        height: auto;
+        object-fit: contain;
+    }
+
+    .shield-image, .lives-image, .streak-length-image {
         width: 30px; /* Scales the image to fit */
         height: auto;
         object-fit: contain;

@@ -14,7 +14,7 @@ class MainController:
         
         # Game state attributes
         self.current_game_id = -1
-        self.remaining_rounds = 0
+        self.remaining_rounds = 0 #Configured rounds of the current game
         self.game_number = q.get_stored_game_number() # In case the server is restarted (it will be incremented in transition_to_next_game)
         print(f"Stored game number: {self.game_number}")
         print(f"Remaining games: {q.get_remaining_prizes()}")
@@ -62,6 +62,8 @@ class MainController:
 
         if(self.remaining_rounds > 0):
             self.remaining_rounds -= 1
+
+        print(f'Remaining rounds: {self.remaining_rounds}')
         
         if(self.remaining_rounds == 0): # If there are no more rounds, return -1
             self.current_game_id = -1

@@ -10,7 +10,7 @@ class BNumberGame:
 
     def __init__(self):
 
-        self.LIST_SIZE = 6
+        self.LIST_SIZE = 8
         self.NUMBER_RANGE = (10 * self.LIST_SIZE) - 1
         self.REWARD_PER_ADVANTAGE = 5
         self.TEAM_NAMES = ('Verde', 'Rojo', 'Azul', 'Amarillo')  # Possible team names
@@ -86,15 +86,11 @@ class BNumberGame:
     
     def has_finished(self) -> bool:
         """
-            Returns true if any team has completed the list
+            Returns true if the game is not ready (call it only after several seconds of starting the game)
         """
-        self.players_lock.acquire()
         has_finished = False
-        for team_name in self.TEAM_NAMES[:self.num_teams]:
-            if self.get_number_of_non_empty_positions(team_name) == self.LIST_SIZE:
-                has_finished = True
-                break
-        self.players_lock.release()
+        if not main_views.main_controller_.get_can_players_interact(): # The game is not ready
+            has_finished = True
         return has_finished
 
     def register_position(self, name: str, position: int) -> Tuple[int, bool]:
