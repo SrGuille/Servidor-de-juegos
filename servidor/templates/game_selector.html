@@ -28,7 +28,7 @@
       <article class="game-card game-card--random">
         <button class="game-select" type="button" onclick="set_random_game()" aria-label="Seleccionar juego aleatorio">
           <div class="game-media">
-            <img src="{% static 'img/hat-loader.gif' %}" alt="Aleatorio" loading="lazy">
+            <img src="{% static 'img/ICONO_JUEGO_ALEATORIO.svg' %}" alt="Aleatorio" loading="lazy">
           </div>
           <div class="game-name">Aleatorio</div>
         </button>
@@ -48,7 +48,7 @@
       <article class="game-card" data-game-id="0">
         <button class="game-select" type="button" onclick="set_next_game(0)" aria-label="Seleccionar Ruleta">
           <div class="game-media">
-            <img src="{% static 'img/hat-loader.gif' %}" alt="Ruleta" loading="lazy">
+            <img src="{% static 'img/ICONO_RULETA.svg' %}" alt="Ruleta" loading="lazy">
           </div>
           <div class="game-name">Ruleta</div>
         </button>
@@ -63,7 +63,7 @@
         </div>
       </article>
 
-      <!-- GAME 1 -->
+      <!-- GAME 1 este ya no mete cabra saramambiche
       <article class="game-card" data-game-id="1">
         <button class="game-select" type="button" onclick="set_next_game(1)" aria-label="Seleccionar Ahorcado">
           <div class="game-media">
@@ -80,13 +80,13 @@
             <button class="rounds-btn" type="button" data-target="rounds1" data-delta="1" aria-label="Sumar ronda">+</button>
           </div>
         </div>
-      </article>
+      </article> -->
 
       <!-- GAME 2 -->
       <article class="game-card" data-game-id="2">
         <button class="game-select" type="button" onclick="set_next_game(2)" aria-label="Seleccionar Democracia">
           <div class="game-media">
-            <img src="{% static 'img/hat-loader.gif' %}" alt="Democracia" loading="lazy">
+            <img src="{% static 'img/ICONO_DEMOCRACIA.svg' %}" alt="Democracia" loading="lazy">
           </div>
           <div class="game-name">Democracia</div>
         </button>
@@ -105,7 +105,7 @@
       <article class="game-card" data-game-id="3">
         <button class="game-select" type="button" onclick="set_next_game(3)" aria-label="Seleccionar Pistolero">
           <div class="game-media">
-            <img src="{% static 'img/hat-loader.gif' %}" alt="Pistolero" loading="lazy">
+            <img src="{% static 'img/ICONO_PISTOLERO.svg' %}" alt="Pistolero" loading="lazy">
           </div>
           <div class="game-name">Pistolero</div>
         </button>
@@ -124,7 +124,7 @@
       <article class="game-card" data-game-id="4">
         <button class="game-select" type="button" onclick="set_next_game(4)" aria-label="Seleccionar Números ciegos">
           <div class="game-media">
-            <img src="{% static 'img/hat-loader.gif' %}" alt="Números ciegos" loading="lazy">
+            <img src="{% static 'img/ICONO_NUMEROS_CIEGOS.svg' %}" alt="Números ciegos" loading="lazy">
           </div>
           <div class="game-name">Números ciegos</div>
         </button>
@@ -138,6 +138,45 @@
           </div>
         </div>
       </article>
+
+      <!-- GAME 5 -->
+      <article class="game-card" data-game-id="5">
+        <button class="game-select" type="button" onclick="set_next_game(5)" aria-label="Seleccionar Palabrazo!">
+          <div class="game-media">
+            <img src="{% static 'img/ICONO_PALABRAZO.svg' %}" alt="Números ciegos" loading="lazy">
+          </div>
+          <div class="game-name">PALABRAZO!</div>
+        </button>
+
+        <div class="rounds-bubble" aria-label="Rondas Palabrazo!">
+          <div class="rounds-bubble-title">Rondas</div>
+          <div class="rounds-stepper" role="group" aria-label="Rondas Palabrazo!">
+            <button class="rounds-btn" type="button" data-target="rounds5" data-delta="-1" aria-label="Restar ronda">−</button>
+            <input class="rounds-input" type="number" id="rounds5" name="rounds5" value="1" min="1" max="99" inputmode="numeric">
+            <button class="rounds-btn" type="button" data-target="rounds5" data-delta="1" aria-label="Sumar ronda">+</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- GAME 6 -->
+      <article class="game-card" data-game-id="6">
+        <button class="game-select" type="button" onclick="set_next_game(6)" aria-label="Seleccionar Calcetines apestosos">
+          <div class="game-media">
+            <img src="{% static 'img/ICONO_CALCETINES_APESTOSOS.svg' %}" alt="Números ciegos" loading="lazy">
+          </div>
+          <div class="game-name">Calcetines apestosos</div>
+        </button>
+
+        <div class="rounds-bubble" aria-label="Rondas Calcetines apestosos">
+          <div class="rounds-bubble-title">Rondas</div>
+          <div class="rounds-stepper" role="group" aria-label="Rondas Calcetines apestosos">
+            <button class="rounds-btn" type="button" data-target="rounds6" data-delta="-1" aria-label="Restar ronda">−</button>
+            <input class="rounds-input" type="number" id="rounds6" name="rounds6" value="1" min="1" max="99" inputmode="numeric">
+            <button class="rounds-btn" type="button" data-target="rounds6" data-delta="1" aria-label="Sumar ronda">+</button>
+          </div>
+        </div>
+      </article>
+
     </section>
 
     <footer class="games-footer" aria-label="Edición">

@@ -260,7 +260,7 @@ body{
 .login-subtitle{
   margin: 0;
   font-family: "Advent Pro", system-ui;
-  font-size: .98rem;
+  font-size: 1.5rem;
   color: var(--neutral-700, #3b3f45);
 }
 
@@ -558,346 +558,324 @@ body{
 }
 
 
-          /* =========================
-      GAME SELECTOR (Admin/Web/TV)
-      Body: class="page-games"
-      Fondo tipo login + cards Wii + bocadillo de rondas
-      ========================= */
+/* =========================
+   GAME SELECTOR (Admin/Web/TV)
+   Sustituye tu bloque entero por este
+   ========================= */
 
-    .page-games{
-      min-height: 100vh;
-      margin: 0;
-      background-image:
-        radial-gradient(900px 520px at 50% 18%, rgba(176,229,255,.20), transparent 60%),
-        radial-gradient(800px 520px at 18% 78%, rgba(0,153,89,.14), transparent 62%),
-        radial-gradient(820px 560px at 82% 76%, rgba(153,29,50,.14), transparent 62%),
-        url("../img/portada.jpg");
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: cover;
-    }
+.page-games{
+  min-height: 100vh;
+  margin: 0;
+  background-image:
+    radial-gradient(900px 520px at 50% 18%, rgba(176,229,255,.20), transparent 60%),
+    radial-gradient(800px 520px at 18% 78%, rgba(0,153,89,.14), transparent 62%),
+    radial-gradient(820px 560px at 82% 76%, rgba(153,29,50,.14), transparent 62%),
+    url("../img/portada.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
 
-    .games{
-      position: relative;
-      z-index: 2;
-      min-height: 100vh;
+.games{
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-      padding: clamp(18px, 2vw, 34px);
-      gap: 16px;
-    }
+  padding: clamp(18px, 2vw, 34px);
+  gap: 16px;
+}
 
-    /* Header */
-    .games-header{
-      width: min(1280px, 100%);
-      text-align: center;
-    }
+/* Header */
+.games-header{
+  width: min(1280px, 100%);
+  text-align: center;
+}
 
-    .games-title{
-      margin: 0;
-      font-family: "Great Vibes", cursive;
-      font-size: clamp(44px, 5vw, 84px);
-      line-height: 1;
-      color: var(--primary-500, #991D32);
-      text-shadow: 0 0 18px rgba(176,229,255,.22);
-    }
+.games-title{
+  margin: 0;
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(44px, 5vw, 84px);
+  line-height: 1;
+  color: var(--primary-500, #991D32);
+  text-shadow: 0 0 18px rgba(176,229,255,.22);
+}
 
-    .games-subtitle{
-      margin: 8px 0 0;
-      font-family: "Advent Pro", system-ui;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: var(--neutral-700, #3b3f45);
-    }
+.games-subtitle{
+  margin: 8px 0 0;
+  font-family: "Advent Pro", system-ui;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--neutral-700, #3b3f45);
+}
 
-    /* Flex wrap centrado */
-    .games-grid{
-      width: min(1280px, 100%);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-content: flex-start;
-      gap: clamp(14px, 1.6vw, 22px);
-    }
+/* Flex wrap centrado */
+.games-grid{
+  width: min(1280px, 100%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: clamp(14px, 1.6vw, 22px);
+}
 
-    /* Card */
-    .game-card{
-      flex: 0 1 clamp(240px, 18vw, 300px);
+/* -------------------------
+   Glow Border animado (hover)
+   ------------------------- */
 
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(176,229,255,.40);
-      border-radius: 16px;
-      box-shadow: 0 14px 34px rgba(0,0,0,.18);
-      overflow: hidden;
+@keyframes steam{
+  0%   { background-position: 0 0, 0 0; }
+  50%  { background-position: 0 0, 400% 0; }
+  100% { background-position: 0 0, 0 0; }
+}
 
-      display: flex;
-      flex-direction: column;
+.game-card{
+  flex: 0 1 clamp(240px, 18vw, 300px);
 
-      position: relative;
-      transition: transform .14s ease, box-shadow .18s ease;
-    }
+  /* Borde gradiente corporativo + fondo blanco */
+  border: 2px solid transparent;
+  background:
+    linear-gradient(rgba(255,255,255,.92), rgba(255,255,255,.92)) padding-box,
+    linear-gradient(
+      45deg,
+      #009959,
+      #B0E5FF,
+      #991D32,
+      #009959,
+      #B0E5FF,
+      #991D32
+    ) border-box;
 
-    /* Clickable area */
-    .game-select{
-      all: unset;
-      cursor: pointer;
-      display: block;
-    }
+  background-size: auto, 400% 400%;
+  background-position: 0 0, 0 0;
 
-    .game-select:focus-visible{
-      outline: none;
-      box-shadow: 0 0 0 4px rgba(176,229,255,.34);
-    }
+  border-radius: 16px;
+  box-shadow: 0 14px 34px rgba(0,0,0,.18);
+  overflow: hidden;
 
-    /* Media */
-    .game-media{
-      aspect-ratio: 16 / 10;
-      background: rgba(176,229,255,.16);
-      overflow: hidden;
-    }
+  display: flex;
+  flex-direction: column;
 
-    .game-media img{
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+  position: relative;
+  transition: transform .14s ease, box-shadow .18s ease;
+}
 
-    /* Name */
-    .game-name{
-      padding: 10px 12px;
-      text-align: center;
+.game-card:hover,
+.game-card:focus-within{
+  transform: translateY(-2px);
 
-      font-family: "Advent Pro", system-ui;
-      font-weight: 800;
-      font-size: 1.25rem;
-      color: var(--text, #121417);
+  /* Halo navideño */
+  box-shadow:
+    0 16px 38px rgba(0,0,0,.20),
+    0 0 22px rgba(0,153,89,.22),
+    0 0 22px rgba(153,29,50,.18),
+    0 0 22px rgba(176,229,255,.16);
 
-      border-top: 1px solid rgba(176,229,255,.35);
-    }
+  /* Animación borde */
+  animation: steam 10s linear infinite;
+}
 
-    /* =========================
-      Hover/focus: borde con “glow” tipo login (radial gradients)
-      sin overlays feos, sin estirar layout
-      ========================= */
+/* Clickable area */
+.game-select{
+  all: unset;
+  cursor: pointer;
+  display: block;
+}
 
-    /* Creamos un “marco” gradiente alrededor con pseudo-elemento */
-    .game-card::after{
-      content: "";
-      position: absolute;
-      inset: -2px;                 /* grosor del “borde” */
-      border-radius: 18px;         /* 16px + 2px */
-      z-index: -1;
+.game-select:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(176,229,255,.34);
+}
 
-      opacity: 0;
-      transform: scale(0.995);
-      transition: opacity .18s ease, transform .18s ease;
+/* Media */
+.game-media{
+  aspect-ratio: 16 / 10;
+  background: rgba(176,229,255,.16);
+  overflow: hidden;
+}
 
-      /* El look del login */
-      background-image:
-        radial-gradient(900px 520px at 50% 18%, rgba(176,229,255,.22), transparent 60%),
-        radial-gradient(800px 520px at 18% 78%, rgba(0,153,89,.18), transparent 62%),
-        radial-gradient(820px 560px at 82% 76%, rgba(153,29,50,.18), transparent 62%);
-      filter: blur(0.2px);
-    }
+.game-media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
-    .game-card:hover,
-    .game-card:focus-within{
-      transform: translateY(-2px);
-      box-shadow:
-        0 14px 34px rgba(0,0,0,.18),
-        0 0 26px rgba(176,229,255,.18);
-    }
+/* Name */
+.game-name{
+  padding: 10px 12px;
+  text-align: center;
 
-    .game-card:hover::after,
-    .game-card:focus-within::after{
-      opacity: 1;
-      transform: scale(1);
-    }
+  font-family: "Advent Pro", system-ui;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--text, #121417);
 
-    /* =========================
-      Bocadillo de Rondas (aparece en hover/focus)
-      Mover con --bx sin estirar (importantísimo)
-      ========================= */
+  border-top: 1px solid rgba(176,229,255,.35);
+}
 
-    .rounds-bubble{
-      position: absolute;
-      left: 14px;
-      top: 14px;
-      z-index: 5;
+/* -------------------------
+   Bocadillo de rondas (70% derecha)
+   ------------------------- */
 
-      /* offset horizontal del bocadillo */
-      --bx: 0px;
+.rounds-bubble{
+  position: absolute;
+  top: 14px;
+  left: 70%;
+  z-index: 5;
 
-      padding: 10px;
-      border-radius: 14px;
+  --by: 0px;
+  --tail-x: 0px;
+  --tail-rot: 0deg;
 
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(176,229,255,.55);
-      box-shadow:
-        0 12px 22px rgba(0,0,0,.16),
-        0 0 16px rgba(176,229,255,.18);
+  padding: 10px;
+  border-radius: 14px;
 
-      opacity: 0;
-      transform: translate(var(--bx), -6px);
-      pointer-events: none;
-      transition: opacity .16s ease, transform .16s ease;
-    }
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(176,229,255,.55);
+  box-shadow:
+    0 12px 22px rgba(0,0,0,.16),
+    0 0 16px rgba(176,229,255,.18);
 
-    .game-card:hover .rounds-bubble,
-    .game-card:focus-within .rounds-bubble{
-      opacity: 1;
-      transform: translate(var(--bx), 0);
-      pointer-events: auto;
-    }
+  opacity: 0;
+  transform: translate(-50%, calc(-6px + var(--by)));
+  pointer-events: none;
+  transition: opacity .16s ease, transform .16s ease;
+}
 
-    /* En pantallas sin hover (táctil) se queda visible */
-    @media (hover: none){
-      .rounds-bubble{
-        opacity: 1;
-        transform: translate(var(--bx), 0);
-        pointer-events: auto;
-      }
-    }
+.rounds-bubble::after{
+  content: "";
+  position: absolute;
+  left: calc(50% + var(--tail-x));
+  top: 100%;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  border-top-color: rgba(255,255,255,.92);
+  transform: translateX(-50%) rotate(var(--tail-rot));
+  transform-origin: top center;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,.12));
+}
 
-    /* Piquito del bocadillo */
-    .rounds-bubble::after{
-      content: "";
-      position: absolute;
-      left: calc(18px + var(--tail-x, 0px));
-      top: 100%;
-      width: 0;
-      height: 0;
-      border: 8px solid transparent;
-      border-top-color: rgba(255,255,255,.92);
-      transform: rotate(var(--tail-rot, 0deg));
-      transform-origin: top left;
-      filter: drop-shadow(0 6px 8px rgba(0,0,0,.12));
-    }
+.game-card:hover .rounds-bubble,
+.game-card:focus-within .rounds-bubble{
+  opacity: 1;
+  transform: translate(-50%, var(--by));
+  pointer-events: auto;
+}
 
-    .rounds-bubble-title{
-      font-family: "Advent Pro", system-ui;
-      font-weight: 800;
-      font-size: 1rem;
-      color: var(--neutral-700, #3b3f45);
-      margin-bottom: 6px;
-    }
+/* En táctil: visible siempre */
+@media (hover: none){
+  .rounds-bubble{
+    opacity: 1;
+    transform: translate(-50%, var(--by));
+    pointer-events: auto;
+  }
+}
 
-    /* Stepper */
-    .rounds-stepper{
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+.rounds-bubble-title{
+  font-family: "Advent Pro", system-ui;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--neutral-700, #3b3f45);
+  margin-bottom: 6px;
+}
 
-      padding: 6px;
-      border-radius: 14px;
+/* Stepper */
+.rounds-stepper{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 
-      background: rgba(176,229,255,.16);
-      border: 1px solid rgba(176,229,255,.35);
-    }
+  padding: 6px;
+  border-radius: 14px;
 
-    .rounds-btn{
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
+  background: rgba(176,229,255,.16);
+  border: 1px solid rgba(176,229,255,.35);
+}
 
-      border: 1px solid rgba(176,229,255,.45);
-      background: rgba(255,255,255,.90);
-      box-shadow: 0 10px 18px rgba(0,0,0,.10);
+.rounds-btn{
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
 
-      font-family: "Advent Pro", system-ui;
-      font-weight: 900;
-      font-size: 1.3rem;
-      line-height: 1;
+  border: 1px solid rgba(176,229,255,.45);
+  background: rgba(255,255,255,.90);
+  box-shadow: 0 10px 18px rgba(0,0,0,.10);
 
-      cursor: pointer;
-      transition: transform .10s ease, filter .15s ease;
-    }
+  font-family: "Advent Pro", system-ui;
+  font-weight: 900;
+  font-size: 1.3rem;
+  line-height: 1;
 
-    .rounds-btn:hover{ filter: brightness(1.03); }
-    .rounds-btn:active{ transform: translateY(1px); }
+  cursor: pointer;
+  transition: transform .10s ease, filter .15s ease;
+}
 
-    .rounds-input{
-      width: 62px;
-      min-height: 40px;
-      padding: 6px 8px;
+.rounds-btn:hover{ filter: brightness(1.03); }
+.rounds-btn:active{ transform: translateY(1px); }
 
-      text-align: center;
+.rounds-input{
+  width: 62px;
+  min-height: 40px;
+  padding: 6px 8px;
 
-      font-family: "Advent Pro", system-ui;
-      font-weight: 900;
-      font-size: 1.1rem;
+  text-align: center;
 
-      color: var(--text, #121417);
-      background: #fff;
+  font-family: "Advent Pro", system-ui;
+  font-weight: 900;
+  font-size: 1.1rem;
 
-      border: 1px solid var(--neutral-300, #d4d7db);
-      border-radius: 12px;
-      outline: none;
+  color: var(--text, #121417);
+  background: #fff;
 
-      transition: border-color .15s ease, box-shadow .15s ease;
-    }
+  border: 1px solid var(--neutral-300, #d4d7db);
+  border-radius: 12px;
+  outline: none;
+}
 
-    .rounds-input:focus{
-      border-color: var(--primary-600, #871A2C);
-      box-shadow: 0 0 0 4px rgba(176,229,255,.32);
-    }
+/* Oculta spinners nativos */
+.rounds-input::-webkit-outer-spin-button,
+.rounds-input::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+  margin: 0;
+}
+.rounds-input{
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
 
-    /* Oculta spinners nativos */
-    .rounds-input::-webkit-outer-spin-button,
-    .rounds-input::-webkit-inner-spin-button{
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    .rounds-input{
-      appearance: textfield;
-      -moz-appearance: textfield;
-    }
+/* Footer (FIX) */
+.games-footer{
+  margin-top: 48px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 6px;
+}
 
-    /* =========================
-      “Hamster habla” (solo Random)
-      Mover bocadillo a la derecha + piquito apuntando al hamster
-      ========================= */
+.games-edition{
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(176,229,255,.35);
+  border-radius: 999px;
+  padding: 8px 14px;
 
-    .game-card--random .rounds-bubble{
-      --bx: 18px;       /* mueve el bocadillo a la derecha */
-      --tail-x: 14px;   /* mueve el piquito a la derecha */
-      --tail-rot: 12deg;/* inclinación hacia el hamster */
-    }
+  font-family: "Advent Pro", system-ui;
+  font-weight: 700;
+  color: var(--neutral-700, #3b3f45);
+}
 
-    /* Footer */
-    .games-footer{
-      margin-top: 48px;
-      width: 10%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-top: 6px;
-    align-items: center;
-    }
-
-    .games-edition{
-      background: rgba(255,255,255,.72);
-      border: 1px solid rgba(176,229,255,.35);
-      border-radius: 999px;
-      padding: 8px 14px;
-
-      font-family: "Advent Pro", system-ui;
-      font-weight: 700;
-      color: var(--neutral-700, #3b3f45);
-    }
-
-    /* TV grandes */
-    @media (min-width: 1400px){
-      .game-card{ flex-basis: clamp(280px, 16vw, 360px); }
-      .game-name{ font-size: 1.35rem; }
-      .rounds-btn{ width: 44px; height: 44px; font-size: 1.35rem; }
-      .rounds-input{ width: 72px; min-height: 44px; font-size: 1.15rem; }
-    }
-
+/* TV grandes */
+@media (min-width: 1400px){
+  .game-card{ flex-basis: clamp(280px, 16vw, 360px); }
+  .game-name{ font-size: 1.35rem; }
+  .rounds-btn{ width: 44px; height: 44px; font-size: 1.35rem; }
+  .rounds-input{ width: 72px; min-height: 44px; font-size: 1.15rem; }
+}
 
 
 
