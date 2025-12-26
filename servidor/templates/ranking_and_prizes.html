@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ranking</title>
+  <title>Premios</title>
 
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -15,51 +15,29 @@
   <audio src="{% static 'sounds/sonido_ruleta.mp3' %}" id="spinning_roulette_audio"></audio>
 </head>
 
-<body class="page-ranking">
-  <main class="ranking">
-    <header class="ranking-header">
-      <h1 id="title" class="titulo-pantalla">Clasificación</h1>
+<body class="page-prizes">
+  <main class="prizes">
+    <header class="prizes-header">
+      <h1 class="titulo-pantalla">Premios</h1>
     </header>
 
-    <section class="rank-card" aria-label="Tabla de clasificación">
-      <div id="ranking_container" class="ranking-tables">
-        <table class="rank-table" id="ranking-left">
-          <thead>
-            <tr>
-              <th scope="col">Nombre</th>
-              <th scope="col">Monedas</th>
-            </tr>
-          </thead>
-          <tbody id="tbody-ranking-left"></tbody>
-        </table>
-
-        <table class="rank-table" id="ranking-right">
-          <thead>
-            <tr>
-              <th scope="col">Nombre</th>
-              <th scope="col">Monedas</th>
-            </tr>
-          </thead>
-          <tbody id="tbody-ranking-right"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="roulette-card" aria-label="Ruletas">
-      <div class="box-roulette" id="roulettes_container">
-        <div class="roulette-col">
-          <img id="indicador1" class="roulette-indicator" src="{% static 'img/indicator.png' %}" alt="Indicador ruleta jugadores">
-          <div id="players_roulette_div"></div>
+    <section class="prizes-card" aria-label="Ruletas de jugadores y premios">
+      <div class="roulette-grid" id="roulettes_container">
+        <!-- Jugadores -->
+        <div class="roulette-slot">
+          <img class="roulette-indicator" src="{% static 'img/indicator.png' %}" alt="Indicador ruleta jugadores">
+          <div id="players_roulette_div" class="roulette-stage"></div>
         </div>
 
-        <div class="roulette-col">
-          <img id="indicador2" class="roulette-indicator" src="{% static 'img/indicator.png' %}" alt="Indicador ruleta premios">
-          <div id="prizes_roulette_div"></div>
+        <!-- Premios -->
+        <div class="roulette-slot">
+          <img class="roulette-indicator" src="{% static 'img/indicator.png' %}" alt="Indicador ruleta premios">
+          <div id="prizes_roulette_div" class="roulette-stage"></div>
         </div>
       </div>
 
       <div class="result-wrap">
-        <div class="animate__animated animate__fadeIn animate__slow" id="result"></div>
+        <div id="result" class="result-pill"></div>
       </div>
 
       <button id="enable_sounds" style="display:none;"></button>
@@ -75,15 +53,6 @@
     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
   </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      if (sessionStorage.getItem('special_duel') === 'true') {
-        after_special_duel();
-      } else {
-        get_ranking_and_spin_roulettes();
-      }
-    });
-  </script>
+  <!-- End Snow animation -->
 </body>
 </html>
