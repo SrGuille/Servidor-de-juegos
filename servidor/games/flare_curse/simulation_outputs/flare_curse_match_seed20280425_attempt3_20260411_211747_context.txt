@@ -1,0 +1,109 @@
+### Output (stdout and stderr interleaved):
+
+```
+time | alive | limit | offered | launch_flare_colors | mode | score | events
+  7.00 |     8 |     3 | purple | -                  | calm    | 0.000 | offer_opened;planned_claim_slow
+  9.75 |     8 |     3 |      - | -                  | calm    | 0.333 | claim;offer_closed;planned_launch_fast
+ 10.00 |     8 |     3 |  green | -                  | calm    | 0.333 | offer_opened;planned_claim_fast
+ 10.25 |     8 |     3 |  green | purple             | calm    | 0.302 | launch_flare
+ 10.50 |     8 |     3 |      - | -                  | calm    | 0.635 | claim;offer_closed;planned_launch_slow
+ 11.25 |     8 |     3 | orange | -                  | calm    | 0.635 | offer_opened;planned_claim_fast
+ 12.00 |     8 |     3 |      - | -                  | calm    | 0.969 | claim;offer_closed;planned_launch_fast
+ 12.50 |     8 |     3 |      - | orange             | calm    | 0.937 | launch_flare
+ 16.00 |     8 |     3 |      - | green              | calm    | 0.906 | launch_flare
+ 19.25 |     8 |     3 | purple | -                  | calm    | 0.906 | offer_opened;planned_claim_fast
+ 19.75 |     8 |     3 |      - | -                  | calm    | 1.239 | claim;offer_closed;planned_launch_slow
+ 20.75 |     8 |     3 | orange | -                  | calm    | 0.937 | offer_opened;planned_claim_fast
+ 21.25 |     8 |     3 |      - | -                  | calm    | 1.270 | claim;offer_closed;planned_launch_fast
+ 22.25 |     8 |     3 |      - | orange             | calm    | 1.239 | launch_flare
+ 25.75 |     8 |     3 |  green | -                  | calm    | 0.937 | offer_opened;planned_claim_fast
+ 26.00 |     8 |     3 |  green | purple             | calm    | 0.906 | launch_flare;planned_curse_fast
+ 26.75 |     7 |     3 |  green | -                  | calm    | 0.377 | curse_self_rebound;nuevo_jugador_maldito
+ 27.00 |     7 |     3 |      - | -                  | calm    | 0.711 | claim;offer_closed;planned_launch_slow
+ 31.00 |     7 |     3 |      - | green              | calm    | 0.679 | launch_flare
+ 31.25 |     7 |     3 | orange | -                  | calm    | 0.679 | offer_opened;planned_claim_fast
+ 31.75 |     7 |     3 |      - | -                  | calm    | 1.013 | claim;offer_closed;planned_launch_slow
+ 35.25 |     7 |     3 | purple | -                  | calm    | 0.711 | offer_opened;planned_claim_fast
+ 36.25 |     7 |     3 | purple | orange             | calm    | 0.377 | launch_flare
+ 36.50 |     7 |     3 |      - | -                  | calm    | 0.711 | claim;offer_closed;planned_launch_fast
+ 37.75 |     7 |     3 |      - | purple             | calm    | 0.906 | launch_flare;planned_curse_fast
+ 38.75 |     6 |     2 |      - | -                  | calm    | 0.900 | curse_enemy_hit;nuevo_jugador_maldito
+ 40.75 |     6 |     2 |  green | -                  | calm    | 0.900 | offer_opened;planned_claim_fast
+ 41.75 |     6 |     2 |      - | -                  | calm    | 1.000 | claim;offer_closed;planned_launch_fast
+ 42.25 |     6 |     2 |      - | green              | calm    | 0.900 | launch_flare
+ 45.25 |     6 |     2 | orange | -                  | calm    | 0.900 | offer_opened;planned_claim_slow
+ 48.75 |     6 |     2 |      - | -                  | calm    | 0.600 | claim;offer_closed;planned_launch_slow
+ 49.00 |     6 |     2 | purple | -                  | calm    | 0.900 | offer_opened;planned_claim_slow
+ 51.00 |     6 |     2 |      - | -                  | calm    | 1.400 | claim;offer_closed;planned_launch_fast
+ 51.50 |     6 |     2 |      - | purple             | calm    | 1.300 | launch_flare;planned_curse_fast
+ 51.75 |     5 |     2 |  green | -                  | calm    | 1.000 | curse_enemy_hit;nuevo_jugador_maldito;offer_opened;planned_claim_fast
+ 52.75 |     5 |     2 |      - | -                  | calm    | 1.100 | claim;offer_closed;planned_launch_fast
+ 53.25 |     5 |     2 |      - | green              | calm    | 1.000 | launch_flare
+ 54.25 |     5 |     2 |      - | orange             | calm    | 0.900 | launch_flare
+ 61.25 |     5 |     2 | purple | -                  | calm    | 0.900 | offer_opened;planned_claim_fast
+ 62.00 |     5 |     2 |      - | -                  | calm    | 1.300 | claim;offer_closed;planned_launch_fast
+ 62.75 |     5 |     2 |  green | -                  | calm    | 1.300 | offer_opened;planned_claim_slow
+ 63.25 |     5 |     2 |  green | purple             | calm    | 1.200 | launch_flare
+ 66.50 |     5 |     2 |      - | -                  | calm    | 0.900 | claim;offer_closed;planned_timeout
+ 66.75 |     5 |     2 | orange | -                  | calm    | 0.900 | offer_opened;planned_claim_fast
+ 67.25 |     5 |     2 |      - | -                  | calm    | 1.400 | claim;offer_closed;planned_launch_fast
+ 67.75 |     5 |     2 |      - | orange             | calm    | 1.300 | launch_flare;planned_curse_fast
+ 68.50 |     4 |     2 |      - | -                  | calm    | 1.000 | curse_enemy_hit;nuevo_jugador_maldito
+ 71.75 |     4 |     2 | purple | -                  | calm    | 1.000 | offer_opened;planned_claim_fast
+ 72.50 |     4 |     2 |      - | -                  | intense | 1.500 | claim;music_mode_changed;offer_closed;planned_timeout
+ 73.50 |     4 |     2 |  green | -                  | intense | 0.600 | offer_opened;planned_claim_slow;timeout
+ 75.00 |     4 |     2 |  green | -                  | calm    | 0.600 | music_mode_changed
+ 75.75 |     4 |     2 |      - | -                  | calm    | 1.100 | claim;offer_closed;planned_launch_fast
+ 76.00 |     4 |     2 |      - | green              | calm    | 1.000 | launch_flare
+ 76.50 |     4 |     2 | orange | -                  | calm    | 1.000 | offer_opened;planned_claim_fast
+ 77.25 |     4 |     2 |      - | -                  | calm    | 1.500 | claim;offer_closed;planned_launch_fast
+ 77.50 |     4 |     2 |      - | -                  | intense | 1.500 | music_mode_changed
+ 77.75 |     4 |     2 |      - | orange             | intense | 1.400 | launch_flare
+ 79.50 |     4 |     2 | purple | -                  | intense | 0.800 | offer_opened;planned_claim_fast;timeout
+ 80.00 |     4 |     2 |      - | -                  | intense | 1.300 | claim;offer_closed;planned_launch_fast
+ 80.50 |     4 |     2 |      - | purple             | intense | 1.200 | launch_flare
+ 85.00 |     4 |     2 |  green | -                  | intense | 1.200 | offer_opened;planned_claim_fast
+ 86.25 |     4 |     2 |      - | -                  | intense | 1.300 | claim;offer_closed;planned_launch_fast
+ 87.25 |     4 |     2 | orange | -                  | intense | 1.300 | offer_opened;planned_claim_fast
+ 87.75 |     4 |     2 | orange | green              | intense | 1.200 | launch_flare
+ 88.00 |     4 |     2 |      - | -                  | intense | 1.300 | claim;offer_closed;planned_timeout
+ 89.50 |     4 |     2 | purple | -                  | intense | 1.300 | offer_opened;planned_claim_fast
+ 90.25 |     4 |     2 |      - | -                  | intense | 1.800 | claim;offer_closed;planned_launch_fast
+ 91.25 |     4 |     2 |      - | purple             | intense | 1.300 | launch_flare
+ 95.00 |     4 |     2 | orange | -                  | calm    | 0.800 | music_mode_changed;offer_opened;planned_claim_fast;timeout
+ 96.00 |     4 |     2 |      - | -                  | calm    | 1.300 | claim;offer_closed;planned_launch_fast
+ 97.00 |     4 |     2 |      - | orange             | calm    | 1.200 | launch_flare
+ 97.75 |     4 |     2 |  green | -                  | calm    | 1.200 | offer_opened;planned_claim_fast
+ 98.50 |     4 |     2 |      - | -                  | calm    | 1.300 | claim;offer_closed;planned_launch_fast
+ 99.00 |     4 |     2 |      - | green              | calm    | 1.200 | launch_flare;planned_curse_fast
+ 99.50 |     3 |     1 |      - | -                  | calm    | 1.333 | curse_self_rebound;nuevo_jugador_maldito
+101.00 |     3 |     1 | purple | -                  | calm    | 1.333 | offer_opened;planned_claim_fast
+102.00 |     3 |     1 |      - | -                  | calm    | 1.741 | claim;offer_closed;planned_launch_fast
+102.50 |     3 |     1 |      - | -                  | intense | 1.741 | music_mode_changed
+102.75 |     3 |     1 |      - | purple             | intense | 1.333 | launch_flare
+106.75 |     3 |     1 | orange | -                  | intense | 1.333 | offer_opened;planned_claim_slow
+107.50 |     3 |     1 | orange | -                  | calm    | 0.741 | music_mode_changed
+110.50 |     3 |     1 |      - | -                  | calm    | 1.593 | claim;offer_closed;planned_timeout
+112.50 |     3 |     1 |      - | -                  | intense | 1.593 | music_mode_changed
+115.00 |     3 |     1 |      - | -                  | calm    | 1.000 | music_mode_changed
+117.50 |     3 |     1 | orange | -                  | calm    | 0.000 | offer_opened;planned_claim_slow;timeout
+120.75 |     3 |     1 |      - | -                  | calm    | 1.000 | claim;offer_closed;planned_launch_fast
+121.25 |     3 |     1 |      - | orange             | calm    | 0.593 | launch_flare
+121.50 |     3 |     1 |  green | -                  | calm    | 0.593 | offer_opened;planned_claim_fast
+122.50 |     3 |     1 |      - | -                  | intense | 1.593 | claim;music_mode_changed;offer_closed;planned_launch_fast
+123.75 |     3 |     1 |      - | green              | intense | 1.185 | launch_flare
+124.00 |     3 |     1 | purple | -                  | intense | 1.185 | offer_opened;planned_claim_fast
+125.25 |     3 |     1 |      - | -                  | intense | 2.185 | claim;offer_closed;planned_timeout
+132.25 |     3 |     1 | purple | -                  | intense | 0.593 | offer_opened;planned_claim_fast;timeout
+132.50 |     3 |     1 | purple | -                  | calm    | 0.593 | music_mode_changed
+133.00 |     3 |     1 |      - | -                  | calm    | 1.593 | claim;offer_closed;planned_launch_fast
+134.00 |     3 |     1 |      - | purple             | calm    | 0.593 | launch_flare
+134.25 |     3 |     1 | orange | -                  | calm    | 0.593 | offer_opened;planned_claim_fast
+135.25 |     3 |     1 |      - | -                  | calm    | 1.593 | claim;offer_closed;planned_launch_fast
+135.75 |     3 |     1 |      - | orange             | calm    | 1.185 | launch_flare;planned_curse_fast
+136.00 |     3 |     1 |  green | -                  | calm    | 1.185 | offer_opened;planned_claim_fast
+136.50 |     2 |     1 |  green | -                  | calm    | 0.741 | curse_enemy_hit;nuevo_jugador_maldito;planned_curse_back_fast
+137.00 |     2 |     1 |      - | -                  | calm    | 1.741 | claim;offer_closed;planned_launch_fast
+137.50 |     2 |     1 |      - | -                  | intense | 1.741 | music_mode_changed
+137.75 |     1 |     0 |      - | -                  | intense | 0.000 | curse_enemy_hit;fin_juego_broadcast;nuevo_jugador_maldito;timeout
+```

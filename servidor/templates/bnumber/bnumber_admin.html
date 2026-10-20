@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>palabrazo game</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/bnumber/bnumber_admin.js' %}"></script>
+    <script src="{% static 'js/game_redirects.js' %}"></script>
+    <script src="{% static 'js/in_game_room.js' %}"></script>
+    <audio src="{% static 'sounds/arcade_jump.wav' %}" id="arcade_jump_audio"></audio>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+</head>
+<body class="page-login" style="top: 100px;">
+    <div id="rounds_left"></div>
+<    
+    <!-- Equipo Verde -->
+    <div id="team-Verde" class="game-half team-column verde-side" style="display: none;">
+        <div class="number-list bnumber-admin-list">
+            <button class="number-button empty-number" id="0">0</button>
+            <button class="number-button empty-number" id="1">1</button>
+            <button class="number-button empty-number" id="2">2</button>
+            <button class="number-button empty-number" id="3">3</button>
+            <button class="number-button empty-number" id="4">4</button>
+            <button class="number-button empty-number" id="5">5</button>
+            <button class="number-button empty-number" id="6">6</button>
+            <button class="number-button empty-number" id="7">7</button>
+        </div>
+        <div class="new-number-container">
+            <span class="new-number-label">Siguiente:</span>
+            <span class="new-number">-</span>
+        </div>
+    </div>
+    
+    <!-- Divisor 1 -->
+    <div class="divider" id="divider-1" style="display: none;"></div>
+    
+    <!-- Equipo Rojo -->
+    <div id="team-Rojo" class="game-half team-column rojo-side" style="display: none;">
+        <div class="number-list bnumber-admin-list">
+            <button class="number-button empty-number" id="0">0</button>
+            <button class="number-button empty-number" id="1">1</button>
+            <button class="number-button empty-number" id="2">2</button>
+            <button class="number-button empty-number" id="3">3</button>
+            <button class="number-button empty-number" id="4">4</button>
+            <button class="number-button empty-number" id="5">5</button>
+            <button class="number-button empty-number" id="6">6</button>
+            <button class="number-button empty-number" id="7">7</button>
+        </div>
+        <div class="new-number-container">
+            <span class="new-number-label">Siguiente:</span>
+            <span class="new-number">-</span>
+        </div>
+    </div>
+    
+    <!-- Divisor 2 -->
+    <div class="divider" id="divider-2" style="display: none;"></div>
+    
+    <!-- Equipo Azul -->
+    <div id="team-Azul" class="game-half team-column azul-side" style="display: none;">
+        <div class="number-list bnumber-admin-list">
+            <button class="number-button empty-number" id="0">0</button>
+            <button class="number-button empty-number" id="1">1</button>
+            <button class="number-button empty-number" id="2">2</button>
+            <button class="number-button empty-number" id="3">3</button>
+            <button class="number-button empty-number" id="4">4</button>
+            <button class="number-button empty-number" id="5">5</button>
+            <button class="number-button empty-number" id="6">6</button>
+            <button class="number-button empty-number" id="7">7</button>
+        </div>
+        <div class="new-number-container">
+            <span class="new-number-label">Siguiente:</span>
+            <span class="new-number">-</span>
+        </div>
+    </div>
+    
+    <!-- Divisor 3 -->
+    <div class="divider" id="divider-3" style="display: none;"></div>
+    
+    <!-- Equipo Amarillo -->
+    <div id="team-Amarillo" class="game-half team-column amarillo-side" style="display: none;">
+        <div class="number-list bnumber-admin-list">
+            <button class="number-button empty-number" id="0">0</button>
+            <button class="number-button empty-number" id="1">1</button>
+            <button class="number-button empty-number" id="2">2</button>
+            <button class="number-button empty-number" id="3">3</button>
+            <button class="number-button empty-number" id="4">4</button>
+            <button class="number-button empty-number" id="5">5</button>
+            <button class="number-button empty-number" id="6">6</button>
+            <button class="number-button empty-number" id="7">7</button>
+        </div>
+        <div class="new-number-container">
+            <span class="new-number-label">Siguiente:</span>
+            <span class="new-number">-</span>
+        </div>
+    </div>
+    
+    <!-- countdown removed, now using only seconds_left for all status -->
+    <button id="enable_sounds" style="display: none;"></button>
+    
+    <!-- Modal de Victoria -->
+    <div id="victory-modal-overlay" class="victory-modal-overlay">
+        <div class="victory-modal">
+            <div class="victory-modal-title">¡Resultado!</div>
+            <div id="victory-modal-content" class="victory-modal-content"></div>
+        </div>
+    </div>
+</body>
+
+
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        play_bnumber();
+    });
+</script>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        position: relative;
+        font-family: var(--font-body);
+        background: var(--neutral-100, #EEF2F6);
+        color: var(--text);
+    }
+    .game-half {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    .verde-side {
+        background-color: var(--success, #00874E);
+    }
+    .rojo-side {
+        background-color: var(--brand, #991D32);
+    }
+    .azul-side {
+        background-color: var(--ice-600, #9BCAE0);
+    }
+    .amarillo-side {
+        background-color: var(--yellow-500, #FFB23B);
+    }
+    .divider {
+        width: 4px;
+        background-color: var(--neutral-300, #B9C2CC);
+        height: 100vh;
+    }
+    .number-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin: 20px 0;
+    }
+    .number-button {
+        width: 70px;
+        height: 70px;
+        border-radius: 40px;
+        border: 2px solid var(--neutral-0, #fff);
+        background-color: var(--neutral-0, #fff);
+        color: var(--text, #121417);
+        font-size: 2.2em;
+        font-family: var(--font-body);
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .number-button:hover {
+        background-color: var(--ice-500, #B0E5FF);
+        color: var(--brand, #991D32);
+    }
+    .new-number-container {
+        background-color: var(--neutral-0, #fff);
+        padding: 10px 20px;
+        border-radius: 12px;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .new-number-label {
+        font-size: 1.5em;
+        color: var(--brand, #991D32);
+        font-family: var(--font-heading);
+    }
+    .new-number {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: var(--success, #009959);
+        font-family: var(--font-heading);
+    }
+    .empty-number {
+        color: var(--neutral-300, #B9C2CC) !important;
+    }
+    .filled-number {
+        color: var(--text, #121417) !important;
+    }
+  
+    #bnumber-result {
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 100px;
+        margin-bottom: auto;
+        text-align: center;
+        height: auto;
+        z-index: 2;
+        font-size: 100px;
+        color: var(--success, #009959);
+        font-family: var(--font-heading);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+</style>

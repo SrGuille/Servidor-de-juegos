@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=0.6, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>Socks Player</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="{% static 'js/socks/socks_player.js' %}"></script>
+    <script src="{% static 'js/game_redirects.js' %}"></script>
+    <script src="{% static 'js/in_game_room.js' %}"></script>
+</head>
+<body class="page-login">
+    <div class="socks-player-container">
+        <div class="socks-grid">
+            <div class="sock-item" id="sock-item-0">
+                <button class="sock-square bet-btn" id="bet-btn-0" onclick="select_sock(0)">
+                    <img src="{% static 'img/calcetines/calcetin_1.svg' %}" alt="Sock 0" class="sock-img" />
+                </button>
+            </div>
+            <div class="sock-item" id="sock-item-1">
+                <button class="sock-square bet-btn" id="bet-btn-1" onclick="select_sock(1)">
+                    <img src="{% static 'img/calcetines/calcetin_2.svg' %}" alt="Sock 1" class="sock-img" />
+                </button>
+            </div>
+            <div class="sock-item" id="sock-item-2">
+                <button class="sock-square bet-btn" id="bet-btn-2" onclick="select_sock(2)">
+                    <img src="{% static 'img/calcetines/calcetin_3.svg' %}" alt="Sock 2" class="sock-img" />
+                </button>
+            </div>
+            <div class="sock-item" id="sock-item-3">
+                <button class="sock-square bet-btn" id="bet-btn-3" onclick="select_sock(3)">
+                    <img src="{% static 'img/calcetines/calcetin_4.svg' %}" alt="Sock 3" class="sock-img" />
+                </button>
+            </div>
+            <div class="sock-item" id="sock-item-4">
+                <button class="sock-square bet-btn" id="bet-btn-4" onclick="select_sock(4)">
+                    <img src="{% static 'img/calcetines/calcetin_5.svg' %}" alt="Sock 4" class="sock-img" />
+                </button>
+            </div>
+            <div class="sock-item" id="sock-item-5">
+                <button class="sock-square bet-btn" id="bet-btn-5" onclick="select_sock(5)">
+                    <img src="{% static 'img/calcetines/calcetin_6.svg' %}" alt="Sock 5" class="sock-img" />
+                </button>
+            </div>
+            <div class="sock-item" id="sock-item-6">
+                <button class="sock-square bet-btn" id="bet-btn-6" onclick="select_sock(6)">
+                    <img src="{% static 'img/calcetines/calcetin_7.svg' %}" alt="Sock 6" class="sock-img" />
+                </button>
+            </div>
+            <div class="sock-item" id="sock-item-7">
+                <button class="sock-square bet-btn" id="bet-btn-7" onclick="select_sock(7)">
+                    <img src="{% static 'img/calcetines/calcetin_8.svg' %}" alt="Sock 7" class="sock-img" />
+                </button>
+            </div>
+        </div>
+        </div>
+        <div class="betting-panel">
+            <button id="group_coins_bet" onclick="change_bet_coins()" class="button-send">Apostar: <span id="coins-to-bet">1</span> moneda(s)</button>
+            <button id="send-bet" onclick="send_sock_bet_notify()" class="button-send">Enviar apuesta</button>
+            <div class="coin-info">
+                <label id="available_coins"></label>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<style>
+
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f0f0f0;
+    }
+
+    .socks-player-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .socks-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 150px);
+        grid-template-rows: repeat(2, 160px);
+        gap: 32px 32px;
+        margin-top: 20px;
+        margin-bottom: 32px;
+    }
+
+    .sock-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sock-square {
+        width: 150px;
+        height: 120px;
+        background: #e0e0e0;
+        border: 2px solid #888;
+        border-radius: 16px;
+        margin-bottom: 4px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+        color: #fff;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 2px solid #888;
+        overflow: hidden;
+    }
+    .sock-img {
+        max-width: 110px;
+        max-height: 90px;
+        object-fit: contain;
+        display: block;
+        margin: auto;
+        pointer-events: none;
+    }
+    .sock-square.selected {
+        background: #e26a4a;
+    }
+
+    .betting-panel {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        margin-top: 0px;
+        margin-bottom: 8px;
+        position: relative;
+        top: -24px;
+    }
+
+    .button-send {
+        background: #44aa44;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 8px 18px;
+        cursor: pointer;
+        margin-right: 8px;
+        transition: background 0.2s;
+    }
+    .button-send:active {
+        background: #368a36;
+    }
+
+    .coin-info label {
+        font-size: 16px;
+        color: #444;
+        padding: 8px 16px;
+        border: 2px solid orange;
+        border-radius: 10px;
+        background: #fff7e6;
+        font-weight: bold;
+        box-shadow: 0 2px 8px #ffb34733;
+        margin-left: 8px;
+    }
+</style>
+
+</html>

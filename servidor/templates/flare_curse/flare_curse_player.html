@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flare Curse - Jugador</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/flare_curse/flare_curse_player.js' %}?v=20260412-7"></script>
+</head>
+<body class="page-login">
+    <main class="fc-main">
+        <section id="alive-header-card" class="fc-header-card">
+            <div id="team-box" class="fc-team-box fc-team-unknown" aria-label="team symbol">
+                <span class="fc-team-icon"></span>
+            </div>
+            <div id="alive-header-controls" class="fc-header-controls">
+                <button id="flare-button" class="fc-flare-button fc-state-idle" type="button" aria-label="flare action"></button>
+                <div class="fc-timer-track fc-timer-track--compact">
+                    <div id="flare-timer" class="fc-timer-fill"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ghost-panel" class="fc-panel" style="display: none;">
+            <div class="fc-ghost-row">
+                <button id="ghost-flare-button" class="fc-ghost-button" type="button" aria-label="ghost flare">
+                    <span class="fc-ghost-icon" aria-hidden="true"></span>
+                </button>
+                <div id="ghost-points-text" class="fc-ghost-points">0</div>
+            </div>
+            <div class="fc-timer-track">
+                <div id="ghost-cooldown-timer" class="fc-timer-fill"></div>
+            </div>
+        </section>
+
+        <section id="players-panel" class="fc-panel">
+            <div id="players-container" class="fc-players-grid"></div>
+        </section>
+
+        <section id="result-panel" class="fc-result" style="display: none;"></section>
+    </main>
+
+    <div id="flash-overlay" class="fc-flash-overlay"></div>
+
+    <style>
+        body.page-login {
+            margin: 0;
+            display: block;
+            height: 100svh;
+            overflow: hidden;
+        }
+
+        .fc-main {
+            width: min(100%, 740px);
+            height: 100svh;
+            max-height: 100svh;
+            margin: 0 auto;
+            box-sizing: border-box;
+            padding: clamp(6px, 1.4vh, 12px) clamp(6px, 2.2vw, 10px);
+            display: grid;
+            grid-template-rows: auto auto minmax(0, 1fr) auto;
+            gap: clamp(6px, 1.2vh, 10px);
+            --fc-symbol-stroke: #81612c;
+            --fc-symbol-bg: #fff3dc;
+            --fc-symbol-text: #5d451f;
+        }
+
+        .fc-header-card,
+        .fc-panel,
+        .fc-result {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 12px;
+            border: 2px solid #d9d9d9;
+            padding: 9px;
+        }
+
+        .fc-header-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fc-team-box {
+            width: 72px;
+            height: 72px;
+            border-radius: 12px;
+            border: 2px solid #c8c8c8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            position: relative;
+        }
+
+        .fc-team-icon {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            box-sizing: border-box;
+            border: 3px solid var(--fc-symbol-stroke);
+            border-radius: 8px;
+            background: var(--fc-symbol-bg);
+        }
+
+        .fc-team-box.fc-team-circle .fc-team-icon {
+            border-radius: 999px;
+            border-color: var(--fc-symbol-stroke);
+            background: var(--fc-symbol-bg);
+        }
+
+        .fc-team-box.fc-team-square .fc-team-icon {
+            border-radius: 8px;
+            border-color: var(--fc-symbol-stroke);
+            background: var(--fc-symbol-bg);
+        }
+
+        .fc-team-box.fc-team-ghost-initial .fc-team-icon {
+            border: none;
+            border-radius: 8px;
+            background: var(--fc-symbol-bg);
+        }
+
+        .fc-team-box.fc-team-ghost-initial .fc-team-icon::after {
+            content: "";
+            position: absolute;
+            inset: -4px;
+            pointer-events: none;
+            background: calc(50% + 1px) 50% / 100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M14,16Q20,8,26,16Q32,24,38,16Q44,8,50,16Q56,24,62,16Q68,8,74,16Q80,24,86,16Q92,8,98,16Q104,24,110,16Q118,20,110,28Q102,36,110,44Q118,52,110,60Q102,68,110,76Q118,84,110,92Q102,100,110,108Q104,118,98,110Q92,102,86,110Q80,118,74,110Q68,102,62,110Q56,118,50,110Q44,102,38,110Q32,118,26,110Q20,102,14,110Q6,104,14,96Q22,88,14,80Q6,72,14,64Q22,56,14,48Q6,40,14,32Q6,22,14,16Z' fill='none' stroke='%2381612c' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+
+        .fc-team-box.fc-team-unknown .fc-team-icon {
+            border-color: #8d8d8d;
+            background: #ececec;
+        }
+
+        .fc-header-controls {
+            display: grid;
+            justify-items: end;
+            gap: 5px;
+        }
+
+        .fc-flare-button {
+            width: 68px;
+            height: 68px;
+            border: 2px solid #262626;
+            border-radius: 12px;
+            padding: 0;
+            color: transparent;
+            font-size: 0;
+            cursor: pointer;
+            transition: filter 0.15s linear;
+        }
+
+        .fc-flare-button.fc-state-idle {
+            background: #9e9e9e;
+            cursor: default;
+        }
+
+        .fc-flare-button.fc-state-offered {
+            animation: fcBlink 0.58s steps(1, end) infinite;
+        }
+
+        .fc-flare-button.fc-state-held {
+            animation: none;
+        }
+
+        .fc-flare-button:disabled {
+            opacity: 0.68;
+        }
+
+        .fc-ghost-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .fc-ghost-button {
+            width: 68px;
+            height: 68px;
+            border: 2px solid #333;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #9e9e9e;
+            color: #fff;
+            padding: 0;
+        }
+
+        .fc-ghost-button:disabled {
+            background: #9e9e9e;
+            color: #ebebeb;
+            cursor: default;
+        }
+
+        .fc-ghost-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            aspect-ratio: 1 / 1;
+            background: center / 82% 82% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 6c-8.3 0-15 6.7-15 15v18l5-4 5 4 5-4 5 4 5-4 5 4V21c0-8.3-6.7-15-15-15z' fill='%23fff3dc' stroke='%2381612c' stroke-width='3' stroke-linejoin='round'/%3E%3Ccircle cx='19' cy='22' r='2.2' fill='%2381612c'/%3E%3Ccircle cx='29' cy='22' r='2.2' fill='%2381612c'/%3E%3C/svg%3E");
+            line-height: 1;
+            border-radius: 10px;
+            color: transparent;
+            filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.25));
+        }
+
+        .fc-ghost-points {
+            min-width: 46px;
+            text-align: center;
+            padding: 4px 8px;
+            border: 2px solid #2f2f2f;
+            border-radius: 999px;
+            font-size: 16px;
+            font-weight: 800;
+            color: #1d1d1d;
+            background: #f5f5f5;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .fc-ghost-points.fc-ghost-points-vibrate {
+            animation: fcGhostVibrate 0.28s linear 1;
+        }
+
+        .fc-ghost-points.fc-ghost-points-glow {
+            animation: fcGhostGlow 0.46s ease-out 1;
+            background: var(--fc-ghost-accent, #f5f5f5);
+            color: #ffffff;
+        }
+
+        .fc-player-button {
+            margin: 0;
+            width: var(--fc-player-cell-size, 74px);
+            height: var(--fc-player-cell-size, 74px);
+            box-sizing: border-box;
+            border: 1px solid #cfcfcf;
+            border-radius: 11px;
+            background: #f8f8f8;
+            padding: var(--fc-player-button-padding, 3px);
+            display: grid;
+            place-items: center;
+        }
+
+        .fc-player-button[disabled] {
+            opacity: 0.75;
+            cursor: not-allowed;
+        }
+
+        .fc-player-button.fc-player-revealed[disabled] {
+            opacity: 1;
+            cursor: default;
+        }
+
+        .fc-player-name-badge {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: var(--fc-player-badge-padding, 8px);
+            border: var(--fc-player-badge-border-width, 3px) solid transparent;
+            border-radius: 10px;
+            line-height: 1.1;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            font-size: var(--fc-player-font-size, clamp(0.8rem, 3.4vw, 1rem));
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .fc-player-button.fc-player-hidden .fc-player-name-badge {
+            border-color: #bcbcbc;
+            background: #f2f2f2;
+            color: #2f2f2f;
+        }
+
+        .fc-player-name-badge.fc-team-circle {
+            border: var(--fc-player-badge-border-width, 3px) solid var(--fc-symbol-stroke);
+            border-radius: 999px;
+            background: var(--fc-symbol-bg);
+            color: var(--fc-symbol-text);
+        }
+
+        .fc-player-name-badge.fc-team-square {
+            border: var(--fc-player-badge-border-width, 3px) solid var(--fc-symbol-stroke);
+            border-radius: 7px;
+            background: var(--fc-symbol-bg);
+            color: var(--fc-symbol-text);
+        }
+
+        .fc-player-name-badge.fc-team-ghost-initial {
+            position: relative;
+            border: none;
+            border-radius: 8px;
+            background: var(--fc-symbol-bg);
+            color: var(--fc-symbol-text);
+        }
+
+        .fc-player-name-badge.fc-team-ghost-initial::after {
+            content: "";
+            position: absolute;
+            inset: var(--fc-player-ghost-outline-inset, 0px);
+            pointer-events: none;
+            background: calc(50% + var(--fc-player-ghost-x-offset, 1px)) 50% / 100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M14,16Q20,8,26,16Q32,24,38,16Q44,8,50,16Q56,24,62,16Q68,8,74,16Q80,24,86,16Q92,8,98,16Q104,24,110,16Q118,20,110,28Q102,36,110,44Q118,52,110,60Q102,68,110,76Q118,84,110,92Q102,100,110,108Q104,118,98,110Q92,102,86,110Q80,118,74,110Q68,102,62,110Q56,118,50,110Q44,102,38,110Q32,118,26,110Q20,102,14,110Q6,104,14,96Q22,88,14,80Q6,72,14,64Q22,56,14,48Q6,40,14,32Q6,22,14,16Z' fill='none' stroke='%2381612c' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+
+        .fc-players-grid {
+            display: grid;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            gap: clamp(4px, 0.7vh, 7px);
+            justify-content: center;
+            align-content: center;
+            overflow: hidden;
+        }
+
+        #players-panel {
+            min-height: 0;
+            overflow: hidden;
+            display: flex;
+            padding: 7px;
+        }
+
+        #players-container {
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+
+        .fc-timer-track {
+            width: 100%;
+            height: 7px;
+            background: #d9d9d9;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .fc-timer-track--compact {
+            width: 68px;
+        }
+
+        .fc-timer-fill {
+            width: 0%;
+            height: 100%;
+            background: #444;
+            transition: width 0.1s linear;
+        }
+
+        .fc-result {
+            font-size: 16px;
+            color: #222;
+            font-weight: 700;
+            white-space: pre-line;
+        }
+
+        .fc-flash-overlay {
+            position: fixed;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.02s linear;
+            z-index: 2147483647;
+        }
+
+        @keyframes fcBlink {
+            0%, 44% { filter: brightness(1); }
+            45%, 100% { filter: brightness(1.95); }
+        }
+
+        @keyframes fcGhostVibrate {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-3px); }
+            40% { transform: translateX(3px); }
+            60% { transform: translateX(-2px); }
+            80% { transform: translateX(2px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes fcGhostGlow {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+            }
+            35% {
+                transform: scale(1.09);
+                box-shadow: 0 0 20px var(--fc-ghost-accent, #ffffff);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .fc-main {
+                padding: 6px;
+                gap: 6px;
+            }
+
+            .fc-header-card,
+            .fc-panel,
+            .fc-result {
+                padding: 7px;
+            }
+
+            .fc-team-box,
+            .fc-flare-button,
+            .fc-ghost-button {
+                width: 62px;
+                height: 62px;
+            }
+
+            .fc-team-icon {
+                width: 44px;
+                height: 44px;
+            }
+
+            .fc-timer-track--compact {
+                width: 62px;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            init_flare_curse_player();
+        });
+    </script>
+</body>
+</html>

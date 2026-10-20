@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Socks Admin</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="{% static 'js/socks/socks_admin.js' %}"></script>
+    <script src="{% static 'js/game_redirects.js' %}"></script>
+    <script src="{% static 'js/in_game_room.js' %}"></script>
+</head>
+
+<body class="page-login" style="top: 100px;">
+    <div class="socks-admin-container">
+        <div class="socks-grid">
+            <div class="sock-item" id="sock-item-0">
+                <div class="sock-info" id="sock-info-0">---</div>
+                <div class="sock-square" id="sock-0">
+                    <img src="{% static 'img/calcetines/calcetin_1.svg' %}" alt="Sock 0" class="sock-img" />
+                </div>
+            </div>
+            <div class="sock-item" id="sock-item-1">
+                <div class="sock-info" id="sock-info-1">---</div>
+                <div class="sock-square" id="sock-1">
+                    <img src="{% static 'img/calcetines/calcetin_2.svg' %}" alt="Sock 1" class="sock-img" />
+                </div>
+            </div>
+            <div class="sock-item" id="sock-item-2">
+                <div class="sock-info" id="sock-info-2">---</div>
+                <div class="sock-square" id="sock-2">
+                    <img src="{% static 'img/calcetines/calcetin_3.svg' %}" alt="Sock 2" class="sock-img" />
+                </div>
+            </div>
+            <div class="sock-item" id="sock-item-3">
+                <div class="sock-info" id="sock-info-3">---</div>
+                <div class="sock-square" id="sock-3">
+                    <img src="{% static 'img/calcetines/calcetin_4.svg' %}" alt="Sock 3" class="sock-img" />
+                </div>
+            </div>
+            <div class="sock-item" id="sock-item-4">
+                <div class="sock-info" id="sock-info-4">---</div>
+                <div class="sock-square" id="sock-4">
+                    <img src="{% static 'img/calcetines/calcetin_5.svg' %}" alt="Sock 4" class="sock-img" />
+                </div>
+            </div>
+            <div class="sock-item" id="sock-item-5">
+                <div class="sock-info" id="sock-info-5">---</div>
+                <div class="sock-square" id="sock-5">
+                    <img src="{% static 'img/calcetines/calcetin_6.svg' %}" alt="Sock 5" class="sock-img" />
+                </div>
+            </div>
+            <div class="sock-item" id="sock-item-6">
+                <div class="sock-info" id="sock-info-6">---</div>
+                <div class="sock-square" id="sock-6">
+                    <img src="{% static 'img/calcetines/calcetin_7.svg' %}" alt="Sock 6" class="sock-img" />
+                </div>
+            </div>
+            <div class="sock-item" id="sock-item-7">
+                <div class="sock-info" id="sock-info-7">---</div>
+                <div class="sock-square" id="sock-7">
+                    <img src="{% static 'img/calcetines/calcetin_8.svg' %}" alt="Sock 7" class="sock-img" />
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+</html>
+
+
+<style>
+    body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f0f0f0;
+    }
+    .socks-admin-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        margin-top: 64px;
+    }
+    .socks-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 220px);
+        grid-template-rows: repeat(2, 240px);
+        gap: 80px 48px;
+    }
+    .sock-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .sock-info {
+        margin-bottom: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        line-height: 1.2;
+        word-break: break-word;
+    }
+    .sock-square {
+        width: 220px;
+        height: 200px;
+        background: #e0e0e0;
+        border: 2px solid #888;
+        border-radius: 24px;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 0;
+    }
+    .sock-img {
+        max-width: 160px;
+        max-height: 140px;
+        object-fit: contain;
+        display: block;
+        margin: auto;
+        pointer-events: none;
+    }
+    .sock-badge {
+        z-index: 10;
+    }
+</style>

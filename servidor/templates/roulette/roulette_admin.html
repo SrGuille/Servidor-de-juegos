@@ -9,15 +9,20 @@
     <script src="{% static 'js/in_game_room.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <audio src="{% static 'sounds/sonido_ruleta.mp3' %}" id="spinning_roulette_audio"></audio>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
-<body class="fondo">
+<body class="page-login">
     <div class="container">
         <row>
-            <img id="indicator" src="{% static 'img/indicator.png' %}"/>
+            <img id="indicator" src="{% static 'img/roulette/hat_indicator.svg' %}"/>
         </row>
         <row>
-            <img id="roulette" src="{% static 'img/roulette_img.png' %}"/>
-        </row>        
+            <img id="roulette" src="{% static 'img/roulette/roulette_img.svg' %}" style="width: 45%; height: auto;"/>
+        </row>
         <div id="result-spin"></div>
         <button id="enable_sounds" style="display: none;"></button>
     </div>

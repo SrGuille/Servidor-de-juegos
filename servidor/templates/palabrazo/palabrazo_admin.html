@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>palabrazo game</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/palabrazo/palabrazo_admin.js' %}"></script>
+    <script src="{% static 'js/game_redirects.js' %}"></script>
+    <script src="{% static 'js/in_game_room.js' %}"></script>
+    <audio src="{% static 'sounds/arcade_jump.wav' %}" id="arcade_jump_audio"></audio>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+</head>
+<body class="page-login" style="top: 100px;">
+    <div class="container">
+        <div class="text-center">
+            <h1 id="jackpot">Cargando...</h1>
+        </div>
+        <div class="text-center" style="margin-top: 20px;">
+            <h1 id="palabrazo-sentence" class="big-text"></h1>
+        </div>
+    </div>
+
+    <button id="enable_sounds" style="display: none;"></button>
+    
+    <!-- Modal de Victoria -->
+    <div id="victory-modal-overlay" class="victory-modal-overlay">
+        <div class="victory-modal">
+            <div class="victory-modal-title">¡Resultado!</div>
+            <div id="victory-modal-content" class="victory-modal-content"></div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        play_palabrazo();
+    });
+</script>

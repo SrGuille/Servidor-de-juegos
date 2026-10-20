@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*.sqlite3
+csv_export/
+repo-clean/
+.pytest_cache/
+.venv/
+venv/
