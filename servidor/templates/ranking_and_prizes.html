@@ -16,10 +16,15 @@
     <!--Libreria animaciones-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <audio src="{% static 'sounds/sonido_ruleta.mp3' %}" id="spinning_roulette_audio"></audio>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
-<body class="fondo">
-    <div class="ranking-container">
-        <h1 id="title" class="titulo-pantalla fw-bold" style="z-index: 2;">Clasificación</h1>
+<body class="page-login">
+    <div class="ranking-container games-header">
+        <h1 id="title" class="games-title" style="z-index: 2;">Clasificación</h1>
         <div id="ranking_container" class="table-wrapper">
             <div class="ranking-columns">
                 <table class="table table-striped animate__animated animate__fadeIn animate__slow" id="ranking-left">
@@ -50,11 +55,11 @@
 
     <div class="row box-roulette" id="roulettes_container" style="margin-left: auto; margin-right: auto;">
         <div class="col-5 roulette-column">
-            <img id="indicador1" class="indicador-roulette" src="{% static 'img/indicator.png' %}" alt="">
+            <img id="indicador1" class="indicador-roulette" src="{% static 'img/roulette/hat_indicator.svg' %}" alt="">
             <div id="players_roulette_div" class="roulette-wrapper"></div>
         </div>
         <div class="col-5 roulette-column">
-            <img id="indicador2" class="indicador-roulette" src="{% static 'img/indicator.png' %}" alt="">
+            <img id="indicador2" class="indicador-roulette" src="{% static 'img/roulette/hat_indicator.svg' %}" alt="">
             <div id="prizes_roulette_div" class="roulette-wrapper"></div>
         </div>
     </div>
@@ -145,6 +150,7 @@
         justify-content: center;
         align-items: center;
         padding-top: 0px;
+        margin-top: -100px; /* Subir los divs de las ruletas */
         margin-left: auto;
         margin-right: auto;
         width: 1500px;

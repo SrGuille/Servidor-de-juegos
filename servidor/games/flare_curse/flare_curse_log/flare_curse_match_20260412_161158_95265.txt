@@ -1,0 +1,24 @@
+### Output (stdout and stderr interleaved):
+
+```
+time | alive | limit | offered | launch_flare_colors | mode | score | events
+  0.00 |     8 |     2 |      - | -                  | calm    | 0.000 | player_became_ghost;match_initialized
+  2.59 |     8 |     2 |      - | -                  | calm    | 0.000 | music_eval
+  5.19 |     8 |     2 |      - | -                  | calm    | 0.000 | music_eval
+  7.03 |     8 |     2 |   blue | -                  | calm    | 0.000 | offer_opened
+  7.78 |     8 |     2 |   blue | -                  | calm    | 0.000 | music_eval
+  8.48 |     8 |     2 |      - | -                  | calm    | 0.000 | claim;offer_closed
+  8.53 |     8 |     2 |    red | -                  | calm    | 0.000 | offer_opened
+ 10.38 |     8 |     2 |    red | -                  | calm    | 0.500 | music_eval
+ 10.67 |     7 |     2 |    red | -                  | calm    | 0.500 | player_became_ghost;curse_enemy_hit
+ 10.97 |     6 |     1 |    red | -                  | calm    | 0.500 | player_became_ghost;curse_enemy_hit
+ 12.95 |     6 |     1 |    red | -                  | calm    | -1.021 | music_eval
+ 14.55 |     5 |     1 |    red | -                  | calm    | -1.021 | player_became_ghost;curse_enemy_hit
+ 15.30 |     4 |     1 |    red | -                  | calm    | -1.021 | player_became_ghost;curse_self_rebound
+ 15.55 |     4 |     1 |    red | -                  | calm    | -2.043 | music_eval
+ 16.52 |     4 |     1 |    red | -                  | calm    | -2.043 | ghost_launch_flare
+ 18.14 |     4 |     1 |    red | -                  | calm    | -2.043 | music_eval
+ 20.72 |     4 |     1 |    red | -                  | calm    | -1.532 | music_eval
+ 23.31 |     4 |     1 |    red | -                  | calm    | -1.021 | music_eval
+ 23.56 |     3 |     1 |    red | -                  | intense | -1.021 | player_became_ghost;curse_enemy_hit;music_mode_changed;match_finished
+```

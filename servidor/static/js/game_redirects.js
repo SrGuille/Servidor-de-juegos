@@ -5,8 +5,8 @@
     Once the next game is known, the admin will display it and will send a message to all the clients to join it.
 */
 
-admin_redirects = ['../roulette_admin/', '../hangman_admin/', '../democracy_admin/', '../gunman_admin/', '../bnumber_admin/']
-player_redirects = ['../roulette_player/', '../hangman_player/', '../democracy_player/', '../gunman_player/', '../bnumber_player/']
+admin_redirects = ['../roulette_admin/', '../palabrazo_admin/', '../democracy_admin/', '../gunman_admin/', '../bnumber_admin/', '../socks_admin/', '../flare_curse_host/']
+player_redirects = ['../roulette_player/', '../palabrazo_player/', '../democracy_player/', '../gunman_player/', '../bnumber_player/', '../socks_player/', '../flare_curse_player/']
 
 // Set the game to play with rounds and redirect to it
 function set_next_game(game_id)

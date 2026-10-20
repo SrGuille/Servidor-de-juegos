@@ -26,9 +26,9 @@ PRIZE_COLORS = {
 
 # Imágenes para premios (ruta relativa desde la raíz del proyecto)
 PRIZE_IMAGES = {
-    "R. Grande": "servidor/static/img/iconos_regalos/regalo_grande.png",
-    "R. Mediano": "servidor/static/img/iconos_regalos/regalo_mediano.png",
-    "R. Pequeño": "servidor/static/img/iconos_regalos/regalo_peque.png",
+    "R. Grande": "servidor/static/img/iconos_regalos/regalo_grande_v2.png",
+    "R. Mediano": "servidor/static/img/iconos_regalos/regalo_mediano_v2.png",
+    "R. Pequeño": "servidor/static/img/iconos_regalos/regalo_peque_v2.png",
 }
 
 # Creates the players roulette image with players with coins
@@ -106,7 +106,8 @@ def create_prizes_roulette_image(labels, sizes, colors, images, filename):
             
             # Calcular el tamaño proporcional al gajo
             proportion = size / total
-            img_zoom = max(0.08, min(0.25, proportion * 0.8))  # Ajustado para mejor visualización
+            # Reducir el máximo para que ninguna imagen sea demasiado grande
+            img_zoom = max(0.06, min(0.15, proportion * 0.7))  # Máximo más pequeño
             
             imagebox = OffsetImage(img, zoom=img_zoom)
             ab = AnnotationBbox(imagebox, (x, y), frameon=False, zorder=10)

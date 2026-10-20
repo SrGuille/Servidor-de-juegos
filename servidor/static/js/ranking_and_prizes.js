@@ -8,11 +8,11 @@ TIME_BEFORE_SPINNING = 5000; // Time to wait before starting the spinning animat
 TIME_DURING_SPINNING = 6000; // Duration of the spinning animation
 TIME_AFTER_SPINNING = 6000; // Time to see the result after the spinning animation
 
-TIME_BEFORE_TRANSITION = 3000; // Time to wait before starting the ranking table animation
+TIME_BEFORE_TRANSITION = 2000; // Time to wait before starting the ranking table animation
 TIME_TRANSITION_FADE_OUT = 500; // Duration of the transition animation
 TIME_TRANSITION_FADE_IN = 100; // Duration of the transition animation
 
-TIME_TO_SEE_TABLE = 5000; // Time to see the ranking table after the transition animation
+TIME_TO_SEE_TABLE = 4000; // Time to see the ranking table after the transition animation
 
 async function get_ranking_and_spin_roulettes()
 {
@@ -428,11 +428,15 @@ async function create_and_spin_roulettes(santa_player)
     let players_roulette_img = document.createElement("img");
     players_roulette_img.id = "players_roulette";
     players_roulette_img.src = "/static/img/players_roulette.png";
+    players_roulette_img.style.width = "90%";
+    players_roulette_img.style.height = "auto";
     players_roulette_div.appendChild(players_roulette_img);
 
     let prizes_roulette_img = document.createElement("img");
     prizes_roulette_img.id = "prizes_roulette";
     prizes_roulette_img.src = "/static/img/prizes_roulette.png";
+    prizes_roulette_img.style.width = "90%";
+    prizes_roulette_img.style.height = "auto";
     prizes_roulette_div.appendChild(prizes_roulette_img);
 
     if (santa_player != '')

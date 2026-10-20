@@ -30,7 +30,7 @@ var character_margin_y = 0;
 function calculate_cell_dimensions()
 {
     // Margen para el contenedor y espacio para el contador superior
-    var margin = 40;
+    var margin = 20;
     var top_space = 120; // Espacio para el contador (margin-top del board + altura del contador)
     var available_width = window.innerWidth - margin;
     var available_height = window.innerHeight - margin - top_space;
@@ -62,6 +62,8 @@ function calculate_cell_dimensions()
     character_height = cell_height * character_scale;
     character_margin_x = (cell_width - character_width) / 2;
     character_margin_y = (cell_height - character_height) / 2;
+
+    // El centrado y tamaño del board se gestiona solo por CSS.
 }
 
 // Variables para posición del board (se calculan dinámicamente)

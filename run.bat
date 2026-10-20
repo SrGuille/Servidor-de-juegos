@@ -12,6 +12,16 @@ if not defined VENV_DIR (
   pause
   exit /b 1
 )
+if "%DJANGO_SECRET_KEY%"=="" (
+  echo Falta la variable de entorno DJANGO_SECRET_KEY.
+  pause
+  exit /b 1
+)
+if "%OPENAI_API_KEY%"=="" (
+  echo Falta la variable de entorno OPENAI_API_KEY.
+  pause
+  exit /b 1
+)
 
 rem obtener IP local dando preferencia a la interfaz Wi‑Fi/WLAN; si no hay, usar la primera IPv4 válida
 for /f "usebackq delims=" %%i in (`powershell -NoProfile -Command "$adpt = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and ($_.Name -match 'Wi|Wireless|WLAN' -or $_.InterfaceDescription -match 'Wi|Wireless|WLAN') } | Select-Object -First 1; if($adpt){$ip=(Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $adpt.ifIndex | Where-Object { $_.IPAddress -notmatch '^(169|127)' } | Select-Object -First 1 -ExpandProperty IPAddress)}; if(-not $ip){$ip=(Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notmatch '^(169|127)' } | Select-Object -First 1 -ExpandProperty IPAddress)}; Write-Output $ip"`) do set "LOCAL_IP=%%i"

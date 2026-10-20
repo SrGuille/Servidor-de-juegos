@@ -1,4 +1,5 @@
 from typing import List, Any
+import random
 
 class Player():
     def __init__(self, name: str):
@@ -11,22 +12,11 @@ class Bet():
         self.type: str = type
         self.amount: int = amount
 
-# For hangman
-class Actor():
-    def __init__(self, name: str, attribute: str):
+# For palabrazo
+class PalabrazoActor():
+    def __init__(self, name: str, attributes: list):
         self.name: str = name
-        self.attribute: str = attribute
-
-class HangmanPlayer():
-    def __init__(self):
-        self.num_wrong_guesses: int = 0
-        self.earnings: int = 0
-
-class Guess():
-    def __init__(self, num_appereances: int, first_player: str):
-        self.num_appereances: int = num_appereances
-        self.players: List[str] = [first_player] # List of players that guessed this letter (the rest will be added later)
-
+        self.attributes: list = attributes
 
 class GunmanPlayer():
     def __init__(self):
@@ -47,3 +37,38 @@ class GunmanPlayer():
     
     def to_string(self):
         return f"Action: {self.action}, Bullets: {self.bullets}, Shields: {self.shields}, Lives: {self.lives}"
+
+class Sock:
+    def __init__(self, min, max):
+        self.min = min
+        self.max = max
+        self.bets = [] # List of SockPlayerBet
+        self.historical_bets = {} # Player: number of bets
+        self.historical_performances = [] # List of multiplicator performances
+
+    def generate_multiplicator(self):
+        multiplicator = random.uniform(self.min, self.max)
+        self.historical_performances.append(multiplicator)
+
+        return multiplicator
+
+    def add_bet(self, bet):
+        self.bets.append(bet)
+        if bet.player_name in self.historical_bets:
+            self.historical_bets[bet.player_name] += 1
+        else:
+            self.historical_bets[bet.player_name] = 1
+
+    def add_performance(self, performance: float):
+        self.performances.append(performance)
+
+    def clear_bets(self):
+        self.bets = []
+
+    def __str__(self):
+        return f"prizes x[min: {self.min:.2f}, max: {self.max:.2f}]"
+    
+class SockPlayerBet:
+    def __init__(self, player_name, bet_amount):
+        self.player_name = player_name
+        self.bet_amount = bet_amount

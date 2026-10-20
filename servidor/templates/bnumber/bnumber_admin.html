@@ -2,21 +2,25 @@
 {% load static %}
 <html>
 <head>
-    <title>Hangman game</title>
+    <title>palabrazo game</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static 'js/bnumber/bnumber_admin.js' %}"></script>
     <script src="{% static 'js/game_redirects.js' %}"></script>
     <script src="{% static 'js/in_game_room.js' %}"></script>
     <audio src="{% static 'sounds/arcade_jump.wav' %}" id="arcade_jump_audio"></audio>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
-<body class="fondo" style="top: 100px;">
-    <div id="seconds_left"></div>
-    <!-- Eliminado: ahora usamos modal -->
-    
+<body class="page-login" style="top: 100px;">
+    <div id="rounds_left"></div>
+<    
     <!-- Equipo Verde -->
     <div id="team-Verde" class="game-half team-column verde-side" style="display: none;">
-        <div class="number-list">
+        <div class="number-list bnumber-admin-list">
             <button class="number-button empty-number" id="0">0</button>
             <button class="number-button empty-number" id="1">1</button>
             <button class="number-button empty-number" id="2">2</button>
@@ -37,7 +41,7 @@
     
     <!-- Equipo Rojo -->
     <div id="team-Rojo" class="game-half team-column rojo-side" style="display: none;">
-        <div class="number-list">
+        <div class="number-list bnumber-admin-list">
             <button class="number-button empty-number" id="0">0</button>
             <button class="number-button empty-number" id="1">1</button>
             <button class="number-button empty-number" id="2">2</button>
@@ -58,7 +62,7 @@
     
     <!-- Equipo Azul -->
     <div id="team-Azul" class="game-half team-column azul-side" style="display: none;">
-        <div class="number-list">
+        <div class="number-list bnumber-admin-list">
             <button class="number-button empty-number" id="0">0</button>
             <button class="number-button empty-number" id="1">1</button>
             <button class="number-button empty-number" id="2">2</button>
@@ -79,7 +83,7 @@
     
     <!-- Equipo Amarillo -->
     <div id="team-Amarillo" class="game-half team-column amarillo-side" style="display: none;">
-        <div class="number-list">
+        <div class="number-list bnumber-admin-list">
             <button class="number-button empty-number" id="0">0</button>
             <button class="number-button empty-number" id="1">1</button>
             <button class="number-button empty-number" id="2">2</button>
@@ -95,7 +99,7 @@
         </div>
     </div>
     
-    <div id="countdown"></div>
+    <!-- countdown removed, now using only seconds_left for all status -->
     <button id="enable_sounds" style="display: none;"></button>
     
     <!-- Modal de Victoria -->
@@ -116,14 +120,16 @@
 </script>
 
 <style>
-     body {
+    body {
         margin: 0;
         padding: 0;
         height: 100vh;
         display: flex;
-        position: relative; /* Add this to allow absolute children positioning */
+        position: relative;
+        font-family: var(--font-body);
+        background: var(--neutral-100, #EEF2F6);
+        color: var(--text);
     }
-    
     .game-half {
         flex: 1;
         display: flex;
@@ -131,123 +137,89 @@
         align-items: center;
         padding: 20px;
     }
-    
     .verde-side {
-        background-color: #4CAF50;  /* Verde */
+        background-color: var(--success, #00874E);
     }
-    
     .rojo-side {
-        background-color: #f44336;  /* Rojo */
+        background-color: var(--brand, #991D32);
     }
-    
     .azul-side {
-        background-color: #2196F3;  /* Azul */
+        background-color: var(--ice-600, #9BCAE0);
     }
-    
     .amarillo-side {
-        background-color: #FFEB3B;  /* Amarillo */
+        background-color: var(--yellow-500, #FFB23B);
     }
-    
     .divider {
         width: 4px;
-        background-color: #333;
+        background-color: var(--neutral-300, #B9C2CC);
         height: 100vh;
     }
-    
     .number-list {
         display: flex;
         flex-direction: column;
         gap: 5px;
         margin: 20px 0;
     }
-    
     .number-button {
         width: 70px;
         height: 70px;
         border-radius: 40px;
-        border: 2px solid white;
-        background-color: rgba(255, 255, 255, 0.9);
-        color: #333;
-        font-size: 40px;
+        border: 2px solid var(--neutral-0, #fff);
+        background-color: var(--neutral-0, #fff);
+        color: var(--text, #121417);
+        font-size: 2.2em;
+        font-family: var(--font-body);
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    
     .number-button:hover {
-        background-color: rgba(255, 255, 255, 0.7);
+        background-color: var(--ice-500, #B0E5FF);
+        color: var(--brand, #991D32);
     }
-    
     .new-number-container {
-        background-color: rgba(255, 255, 255, 0.9);
+        background-color: var(--neutral-0, #fff);
         padding: 10px 20px;
-        border-radius: 10px;
+        border-radius: 12px;
         margin-top: 20px;
         display: flex;
         align-items: center;
         gap: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
-    
     .new-number-label {
-        font-size: 30px;
-        color: #333;
+        font-size: 1.5em;
+        color: var(--brand, #991D32);
+        font-family: var(--font-heading);
     }
-    
     .new-number {
-        font-size: 30px;
+        font-size: 1.5em;
         font-weight: bold;
-        color: #333;
+        color: var(--success, #009959);
+        font-family: var(--font-heading);
     }
-
     .empty-number {
-        color: #dbcbcb !important;  /* Gray color for empty positions */
+        color: var(--neutral-300, #B9C2CC) !important;
     }
-    
     .filled-number {
-        color: #000000 !important;  /* Black color for real numbers */
+        color: var(--text, #121417) !important;
     }
-
-    #countdown {
-        display: block; 
-        position: absolute; /* Change to absolute */
-        left: 0;
-        right: 0;
-        margin-right: auto; 
-        margin-left: auto;  
-        margin-top: auto;
-        margin-bottom: auto;
-        text-align: center;
-        height: auto;
-        z-index: 2; 
-        font-size: 700px;
-    }
-
-    #seconds_left {
-        display: block; 
-        position: absolute; /* Change to absolute */
-        left: 0;
-        right: 0;
-        margin-right: auto; 
-        margin-left: auto;  
-        margin-top: -80px;
-        text-align: center;
-        height: auto;
-        font-size: 50px;
-        color: black;
-    }
-
+  
     #bnumber-result {
-        display: block; 
-        position: absolute; /* Change to absolute */
+        display: block;
+        position: absolute;
         left: 0;
         right: 0;
-        margin-right: auto; 
-        margin-left: auto;  
+        margin-right: auto;
+        margin-left: auto;
         margin-top: 100px;
         margin-bottom: auto;
         text-align: center;
         height: auto;
-        z-index: 2; 
+        z-index: 2;
         font-size: 100px;
-        color: black;
+        color: var(--success, #009959);
+        font-family: var(--font-heading);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 </style>

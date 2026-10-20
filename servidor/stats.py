@@ -13,7 +13,7 @@ def get_coins_evolution():
     players = q.get_players_names()
     for player in players:
         coins_evolution[player] = []
-        for game_number in range(4, q.get_stored_game_number() + 1): # All the games in the DB
+        for game_number in range(1, q.get_stored_game_number() + 1): # All the games in the DB
             coins = q.get_player_coins_at_game_number(player, game_number)
             coins_evolution[player].append(coins)
 
@@ -81,10 +81,20 @@ def plot_coins_evolution(evolution, prize_winners, width=10, height=5, year=2024
     all_game_numbers = set()
     for idx, (player, coins) in enumerate(evolution.items()):
         if coins:  # Check if the list is not empty
-            # Filter out zero values
-            filtered_coins = [coin if coin != 0 else None for coin in coins]
+            # Add small jitter to zero values so overlapping lines are visible
+            filtered_coins = []
+            for coin in coins:
+                if coin == 0:
+                    # Add small random offset to zeros (between -2 and 2)
+                    jitter = random.uniform(-2, 2)
+                    filtered_coins.append(jitter)
+                else:
+                    filtered_coins.append(coin)
+            
+            # Game numbers correspond to actual game numbers starting from 1
             game_numbers = list(range(1, len(coins) + 1))
-            plt.plot(game_numbers, filtered_coins, label=player, marker='o', markersize=3, color=colors(idx))
+            plt.plot(game_numbers, filtered_coins, label=player, marker='o', markersize=3, 
+                    color=colors(idx), alpha=0.8)  # Added transparency
             all_game_numbers.update(game_numbers)
 
             # Plot special points for prize-winning rounds

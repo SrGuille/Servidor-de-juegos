@@ -18,8 +18,13 @@
     <!--Libreria animaciones-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
-<body id="fondo" class="fondo">
+<body id="page-login" class="page-login">
     <div class="container" id="container">
         <div id="team-message" class="team-message"></div>
         <button class="number-button" style="display: none;" id="0" onclick="send_position(0)">0</button>
@@ -46,22 +51,23 @@
         justify-content: center;
         gap: 10px;
         padding: 20px;
+        margin-top: 60px;
     }
 
     .team-Verde {
-        background-color: #4CAF50;
+        background-color: var(--success, #00874E);
     }
 
     .team-Rojo {
-        background-color: #f44336;
+        background-color: var(--brand, #991D32);
     }
 
     .team-Azul {
-        background-color: #2196F3;
+        background-color: var(--ice-600, #9BCAE0);
     }
 
     .team-Amarillo {
-        background-color: #ffeb3b;
+        background-color: var(--yellow-500, #FFB23B);
     }
     
     .number-button {
@@ -72,6 +78,7 @@
         background-color: white;
         color: #2c3e50;
         font-size: 20px;
+        font-family: var(--font-body);
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;

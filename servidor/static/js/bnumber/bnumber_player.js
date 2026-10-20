@@ -6,7 +6,7 @@ if(player_name == null) //If the player is not logged in, redirect to the login 
 }
 
 number_positions = [];
-LIST_SIZE = 8;
+LIST_SIZE = 7;
 current_number = -1;
 
 go_to_wait_screen_after_game();

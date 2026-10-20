@@ -11,7 +11,7 @@ class GunmanGame:
         self.duel_players = {}
         self.players_lock = threading.Lock()
         self.COINS_TO_STEAL_BASELINE = 10
-        self.COINS_TO_STEAL_streak = 5
+        self.COINS_TO_STEAL_STREAK = 5
         self.is_special_duel = False
 
     def create_initial_duel(self):
@@ -223,7 +223,7 @@ class GunmanGame:
         """
             Steals coins from the loser and gives them to the winner according to the streak length"""
         winner_streak_length = self.duel_players[winner].streak_length
-        coins_to_steal = self.COINS_TO_STEAL_BASELINE + (winner_streak_length - 1) * self.COINS_TO_STEAL_streak
+        coins_to_steal = self.COINS_TO_STEAL_BASELINE + (winner_streak_length - 1) * self.COINS_TO_STEAL_STREAK
 
         q.add_coins_to_player(winner, coins_to_steal)
         q.add_coins_to_player(loser, -coins_to_steal)

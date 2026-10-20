@@ -10,7 +10,7 @@ class BNumberGame:
 
     def __init__(self):
 
-        self.LIST_SIZE = 8
+        self.LIST_SIZE = 7
         self.NUMBER_RANGE = (10 * self.LIST_SIZE) - 1
         self.REWARD_PER_ADVANTAGE = 5
         self.TEAM_NAMES = ('Verde', 'Rojo', 'Azul', 'Amarillo')  # Possible team names
@@ -167,6 +167,7 @@ class BNumberGame:
         """
             Returns the positions of each team
         """
+        self.players_lock.acquire()
         #serialize the positions of each team
         serialized_teams_positions = {
             team: positions 
@@ -176,6 +177,7 @@ class BNumberGame:
             team: new_number 
             for team, new_number in self.teams_new_number.items()
         }
+        self.players_lock.release()
         return serialized_teams_positions, serialized_teams_new_number
 
     def finish_bnumber(self) -> str:

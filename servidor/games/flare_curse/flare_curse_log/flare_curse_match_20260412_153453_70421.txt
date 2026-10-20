@@ -1,0 +1,64 @@
+### Output (stdout and stderr interleaved):
+
+```
+time | alive | limit | offered | launch_flare_colors | mode | score | events
+  0.00 |     8 |     3 |      - | -                  | calm    | 0.000 | player_became_ghost;match_initialized
+  2.59 |     8 |     3 |      - | -                  | calm    | 0.000 | music_eval
+  5.19 |     8 |     3 |      - | -                  | calm    | 0.000 | music_eval
+  7.03 |     8 |     3 |   blue | -                  | calm    | 0.000 | offer_opened
+  7.69 |     8 |     3 |   blue | -                  | calm    | 0.000 | music_eval
+  7.72 |     8 |     3 |      - | -                  | calm    | 0.000 | claim;offer_closed
+  8.55 |     8 |     3 | purple | -                  | calm    | 0.000 | offer_opened
+  8.80 |     8 |     3 | purple | blue               | calm    | 0.000 | launch_flare
+  9.22 |     8 |     3 |      - | -                  | calm    | 0.000 | claim;offer_closed
+ 10.17 |     8 |     3 |    red | -                  | calm    | 0.000 | offer_opened
+ 10.28 |     8 |     3 |    red | -                  | calm    | 0.635 | music_eval
+ 11.53 |     8 |     3 |      - | -                  | calm    | 0.635 | claim;offer_closed
+ 12.19 |     8 |     3 |      - | red                | calm    | 0.635 | launch_flare
+ 12.78 |     8 |     3 |      - | -                  | calm    | 0.937 | music_eval
+ 13.23 |     7 |     3 |      - | -                  | calm    | 0.937 | player_became_ghost;curse_enemy_hit
+ 15.28 |     7 |     3 |      - | -                  | calm    | 0.711 | music_eval
+ 16.27 |     7 |     3 | purple | -                  | calm    | 0.711 | timeout;offer_opened
+ 16.86 |     7 |     3 |      - | -                  | calm    | 0.711 | claim;offer_closed
+ 17.75 |     7 |     3 |      - | purple             | calm    | 0.711 | launch_flare
+ 17.80 |     7 |     3 |      - | -                  | calm    | 0.679 | music_eval
+ 18.56 |     7 |     3 |      - | -                  | calm    | 0.679 | ghost_launch_flare
+ 18.77 |     7 |     3 |   blue | -                  | calm    | 0.679 | offer_opened
+ 20.16 |     6 |     2 |   blue | -                  | calm    | 0.679 | player_became_ghost;curse_enemy_hit
+ 20.17 |     6 |     2 |      - | -                  | calm    | 0.679 | claim;offer_closed
+ 20.39 |     6 |     2 |      - | -                  | calm    | 0.700 | music_eval
+ 21.36 |     6 |     2 |    red | -                  | calm    | 0.700 | offer_opened
+ 21.70 |     6 |     2 |    red | blue               | calm    | 0.700 | launch_flare
+ 21.89 |     6 |     2 |      - | -                  | calm    | 0.700 | claim;offer_closed
+ 22.41 |     6 |     2 |      - | red                | calm    | 0.700 | launch_flare
+ 22.89 |     6 |     2 |      - | -                  | calm    | 0.600 | music_eval
+ 24.83 |     5 |     2 |      - | -                  | calm    | 0.600 | player_became_ghost;curse_enemy_hit
+ 25.39 |     5 |     2 |      - | -                  | calm    | 0.600 | music_eval
+ 26.58 |     5 |     2 | purple | -                  | calm    | 0.600 | offer_opened
+ 27.67 |     5 |     2 |      - | -                  | calm    | 0.600 | claim;offer_closed
+ 27.78 |     5 |     2 |      - | -                  | calm    | 0.600 | ghost_launch_flare
+ 27.89 |     5 |     2 |      - | -                  | calm    | 0.700 | music_eval
+ 28.12 |     5 |     2 |      - | -                  | calm    | 0.700 | ghost_launch_flare
+ 28.55 |     5 |     2 |      - | purple             | calm    | 0.700 | launch_flare
+ 29.84 |     5 |     2 |   blue | -                  | calm    | 0.700 | offer_opened
+ 30.20 |     5 |     2 |   blue | -                  | calm    | 0.700 | ghost_launch_flare
+ 30.48 |     5 |     2 |   blue | -                  | calm    | 0.900 | music_eval
+ 30.73 |     5 |     2 |      - | -                  | calm    | 0.900 | claim;offer_closed
+ 30.77 |     4 |     2 |      - | -                  | calm    | 0.900 | player_became_ghost;curse_enemy_hit
+ 30.92 |     4 |     2 |      - | blue               | calm    | 0.900 | launch_flare
+ 31.64 |     4 |     2 |      - | -                  | calm    | 0.900 | ghost_launch_flare
+ 32.34 |     4 |     2 |    red | -                  | calm    | 0.900 | offer_opened
+ 32.98 |     4 |     2 |    red | -                  | calm    | 0.200 | music_eval
+ 34.23 |     4 |     2 |      - | -                  | calm    | 0.200 | claim;offer_closed
+ 35.50 |     4 |     2 |      - | -                  | calm    | 1.000 | music_eval
+ 37.34 |     4 |     2 |      - | -                  | calm    | 1.000 | ghost_launch_flare
+ 37.44 |     4 |     2 | purple | -                  | calm    | 1.000 | offer_opened
+ 37.92 |     3 |     1 | purple | -                  | calm    | 1.000 | player_became_ghost;curse_enemy_hit
+ 38.03 |     3 |     1 | purple | -                  | calm    | 1.000 | claim
+ 38.05 |     3 |     1 |      - | -                  | calm    | 1.000 | offer_closed
+ 38.09 |     3 |     1 |      - | -                  | intense | 2.296 | music_eval;music_mode_changed
+ 38.47 |     3 |     1 |      - | purple             | intense | 2.296 | launch_flare
+ 39.02 |     3 |     1 |      - | -                  | intense | 2.296 | ghost_launch_flare
+ 40.59 |     3 |     1 |      - | -                  | intense | 1.296 | music_eval
+ 40.67 |     2 |     1 |      - | -                  | intense | 1.296 | player_became_ghost;curse_enemy_hit;match_finished
+```

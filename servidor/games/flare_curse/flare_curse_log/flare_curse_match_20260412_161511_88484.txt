@@ -1,0 +1,48 @@
+### Output (stdout and stderr interleaved):
+
+```
+time | alive | limit | offered | launch_flare_colors | mode | score | events
+  0.00 |     8 |     2 |      - | -                  | calm    | 0.000 | player_became_ghost;match_initialized
+  2.50 |     8 |     2 |      - | -                  | calm    | 0.000 | music_eval
+  5.09 |     8 |     2 |      - | -                  | calm    | 0.000 | music_eval
+  7.05 |     8 |     2 |   blue | -                  | calm    | 0.000 | offer_opened
+  7.30 |     8 |     2 |   blue | -                  | calm    | 0.000 | ghost_launch_flare
+  7.47 |     8 |     2 |      - | -                  | calm    | 0.000 | claim;offer_closed
+  7.59 |     8 |     2 |      - | -                  | calm    | 0.500 | music_eval
+  7.86 |     8 |     2 |      - | blue               | calm    | 0.500 | launch_flare
+  8.78 |     8 |     2 |  green | -                  | calm    | 0.500 | offer_opened
+  9.72 |     8 |     2 |      - | -                  | calm    | 0.500 | claim;offer_closed
+  9.88 |     7 |     2 |      - | -                  | calm    | 0.500 | player_became_ghost;curse_enemy_hit
+  9.98 |     7 |     2 |      - | green              | calm    | 0.500 | launch_flare
+ 10.17 |     7 |     2 |      - | -                  | calm    | 0.548 | music_eval
+ 12.03 |     6 |     1 |      - | -                  | calm    | 0.548 | player_became_ghost;curse_enemy_hit
+ 12.77 |     6 |     1 |      - | -                  | calm    | 0.340 | music_eval
+ 15.36 |     6 |     1 |      - | -                  | calm    | 0.340 | music_eval
+ 16.86 |     6 |     1 |   blue | -                  | calm    | 0.340 | offer_opened
+ 17.69 |     6 |     1 |      - | -                  | calm    | 0.340 | claim;offer_closed
+ 17.94 |     6 |     1 |      - | -                  | calm    | 0.660 | music_eval
+ 17.97 |     6 |     1 |      - | blue               | calm    | 0.660 | launch_flare
+ 18.81 |     6 |     1 |      - | -                  | calm    | 0.660 | ghost_launch_flare
+ 19.12 |     6 |     1 |  green | -                  | calm    | 0.660 | offer_opened
+ 20.08 |     6 |     1 |      - | -                  | calm    | 0.660 | claim;offer_closed
+ 20.44 |     5 |     1 |      - | -                  | calm    | 0.660 | player_became_ghost;curse_enemy_hit
+ 20.53 |     5 |     1 |      - | -                  | calm    | 0.660 | music_eval
+ 23.12 |     5 |     1 |      - | -                  | calm    | 1.170 | music_eval
+ 24.06 |     4 |     1 |      - | -                  | calm    | 1.170 | player_became_ghost;curse_enemy_hit
+ 24.42 |     4 |     1 |      - | green              | calm    | 1.170 | launch_flare
+ 25.08 |     4 |     1 |      - | -                  | calm    | 1.170 | ghost_launch_flare
+ 25.62 |     4 |     1 |      - | -                  | calm    | 0.340 | music_eval
+ 25.70 |     4 |     1 |      - | -                  | calm    | 0.340 | ghost_launch_flare
+ 26.83 |     3 |     1 |      - | -                  | calm    | 0.340 | player_became_ghost;curse_enemy_hit
+ 27.67 |     3 |     1 |   blue | -                  | calm    | 0.340 | offer_opened
+ 28.20 |     3 |     1 |   blue | -                  | calm    | -0.851 | music_eval
+ 28.72 |     3 |     1 |   blue | -                  | calm    | -0.851 | ghost_launch_flare
+ 29.52 |     3 |     1 |   blue | -                  | calm    | -0.851 | claim
+ 29.53 |     3 |     1 |      - | -                  | calm    | -0.851 | offer_closed
+ 30.20 |     3 |     1 |      - | blue               | calm    | -0.851 | launch_flare
+ 30.80 |     3 |     1 |      - | -                  | calm    | 0.340 | music_eval
+ 30.92 |     3 |     1 |      - | -                  | calm    | 0.340 | ghost_launch_flare
+ 31.92 |     2 |     0 |      - | -                  | calm    | 0.340 | player_became_ghost;curse_enemy_hit
+ 33.39 |     2 |     0 |      - | -                  | calm    | 0.000 | music_eval
+ 33.69 |     1 |     0 |      - | -                  | intense | 0.000 | player_became_ghost;curse_enemy_hit;music_mode_changed;match_finished
+```

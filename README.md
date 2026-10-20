@@ -1,6 +1,19 @@
 # Servidor-de-juegos
 Este es un proyecto de un servidor de videojuegos pensado para pasar un buen rato con amigos en Navidad.
 +
+
+## Configuración local
+
+Antes de ejecutar `run.bat`, define las credenciales fuera del repositorio. En PowerShell:
+
+```powershell
+$env:DJANGO_SECRET_KEY = "genera-una-clave-local-larga-y-aleatoria"
+$env:OPENAI_API_KEY = "tu-clave-de-OpenAI"
+.\run.bat
+```
+
+No guardes estas variables en archivos versionados. Si una credencial ya se compartió o apareció en Git, revócala y genera otra.
+
 # Descripción del juego
 
 ## Condiciones previas
@@ -13,7 +26,7 @@ El juego discurrirá en una red local. Idealmente el ordenador que haga de servi
 Cada jugador se conectará desde su móvil al servidor y participará en los juegos utilizando controles sencillos, con el objetivo de conseguir monedas. Todos comienzan con 200 monedas.
 
 ## Dinámica
-Durante todo el tiempo de juego todos los jugadores juegan a uno de los juegos y después se reparte un premio a uno de ellos. El administrador elegirá qué juegos ocurrirán a continuación, pudiendo elegir que un juego se repita varias veces seguidas o elegir que ocurran varias rondas de juegos aleatorios (siempre con premios entre partidas). La única excepción ocurre cuando algún jugador o jugadores se quedan sin monedas tras un juego o premio, en cuyo caso ocurrirá obligatoriamente un juego gratuito (democracia o ahorcado), donde no hacen falta monedas para jugar. Si tras ese juego alguno de los arruinados no ha ganado nada, se le darán 10 monedas gratis.
+Durante todo el tiempo de juego todos los jugadores juegan a uno de los juegos y después se reparte un premio a uno de ellos. El administrador elegirá qué juegos ocurrirán a continuación, pudiendo elegir que un juego se repita varias veces seguidas o elegir que ocurran varias rondas de juegos aleatorios (siempre con premios entre partidas).
 
 ## Premios y economía
 El ganador del premio no es el ganador del juego, sino que se utiliza una ruleta con los nombres de los participantes. Esta es dinámica, ya que la probabilidad de ganar de cada uno depende directamente de las monedas que tenga en comparación con los demás. El premio que se llevará puede ser cualquiera de los 3 tipos de regalos, decidiéndose esto también mediante otra ruleta que les da la misma probabilidad. 

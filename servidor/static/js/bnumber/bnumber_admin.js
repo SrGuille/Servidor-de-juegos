@@ -1,60 +1,66 @@
 let GAME_SECONDS = 90; // Total seconds of the game
 
+
 let team_screens = {};
 let num_teams = 0;
+// Variable global para controlar la cantidad de filas por equipo
+let LIST_SIZE = 7; // Cambia este valor para mostrar menos filas (por ejemplo, 7)
 
 async function play_bnumber()
 {
     await create_teams();
     console.log("Teams created")
+    let status = document.getElementById("rounds_left");
+    status.innerHTML = "Cargando...";
     await new Promise(r => setTimeout(r, 10000)); //Wait 10 seconds
-    await countdown();
+    await show_countdown_in_status();
     await set_can_players_interact(true); // Players can move
     await main_loop(); 
     await set_can_players_join(false);
     await set_can_players_interact(false); // Players can't move
+    status.innerHTML = "Procesando resultados...";
     await new Promise(r => setTimeout(r, 5000)); //Wait 5 seconds
     await finish_bnumber();
     await new Promise(r => setTimeout(r, 10000)); //Wait 10 seconds
     window.location.href = "../ranking_and_prizes/";
 }
 
-async function countdown()
-{
+
+// Show countdown in the status (rounds_left) element
+async function show_countdown_in_status() {
     document.getElementById("enable_sounds").click(); // Trick browser to enable sounds
     arcade_jump_audio.volume = 0.7;
-    arcade_jump_audio.play();
-    for(i = 3; i > 0; i--)
-    {
-        document.getElementById("countdown").innerHTML = i;
+    let status = document.getElementById("rounds_left");
+    for(let i = 3; i > 0; i--) {
+        status.innerHTML = i;
         arcade_jump_audio.play();
-        await new Promise(r => setTimeout(r, 1000)); //Wait 1 seconds
+        await new Promise(r => setTimeout(r, 1000));
         arcade_jump_audio.pause();
     }
-    document.getElementById("countdown").innerHTML = "";
+    status.innerHTML = "¡GO!";
+    await new Promise(r => setTimeout(r, 500));
 }
 
 async function main_loop()
 {
-    seconds = 0;
-    seconds_left = document.getElementById("seconds_left");
-    team_has_won = false;
+    let seconds = 0;
+    let status = document.getElementById("rounds_left");
+    let team_has_won = false;
     
     console.log(GAME_SECONDS);
     while(seconds < GAME_SECONDS && !team_has_won)
     {
-        seconds_left.innerHTML = "Fin en " + (GAME_SECONDS - seconds).toString();
+        status.innerHTML = "Fin en " + (GAME_SECONDS - seconds).toString();
         seconds += 1;
         for(let i = 0; i < 10; i++)
         {
             await new Promise(r => setTimeout(r, 100)); //Wait 0.1 seconds
             team_has_won = await get_bnumber_data();
             if(team_has_won) break;  // Salir del for del segundo
-
         }
         console.log(seconds);
     }
-    seconds_left.innerHTML = "Fin!";
+    status.innerHTML = "Fin!";
 }
 
 // Create the teams and set the new number for each team
@@ -95,8 +101,16 @@ function setup_team_columns(num_teams, team_names)
         let team_column = document.getElementById(`team-${team_name}`);
         if (team_column) {
             team_column.style.display = 'flex';
+            // Ocultar los botones extra según ROWS_PER_TEAM
+            let buttons = team_column.querySelectorAll('button.number-button');
+            for (let j = 0; j < buttons.length; j++) {
+                if (j < LIST_SIZE) {
+                    buttons[j].style.display = '';
+                } else {
+                    buttons[j].style.display = 'none';
+                }
+            }
         }
-        
         // Mostrar divisor entre equipos (no después del último)
         if (i < num_teams - 1) {
             let divider = document.getElementById(`divider-${i + 1}`);
@@ -174,7 +188,7 @@ async function finish_bnumber()
         url: "../finish_bnumber",
         type: "GET",
         success: function(response) {
-            document.getElementById("seconds_left").innerHTML = "";
+            document.getElementById("rounds_left").innerHTML = "";
             winner_msj = response.winner_msj;
             showVictoryModal(winner_msj);
         }

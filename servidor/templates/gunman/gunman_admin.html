@@ -2,15 +2,20 @@
 {% load static %}
 <html>
 <head>
-    <title>Hangman game</title>
+    <title>palabrazo game</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static 'js/gunman/gunman_admin.js' %}"></script>
     <script src="{% static 'js/game_redirects.js' %}"></script>
     <script src="{% static 'js/in_game_room.js' %}"></script>
     <audio src="{% static 'sounds/arcade_jump.wav' %}" id="arcade_jump_audio"></audio>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
-<body class="fondo" style="top: 100px;">
+<body class="page-login" style="top: 100px;">
     <!-- Caja de texto para mensajes -->
     <div id="message-box" class="message-box">Duelo</div>
 

@@ -107,13 +107,14 @@ def get_logged_players_names():
 
     return players_names
 
-def get_player_attributes(name):
+def get_player_attributes(name: str) -> list[str]:
     """
         Gets the attributes of a player
     """
     try:
         jugador = Player.objects.get(name=name)
-        return jugador.attributes
+        attributes = jugador.attributes.split(',') if jugador.attributes else []
+        return attributes
 
     except Player.DoesNotExist:
         print('No existe el jugador ' + name + 'del que se quieren obtener los atributos')
